@@ -1,12 +1,16 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hotel_booking/screens/loginScreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 // import '../api_controller.dart';
 
 class registerationScreen extends StatelessWidget {
   static const String idScreen = 'register';
+  final _auth = FirebaseAuth.instance;
 
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
@@ -126,7 +130,7 @@ class registerationScreen extends StatelessWidget {
                       shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(24.0),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         if (name.text.length < 4) {
                           Fluttertoast.showToast(msg: 'Nhập đầy đủ họ và tên');
                         } else if (!email.text.contains('@')) {
@@ -138,7 +142,12 @@ class registerationScreen extends StatelessWidget {
                           Fluttertoast.showToast(
                               msg: 'Mật khẩu phải từ 6 kí tự trở lên');
                         } else {
-                          // registerNewUser(context, name.text, email.text, phone.text, password.text);
+                        final newUser = await _auth.createUserWithEmailAndPassword(
+                        email: email.text, password: password.text);
+                        log(newUser.toString());
+                        if (newUser != null) {
+                          //Navigate to Main screen
+                        }
                         }
                       },
                     ),
