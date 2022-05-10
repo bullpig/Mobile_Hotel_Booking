@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/screens/homeScreen.dart';
 import 'package:hotel_booking/screens/loginScreen.dart';
 
 void main() async {
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         accentColor: const Color(0xFFD8ECF1),
         scaffoldBackgroundColor: const Color(0xFFF3F5F7),
       ),
+      // home: HomeScreen(),
       home: LoginScreen(),
     );
   }

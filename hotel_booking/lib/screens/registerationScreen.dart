@@ -143,10 +143,12 @@ class registerationScreen extends StatelessWidget {
                               msg: 'Mật khẩu phải từ 6 kí tự trở lên');
                         } else {
                         final newUser = await _auth.createUserWithEmailAndPassword(
-                        email: email.text, password: password.text);
+                        email: email.text, password: password.text );
                         log(newUser.toString());
                         if (newUser != null) {
-                          //Navigate to Main screen
+                          //Navigate to Login screen
+                           Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(),),);
+
                         }
                         }
                       },
