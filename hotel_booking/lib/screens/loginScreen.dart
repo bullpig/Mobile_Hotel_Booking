@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/screens/homeScreen.dart';
 import './registerationScreen.dart';
 // import '../api_controller.dart';
 
@@ -97,6 +98,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
+                      // onPressed: (){
+                      //   Navigator.push(context, route)
+                      // }
                       shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(24.0),
                       ),
@@ -107,6 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               email: email.text, password: password.text);
                           if (user != null) {
                             log("Logged in");
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(),),);
                           }
                         } catch (e) {
                           print(e);

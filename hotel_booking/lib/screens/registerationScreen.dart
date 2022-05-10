@@ -143,6 +143,7 @@ class registerationScreen extends StatelessWidget {
                           Fluttertoast.showToast(
                               msg: 'Mật khẩu phải từ 6 kí tự trở lên');
                         } else {
+
                           final newUser =
                               await _auth.createUserWithEmailAndPassword(
                                   email: email.text, password: password.text);
@@ -159,7 +160,9 @@ class registerationScreen extends StatelessWidget {
                             _db.collection("users").add(user).then(
                                 (DocumentReference doc) => print(
                                     'DocumentSnapshot added with ID: ${doc.id}'));
+                             Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(),),);
                           }
+
                         }
                       },
                     ),
