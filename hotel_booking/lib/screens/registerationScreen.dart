@@ -1,16 +1,17 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hotel_booking/screens/loginScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 
 // import '../api_controller.dart';
 
 class registerationScreen extends StatelessWidget {
   static const String idScreen = 'register';
   final _auth = FirebaseAuth.instance;
+  final _db = FirebaseFirestore.instance;
 
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
@@ -142,12 +143,23 @@ class registerationScreen extends StatelessWidget {
                           Fluttertoast.showToast(
                               msg: 'Mật khẩu phải từ 6 kí tự trở lên');
                         } else {
-                        final newUser = await _auth.createUserWithEmailAndPassword(
-                        email: email.text, password: password.text);
-                        log(newUser.toString());
-                        if (newUser != null) {
-                          //Navigate to Main screen
-                        }
+                          final newUser =
+                              await _auth.createUserWithEmailAndPassword(
+                                  email: email.text, password: password.text);
+                          log(newUser.toString());
+                          if (newUser != null) {
+                            var uid = newUser.user.uid.toString();
+                            var registeredEmail = newUser.user.email;
+                            var user = <String, dynamic>{
+                              "uid": uid,
+                              "email": registeredEmail,
+                              "name": name.text,
+                              "phone": phone.text
+                            };
+                            _db.collection("users").add(user).then(
+                                (DocumentReference doc) => print(
+                                    'DocumentSnapshot added with ID: ${doc.id}'));
+                          }
                         }
                       },
                     ),
@@ -160,12 +172,11 @@ class registerationScreen extends StatelessWidget {
                 ),
                 onPressed: () {
                   Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                   LoginScreen(),
-                            ),
-                          );
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
+                    ),
+                  );
                 },
               ),
             ],

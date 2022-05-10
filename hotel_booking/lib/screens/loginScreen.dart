@@ -118,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               FlatButton(
                 child: Text(
-                  'Không có tài khoản? Đăng ký ngay!',
+                  'Không có tài khoản? Đăng ký abc ngay!',
                 ),
                 onPressed: () {
                   // Navigator.pushNamedAndRemoveUntil(
