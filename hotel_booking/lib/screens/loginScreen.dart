@@ -1,4 +1,7 @@
 // ignore: file_names
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import './registerationScreen.dart';
 // import '../api_controller.dart';
@@ -14,8 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
-
-
+  final _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -98,8 +100,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(24.0),
                       ),
-                      onPressed: () {
-                        // loginAuth(context, email.text, password.text);
+                      onPressed: () async {
+                        log("Press login");
+                        try {
+                          final user = await _auth.signInWithEmailAndPassword(
+                              email: email.text, password: password.text);
+                          if (user != null) {
+                            log("Logged in");
+                          }
+                        } catch (e) {
+                          print(e);
+                        }
                       },
                     ),
                   ],
@@ -113,13 +124,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Navigator.pushNamedAndRemoveUntil(
                   //     context, registerationScreen.idScreen, (route) => false);
                   Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                   registerationScreen(),
-                            ),
-                          );
-                
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => registerationScreen(),
+                    ),
+                  );
                 },
               ),
             ],

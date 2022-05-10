@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "770855249694",
+    "project_id": "fir-firebase-505fd",
+    "storage_bucket": "fir-firebase-505fd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:770855249694:android:97ab7b18ef55ac45e08b0f",
+        "android_client_info": {
+          "package_name": "com.example.hotel_booking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "770855249694-sfo28fiuc3uplnsg53m84qmjf11aie3f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSiQbLApEY0SsXVQ9fFp3YFoQL074tLUk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "770855249694-sfo28fiuc3uplnsg53m84qmjf11aie3f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
