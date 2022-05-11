@@ -6,6 +6,7 @@ class Hotel {
   double twohourprice;
   double overnightprice;
   int rating;
+
   double longitude;
   double latitude;
 
