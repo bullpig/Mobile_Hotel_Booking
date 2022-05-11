@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/basic.dart';
+import 'package:hotel_booking/screens/eventsScreen.dart';
+import 'package:hotel_booking/screens/favouriteScreen.dart';
 import 'package:hotel_booking/screens/mainHomeScreen.dart';
-// import 'package:hotel_app/screens/eventsScreen.dart';
+import 'package:hotel_booking/screens/nearbyScreen.dart';
+import 'package:hotel_booking/screens/profileScreen.dart';
 // import 'package:hotel_app/screens/favouriteScreen.dart';
 // import 'package:hotel_app/screens/mainHomeScreen.dart';
 // import 'package:hotel_app/screens/nearbyScreen.dart';
-// import 'package:hotel_app/screens/profileScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String idScreen = 'home';
@@ -24,6 +26,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final Tabs = [
     MainHomeScreen(),
+    NearbyScreen(),
+    FavouriteScreen(),
+    EventScreen(),
+    ProfileScreen(),
     // NearbyScreen(),
     // FavouriteScreen(),
     // EventScreen(),
