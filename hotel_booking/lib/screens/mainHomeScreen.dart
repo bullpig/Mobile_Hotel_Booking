@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 // import 'package:hotel_app/screens/search.dart';
-// import 'package:hotel_app/widgets/destination_carsousel.dart';
+import 'package:hotel_booking/widgets/destination_carsousel.dart';
 // import 'package:hotel_app/widgets/hotel_carousel.dart';
+import '../models/destination_model.dart';
 
 class MainHomeScreen extends StatefulWidget {
   @override
@@ -9,6 +10,13 @@ class MainHomeScreen extends StatefulWidget {
 }
 
 class _MainHomeScreenState extends State<MainHomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    print("Init state called");
+    loadDataOfDestinations();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +57,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               ),
             ),
             SizedBox(height: 20.0),
-            // DestinationCarousel(),
+            DestinationCarousel(),
             SizedBox(
               height: 20.0,
             ),

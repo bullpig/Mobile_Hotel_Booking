@@ -5,7 +5,6 @@ import 'package:hotel_booking/screens/loginScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // loadDataOfDestinations();
   await Firebase.initializeApp();
   runApp(MyApp());
 }
