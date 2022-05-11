@@ -6,19 +6,20 @@ class Hotel {
   double twohourprice;
   double overnightprice;
   int rating;
-  // double longitude;
-  // double latitude;
+
+  double longitude;
+  double latitude;
 
   Hotel({
-    required this.imageUrl,
-    required this.name,
-    required this.address,
-    required this.introduction,
-    required this.twohourprice,
-    required this.overnightprice,
-    required this.rating,
-    // required this.longitude,
-    // required this.latitude,
+    this.imageUrl = "",
+    this.name = "",
+    this.address = "",
+    this.introduction = "",
+    this.twohourprice = 0.0,
+    this.overnightprice = 0.0,
+    this.rating = 0,
+    this.longitude = 0.0,
+    this.latitude = 0.0,
   });
 }
 
