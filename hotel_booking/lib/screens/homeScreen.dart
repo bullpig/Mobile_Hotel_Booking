@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/basic.dart';
+import 'package:hotel_booking/models/hotel_model.dart';
 import 'package:hotel_booking/screens/eventsScreen.dart';
 import 'package:hotel_booking/screens/favouriteScreen.dart';
 import 'package:hotel_booking/screens/mainHomeScreen.dart';
@@ -27,14 +28,11 @@ class _HomeScreenState extends State<HomeScreen> {
   final Tabs = [
     MainHomeScreen(),
     NearbyScreen(),
-    FavouriteScreen(),
+    FavouriteScreen(hotel: temp_favorite[1],),
     EventScreen(),
     ProfileScreen(),
-    // NearbyScreen(),
-    // FavouriteScreen(),
-    // EventScreen(),
-    // ProfileScreen(),
   ];
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

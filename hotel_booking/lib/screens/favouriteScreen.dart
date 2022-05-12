@@ -3,14 +3,15 @@ import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/models/hotel_model.dart';
+import 'package:hotel_booking/screens/hotelDetails.dart';
 // import 'package:hotel_app/screens/hotelDetails.dart';
 // import 'package:hotel_app/screens/success.dart';
 // import 'package:hotel_app/widgets/overNightpicker.dart';
 // import 'package:hotel_app/widgets/twoHourspicker.dart';
 
 class FavouriteScreen extends StatefulWidget {
-  final Hotel hotel;
-  // FavouriteScreen({ this.hotel});
+  Hotel hotel;
+  FavouriteScreen({required this.hotel});
   @override
   _FavouriteScreenState createState() => _FavouriteScreenState();
 }
@@ -39,14 +40,14 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         itemBuilder: (BuildContext context, int index) {
           Hotel hotel = temp_favorite[index];
           return GestureDetector(
-            // onTap: () {
-            //   Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //       builder: (_) => HotelDetail(hotel: hotel),
-            //     ),
-            //   );
-            // },
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => HotelDetail(hotel: hotel),
+                ),
+              );
+            },
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Stack(
@@ -68,12 +69,12 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                     bottom: 5.0,
                     child: ElevatedButton(
                       onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (_) => HotelDetail(hotel: hotel),
-                        //   ),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => HotelDetail(hotel: hotel),
+                          ),
+                        );
                       },
                       child: Text('Xem ngay'),
                     ),

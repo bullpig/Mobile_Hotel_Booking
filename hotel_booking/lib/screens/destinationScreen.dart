@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hotel_booking/screens/hotelDetails.dart';
 import '../models/destination_model.dart';
 import '../models/hotel_model.dart';
 //import 'package:hotel_app/screens/hotelDetails.dart';
@@ -126,26 +127,27 @@ class _DestinationScreenState extends State<DestinationScreen> {
               itemBuilder: (BuildContext context, int index) {
                 Hotel hotel = widget.destination.hotels[index];
                 return GestureDetector(
-                  // onTap: () => Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (_) => HotelDetail(
-                  //       hotel: hotel,
-                  //     ),
-                  //   ),
-                  // ),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => HotelDetail(
+                        hotel: hotel,
+                      ),
+                    ),
+                  ),
                   child: Stack(
                     children: [
                       Container(
-                        margin: EdgeInsets.fromLTRB(40.0, 5.0, 20.0, 5.0),
-                        height: 180.0,
-                        width: double.infinity,
+                        margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                        height: 200.0,
+                        // width: double.infinity,
+                        width: 400.0,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(100.0, 20.0, 20.0, 20.0),
+                          padding: EdgeInsets.fromLTRB(140.0, 20.0, 20.0, 20.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,7 +188,8 @@ class _DestinationScreenState extends State<DestinationScreen> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        '\$${hotel.twohourprice}',
+                                        // '${hotel.twohourprice.toInt()}đ',
+                                        '${hotel.twohourprice.toInt()}đ',
                                         style: TextStyle(
                                           fontSize: 16.0,
                                           fontWeight: FontWeight.w600,
@@ -199,7 +202,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                                         ),
                                       ),
                                       Text(
-                                        '\$${hotel.overnightprice}',
+                                        '${hotel.overnightprice.toInt()}đ',
                                         style: TextStyle(
                                           fontSize: 16.0,
                                           fontWeight: FontWeight.w600,
@@ -220,39 +223,39 @@ class _DestinationScreenState extends State<DestinationScreen> {
                               ),
                               _buildRatingStars(hotel.rating),
                               SizedBox(height: 10.0),
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Container(
-                                      width: 70.0,
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context).accentColor,
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        '\$${hotel.twohourprice}',
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  Container(
-                                    width: 70.0,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).accentColor,
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      '\$${hotel.overnightprice}',
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              // Row(
+                              //   children: [
+                              //     Padding(
+                              //       padding: const EdgeInsets.all(5.0),
+                              //       child: Container(
+                              //         width: 70.0,
+                              //         decoration: BoxDecoration(
+                              //           color: Theme.of(context).accentColor,
+                              //           borderRadius:
+                              //               BorderRadius.circular(10.0),
+                              //         ),
+                              //         alignment: Alignment.center,
+                              //         child: Text(
+                              //           '\$${hotel.twohourprice}',
+                              //         ),
+                              //       ),
+                              //     ),
+                              //     SizedBox(
+                              //       width: 10.0,
+                              //     ),
+                              //     Container(
+                              //       width: 70.0,
+                              //       decoration: BoxDecoration(
+                              //         color: Theme.of(context).accentColor,
+                              //         borderRadius: BorderRadius.circular(10.0),
+                              //       ),
+                              //       alignment: Alignment.center,
+                              //       child: Text(
+                              //         '\$${hotel.overnightprice}',
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
                             ],
                           ),
                         ),
@@ -264,7 +267,8 @@ class _DestinationScreenState extends State<DestinationScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20.0),
                           child: Image(
-                            width: 110.0,
+                            height: 180.0,
+                            width: 120.0,
                             //TODO: replace hotel image here
                             image: AssetImage("assets/images/hotel0.jpg"),
                             fit: BoxFit.cover,
