@@ -29,8 +29,8 @@ List<Hotel> temp_favorite = [
       name: 'KIM HOTEL',
       address:
           '12 ngõ 75 Cầu Đất, Chương Dương Độ, Hoàn Kiếm, Hà Nội, Việt Nam',
-      twohourprice: 175,
-      overnightprice: 300,
+      twohourprice: 175000,
+      overnightprice: 300000,
       rating: 5,
       introduction:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit.In porta euismod neque, vel sagittis augue suscipit et. In sapien ipsum, vehicula sit amet ante non, sollicitudin venenatis est.Vivamus imperdiet venenatis tellus eget fringilla.'),
@@ -39,8 +39,8 @@ List<Hotel> temp_favorite = [
       name: 'Hotel 1',
       address:
           '12 ngõ 75 Cầu Đất, Chương Dương Độ, Hoàn Kiếm, Hà Nội, Việt Nam',
-      twohourprice: 300,
-      overnightprice: 652,
+      twohourprice: 300000,
+      overnightprice: 650000,
       rating: 4,
       introduction:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit.In porta euismod neque, vel sagittis augue suscipit et. In sapien ipsum, vehicula sit amet ante non, sollicitudin venenatis est.Vivamus imperdiet venenatis tellus eget fringilla.'),
@@ -49,8 +49,8 @@ List<Hotel> temp_favorite = [
       name: 'Hotel 2',
       address:
           '12 ngõ 75 Cầu Đất, Chương Dương Độ, Hoàn Kiếm, Hà Nội, Việt Nam',
-      twohourprice: 240,
-      overnightprice: 480,
+      twohourprice: 240000,
+      overnightprice: 480000,
       rating: 4,
       introduction:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit.In porta euismod neque, vel sagittis augue suscipit et. In sapien ipsum, vehicula sit amet ante non, sollicitudin venenatis est.Vivamus imperdiet venenatis tellus eget fringilla.'),
@@ -62,8 +62,8 @@ List<Hotel> temp_hotels = [
       name: 'KIM HOTEL',
       address:
           '12 ngõ 75 Cầu Đất, Chương Dương Độ, Hoàn Kiếm, Hà Nội, Việt Nam',
-      twohourprice: 175,
-      overnightprice: 300,
+      twohourprice: 175000,
+      overnightprice: 300000,
       rating: 5,
       introduction:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit.In porta euismod neque, vel sagittis augue suscipit et. In sapien ipsum, vehicula sit amet ante non, sollicitudin venenatis est.Vivamus imperdiet venenatis tellus eget fringilla.'),
@@ -72,8 +72,8 @@ List<Hotel> temp_hotels = [
       name: 'Hotel 1',
       address:
           '12 ngõ 75 Cầu Đất, Chương Dương Độ, Hoàn Kiếm, Hà Nội, Việt Nam',
-      twohourprice: 300,
-      overnightprice: 652,
+      twohourprice: 300000,
+      overnightprice: 650000,
       rating: 4,
       introduction:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit.In porta euismod neque, vel sagittis augue suscipit et. In sapien ipsum, vehicula sit amet ante non, sollicitudin venenatis est.Vivamus imperdiet venenatis tellus eget fringilla.'),
@@ -82,8 +82,8 @@ List<Hotel> temp_hotels = [
       name: 'Hotel 2',
       address:
           '12 ngõ 75 Cầu Đất, Chương Dương Độ, Hoàn Kiếm, Hà Nội, Việt Nam',
-      twohourprice: 240,
-      overnightprice: 480,
+      twohourprice: 240000,
+      overnightprice: 480000,
       rating: 4,
       introduction:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit.In porta euismod neque, vel sagittis augue suscipit et. In sapien ipsum, vehicula sit amet ante non, sollicitudin venenatis est.Vivamus imperdiet venenatis tellus eget fringilla.'),

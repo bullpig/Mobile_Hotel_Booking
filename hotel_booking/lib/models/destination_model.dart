@@ -27,10 +27,10 @@ List<Destination> destinations = [];
 
 void loadDataOfDestinations() {
     destinations = [
-    Destination(imageUrl: 'assets/images/venice.jpg', city: 'Hoàn Kiếm', country: 'Hà Nội', description: 'Visit Hoàn Kiếm for an amazing and unforgettable adventure.'),
-    Destination(imageUrl: 'assets/images/paris.jpg', city: 'Cầu Giấy', country: 'Hà Nội', description: 'Visit Cầu Giấy for an amazing and unforgettable adventure.'),
-    Destination(imageUrl: 'assets/images/newdelhi.jpg', city: 'Đống Đa', country: 'Hà Nội', description: 'Visit Đống Đa for an amazing and unforgettable adventure.'),
-    Destination(imageUrl: 'assets/images/saopaulo.jpg', city: 'Nam Từ Liêm', country: 'Hà Nội', description: 'Visit Hà Nội for an amazing and unforgettable adventure.'),
-    Destination(imageUrl: 'assets/images/newyork.jpg', city: 'Hai Bà Trưng', country: 'Hà Nội', description: 'Visit Hà Nội for an amazing and unforgettable adventure.')
+    Destination(imageUrl: 'assets/images/venice.jpg', city: 'Hoàn Kiếm', country: 'Hà Nội', description: 'Ghé thăm Hoàn Kiếm để có một chuyến phiêu lưu kỳ thú và khó quên.'),
+    Destination(imageUrl: 'assets/images/paris.jpg', city: 'Cầu Giấy', country: 'Hà Nội', description: 'Ghé thăm Cầu Giấy để có một chuyến phiêu lưu kỳ thú và khó quên'),
+    Destination(imageUrl: 'assets/images/newdelhi.jpg', city: 'Hoàng Mai', country: 'Hà Nội', description: 'Ghé thăm Hoàng Mai để có một chuyến phiêu lưu kỳ thú và khó quên'),
+    Destination(imageUrl: 'assets/images/saopaulo.jpg', city: 'Nam Từ Liêm', country: 'Hà Nội', description: 'Ghé thăm Nam Từ Liêm để có một chuyến phiêu lưu kỳ thú và khó quên'),
+    Destination(imageUrl: 'assets/images/newyork.jpg', city: 'Hai Bà Trưng', country: 'Hà Nội', description: 'Ghé thăm Hai Bà Trưng để có một chuyến phiêu lưu kỳ thú và khó quên'),
   ];
 }
