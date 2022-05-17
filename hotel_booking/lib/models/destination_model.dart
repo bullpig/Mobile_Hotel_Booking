@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_this
+
 import './hotel_model.dart';
 import '../api_controller.dart';
 
@@ -8,19 +10,15 @@ class Destination {
   String description;
   List<Hotel> hotels = [];
 
-  Destination ({
-    required this.imageUrl,
-    required this.city,
-    required this.country,
-    required this.description
-  }) {
-    getterHotels();
-  }
+  Destination(
+      {required this.imageUrl,
+      required this.city,
+      required this.country,
+      required this.description});
 
   Future<void> getterHotels() async {
     this.hotels = await getHotelsByDestination(this.city);
   }
-
 }
 
 List<Destination> destinations = [];

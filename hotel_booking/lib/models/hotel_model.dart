@@ -6,6 +6,7 @@ class Hotel {
   double twohourprice;
   double overnightprice;
   int rating;
+  List<String> services;
 
   double longitude;
   double latitude;
@@ -20,6 +21,7 @@ class Hotel {
     this.rating = 0,
     this.longitude = 0.0,
     this.latitude = 0.0,
+    this.services = const [],
   });
 }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 // import 'package:hotel_app/screens/checkoutScreen.dart';
 // import 'package:hotel_app/screens/favouriteScreen.dart';
 import 'package:hotel_booking/models/hotel_model.dart';
+import 'package:hotel_booking/utils/utils.dart';
 // import 'package:hotel_app/screens/hotelLocationScreen.dart';
 // import 'package:hotel_app/screens/seeallScreen.dart';
 
@@ -38,8 +39,7 @@ class _HotelDetailState extends State<HotelDetail> {
                 ),
                 image: DecorationImage(
                   //TODO: replace hotel image here
-                  image: NetworkImage(
-                      "https://pix10.agoda.net/hotelImages/124/1246280/1246280_16061017110043391702.jpg?s=1024x768"),
+                  image: NetworkImage(widget.hotel.imageUrl),
                   fit: BoxFit.cover,
                 ),
                 boxShadow: [
@@ -211,158 +211,185 @@ class _HotelDetailState extends State<HotelDetail> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        children: [
-                          Container(
-                            height: 32,
-                            width: 32,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 3,
-                                  spreadRadius: 2,
-                                )
+                    // children: [
+                    //   Column(
+                    //     children: [
+                    //       Container(
+                    //         height: 32,
+                    //         width: 32,
+                    //         decoration: BoxDecoration(
+                    //           boxShadow: [
+                    //             BoxShadow(
+                    //               color: Colors.black.withOpacity(0.2),
+                    //               blurRadius: 3,
+                    //               spreadRadius: 2,
+                    //             )
+                    //           ],
+                    //           color: Colors.white,
+                    //           borderRadius: BorderRadius.circular(4),
+                    //         ),
+                    //         child: Icon(
+                    //           Icons.local_parking,
+                    //           color: Theme.of(context).primaryColor,
+                    //         ),
+                    //       ),
+                    //       SizedBox(height: 8),
+                    //       Text('Park'),
+                    //     ],
+                    //   ),
+                    //   Column(
+                    //     children: [
+                    //       Container(
+                    //         height: 32,
+                    //         width: 32,
+                    //         decoration: BoxDecoration(
+                    //           boxShadow: [
+                    //             BoxShadow(
+                    //               color: Colors.black.withOpacity(0.2),
+                    //               blurRadius: 3,
+                    //               spreadRadius: 2,
+                    //             )
+                    //           ],
+                    //           color: Colors.white,
+                    //           borderRadius: BorderRadius.circular(4),
+                    //         ),
+                    //         child: Icon(
+                    //           Icons.pool,
+                    //           color: Theme.of(context).primaryColor,
+                    //         ),
+                    //       ),
+                    //       SizedBox(height: 8),
+                    //       Text('Pool'),
+                    //     ],
+                    //   ),
+                    //   Column(
+                    //     children: [
+                    //       Container(
+                    //         height: 32,
+                    //         width: 32,
+                    //         decoration: BoxDecoration(
+                    //           boxShadow: [
+                    //             BoxShadow(
+                    //               color: Colors.black.withOpacity(0.2),
+                    //               blurRadius: 3,
+                    //               spreadRadius: 2,
+                    //             )
+                    //           ],
+                    //           color: Colors.white,
+                    //           borderRadius: BorderRadius.circular(4),
+                    //         ),
+                    //         child: Icon(
+                    //           Icons.bathtub,
+                    //           color: Theme.of(context).primaryColor,
+                    //         ),
+                    //       ),
+                    //       SizedBox(height: 8),
+                    //       Text('Bath'),
+                    //     ],
+                    //   ),
+                    //   Column(
+                    //     children: [
+                    //       Container(
+                    //         height: 32,
+                    //         width: 32,
+                    //         decoration: BoxDecoration(
+                    //           boxShadow: [
+                    //             BoxShadow(
+                    //               color: Colors.black.withOpacity(0.2),
+                    //               blurRadius: 3,
+                    //               spreadRadius: 2,
+                    //             )
+                    //           ],
+                    //           color: Colors.white,
+                    //           borderRadius: BorderRadius.circular(4),
+                    //         ),
+                    //         child: Icon(
+                    //           Icons.local_drink,
+                    //           color: Theme.of(context).primaryColor,
+                    //         ),
+                    //       ),
+                    //       SizedBox(height: 8),
+                    //       Text('Bar'),
+                    //     ],
+                    //   ),
+                    //   Column(
+                    //     children: [
+                    //       Container(
+                    //         height: 32,
+                    //         width: 32,
+                    //         decoration: BoxDecoration(
+                    //           boxShadow: [
+                    //             BoxShadow(
+                    //               color: Colors.black.withOpacity(0.2),
+                    //               blurRadius: 3,
+                    //               spreadRadius: 2,
+                    //             )
+                    //           ],
+                    //           color: Colors.white,
+                    //           borderRadius: BorderRadius.circular(4),
+                    //         ),
+                    //         child: Icon(
+                    //           Icons.wifi,
+                    //           color: Theme.of(context).primaryColor,
+                    //         ),
+                    //       ),
+                    //       SizedBox(height: 8),
+                    //       Text('Wifi'),
+                    //     ],
+                    //   ),
+                    //   Column(
+                    //     children: [
+                    //       Container(
+                    //         height: 32,
+                    //         width: 32,
+                    //         decoration: BoxDecoration(
+                    //           boxShadow: [
+                    //             BoxShadow(
+                    //               color: Colors.black.withOpacity(0.2),
+                    //               blurRadius: 3,
+                    //               spreadRadius: 2,
+                    //             )
+                    //           ],
+                    //           color: Colors.white,
+                    //           borderRadius: BorderRadius.circular(4),
+                    //         ),
+                    //         child: Icon(
+                    //           Icons.fitness_center,
+                    //           color: Theme.of(context).primaryColor,
+                    //         ),
+                    //       ),
+                    //       SizedBox(height: 8),
+                    //       Text('Gym'),
+                    //     ],
+                    //   ),
+                    // ],
+                    children: widget.hotel.services
+                        .map((e) => Column(
+                              children: [
+                                Container(
+                                  height: 32,
+                                  width: 32,
+                                  decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        blurRadius: 3,
+                                        spreadRadius: 2,
+                                      )
+                                    ],
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: Icon(
+                                    services[e],
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                                SizedBox(height: 8),
+                                Text(e),
                               ],
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Icon(
-                              Icons.local_parking,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text('Parking'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            height: 32,
-                            width: 32,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 3,
-                                  spreadRadius: 2,
-                                )
-                              ],
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Icon(
-                              Icons.pool,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text('Pool'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            height: 32,
-                            width: 32,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 3,
-                                  spreadRadius: 2,
-                                )
-                              ],
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Icon(
-                              Icons.bathtub,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text('Bath'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            height: 32,
-                            width: 32,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 3,
-                                  spreadRadius: 2,
-                                )
-                              ],
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Icon(
-                              Icons.local_drink,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text('Bar'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            height: 32,
-                            width: 32,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 3,
-                                  spreadRadius: 2,
-                                )
-                              ],
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Icon(
-                              Icons.wifi,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text('Wifi'),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            height: 32,
-                            width: 32,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 3,
-                                  spreadRadius: 2,
-                                )
-                              ],
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Icon(
-                              Icons.fitness_center,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text('Gym'),
-                        ],
-                      ),
-                    ],
+                            ))
+                        .toList(),
                   )
                 ],
               ),

@@ -28,11 +28,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final Tabs = [
     MainHomeScreen(),
     NearbyScreen(),
-    FavouriteScreen(hotel: temp_favorite[1],),
+    FavouriteScreen(
+      hotel: temp_favorite[1],
+    ),
     EventScreen(),
     ProfileScreen(),
   ];
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,15 +68,15 @@ class _HomeScreenState extends State<HomeScreen> {
             label: "Gần đây",
           ),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.bookmark,
-                size: 40.0,
-              ),
-              // label: (
-              //   'Yêu thích',
-              //   style: bottomTextStyle,
-              // ),
-              label: "Yêu thích",
+            icon: Icon(
+              Icons.bookmark,
+              size: 40.0,
+            ),
+            // label: (
+            //   'Yêu thích',
+            //   style: bottomTextStyle,
+            // ),
+            label: "Yêu thích",
           ),
           BottomNavigationBarItem(
             icon: Icon(
