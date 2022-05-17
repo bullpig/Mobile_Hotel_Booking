@@ -7,7 +7,7 @@ import '../models/hotel_model.dart';
 
 class DestinationScreen extends StatefulWidget {
   final Destination destination;
-  DestinationScreen({ required this.destination});
+  DestinationScreen({required this.destination});
   @override
   _DestinationScreenState createState() => _DestinationScreenState();
 }
@@ -45,9 +45,10 @@ class _DestinationScreenState extends State<DestinationScreen> {
                   tag: widget.destination.imageUrl,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(30.0),
-                    child: Image(
-                        image: AssetImage(widget.destination.imageUrl),
-                        fit: BoxFit.cover),
+                    child: Image.network(
+                      widget.destination.imageUrl,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
@@ -223,39 +224,39 @@ class _DestinationScreenState extends State<DestinationScreen> {
                               ),
                               _buildRatingStars(hotel.rating),
                               SizedBox(height: 10.0),
-                              // Row(
-                              //   children: [
-                              //     Padding(
-                              //       padding: const EdgeInsets.all(5.0),
-                              //       child: Container(
-                              //         width: 70.0,
-                              //         decoration: BoxDecoration(
-                              //           color: Theme.of(context).accentColor,
-                              //           borderRadius:
-                              //               BorderRadius.circular(10.0),
-                              //         ),
-                              //         alignment: Alignment.center,
-                              //         child: Text(
-                              //           '\$${hotel.twohourprice}',
-                              //         ),
-                              //       ),
-                              //     ),
-                              //     SizedBox(
-                              //       width: 10.0,
-                              //     ),
-                              //     Container(
-                              //       width: 70.0,
-                              //       decoration: BoxDecoration(
-                              //         color: Theme.of(context).accentColor,
-                              //         borderRadius: BorderRadius.circular(10.0),
-                              //       ),
-                              //       alignment: Alignment.center,
-                              //       child: Text(
-                              //         '\$${hotel.overnightprice}',
-                              //       ),
-                              //     ),
-                              //   ],
-                              // ),
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Container(
+                                      width: 70.0,
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context).accentColor,
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '\$${hotel.twohourprice}',
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  Container(
+                                    width: 70.0,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).accentColor,
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      '\$${hotel.overnightprice}',
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
@@ -264,15 +265,11 @@ class _DestinationScreenState extends State<DestinationScreen> {
                         left: 20.0,
                         top: 15.0,
                         bottom: 15.0,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20.0),
-                          child: Image(
-                            height: 180.0,
-                            width: 120.0,
-                            //TODO: replace hotel image here
-                            image: AssetImage("assets/images/hotel0.jpg"),
-                            fit: BoxFit.cover,
-                          ),
+                        child: Image.network(
+                          hotel.imageUrl,
+                          height: 180.0,
+                          width: 120.0,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ],

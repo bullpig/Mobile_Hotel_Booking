@@ -13,8 +13,8 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   @override
   void initState() {
     super.initState();
-    print("Init state called");
     loadDataOfDestinations();
+    print("Main Home called");
   }
 
   @override
