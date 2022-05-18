@@ -1,9 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../models/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+Future<void> _signOut() async {
+  await FirebaseAuth.instance.signOut();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
@@ -68,10 +73,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       color: Theme.of(context).primaryColor,
                     ),
                     title: Text(labels[index]),
-                    onTap: () {},
+                    onTap:() {
+                      
+                      _signOut();
+                    }
                   );
                 }),
           ),
+          
         ],
       ),
     );
