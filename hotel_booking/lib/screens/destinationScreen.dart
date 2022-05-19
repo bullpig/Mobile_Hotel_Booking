@@ -96,7 +96,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                           color: Colors.white70,
                         ),
                         Text(
-                          widget.destination.country,
+                          widget.destination.city,
                           style: TextStyle(
                             color: Colors.white70,
                             fontSize: 20.0,

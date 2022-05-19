@@ -11,14 +11,22 @@ import '../api_controller.dart';
 import '../models/destination_model.dart';
 
 class DestinationCarousel extends StatefulWidget {
-  const DestinationCarousel({Key? key}) : super(key: key);
+  final String city;
+
+  const DestinationCarousel({Key? key, required this.city}) : super(key: key);
 
   @override
   State<DestinationCarousel> createState() => _DestinationCarousel();
 }
 
 class _DestinationCarousel extends State<DestinationCarousel> {
-  final Future<List<Destination>> _destination = getDestination();
+  late final Future<List<Destination>> _destination;
+
+  @override
+  void initState() {
+    super.initState();
+    _destination = getDestination(widget.city);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +164,7 @@ class _DestinationCarousel extends State<DestinationCarousel> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            destination.city,
+                                            destination.name,
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 24.0,
@@ -172,7 +180,7 @@ class _DestinationCarousel extends State<DestinationCarousel> {
                                                 color: Colors.white,
                                               ),
                                               Text(
-                                                destination.country,
+                                                destination.city,
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                 ),
