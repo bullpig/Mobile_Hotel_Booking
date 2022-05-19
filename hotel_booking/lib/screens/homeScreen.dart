@@ -28,9 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final Tabs = [
     MainHomeScreen(),
     NearbyScreen(),
-    FavouriteScreen(
-      hotel: temp_favorite[1],
-    ),
+    FavouriteScreen(),
     EventScreen(),
     ProfileScreen(),
   ];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/api_controller.dart';
 // import 'package:hotel_app/screens/checkoutScreen.dart';
 // import 'package:hotel_app/screens/favouriteScreen.dart';
 import 'package:hotel_booking/models/hotel_model.dart';
@@ -14,6 +15,19 @@ class HotelDetail extends StatefulWidget {
 }
 
 class _HotelDetailState extends State<HotelDetail> {
+  late bool _isFavorite = false;
+
+  @override
+  void initState() {
+    super.initState();
+    asyncInitState();
+  }
+
+  void asyncInitState() async {
+    getHotelFavoriteStatus(widget.hotel.id)
+        .then((value) => setState(() => _isFavorite = value));
+  }
+
   String _buildRatingStars(int rating) {
     String stars = '';
     for (int i = 0; i < rating; i++) {
@@ -38,7 +52,6 @@ class _HotelDetailState extends State<HotelDetail> {
                   bottomRight: Radius.circular(24),
                 ),
                 image: DecorationImage(
-                  //TODO: replace hotel image here
                   image: NetworkImage(widget.hotel.imageUrl),
                   fit: BoxFit.cover,
                 ),
@@ -150,7 +163,7 @@ class _HotelDetailState extends State<HotelDetail> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '\$${widget.hotel.twohourprice}',
+                          '${widget.hotel.twohourprice}đ',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -159,7 +172,7 @@ class _HotelDetailState extends State<HotelDetail> {
                         Text('Hai giờ đầu'),
                         SizedBox(height: 10),
                         Text(
-                          '\$${widget.hotel.overnightprice}',
+                          '${widget.hotel.overnightprice}đ',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -399,11 +412,11 @@ class _HotelDetailState extends State<HotelDetail> {
             child: Row(
               children: [
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     setState(() {
-                      if (temp_favorite.contains(widget.hotel) == false)
-                        temp_favorite.add(widget.hotel);
+                      _isFavorite = !_isFavorite;
                     });
+                    await setHotelFavoriteStatus(widget.hotel.id, _isFavorite);
                   },
                   child: Container(
                     width: 80,
@@ -415,29 +428,13 @@ class _HotelDetailState extends State<HotelDetail> {
                     ),
                     child: Center(
                       child: Icon(
-                        Icons.favorite_border,
+                        _isFavorite ? Icons.favorite : Icons.favorite_border,
                         color: Theme.of(context).accentColor,
                         size: 48.0,
                       ),
                     ),
                   ),
                 ),
-                /*Container(
-                  width: 80,
-                  height: 80,
-                  margin: EdgeInsets.all(18.0),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.favorite_border,
-                      color: Theme.of(context).accentColor,
-                      size: 48.0,
-                    ),
-                  ),
-                ),*/
                 GestureDetector(
                   onTap: () {
                     // Navigator.push(

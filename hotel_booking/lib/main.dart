@@ -7,9 +7,7 @@ import 'package:hotel_booking/screens/loginScreen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   FirebaseAuth.instance.authStateChanges().listen((User user) {
-    print(user);
     if (user == null) {
       runApp(MyApp(auth: false));
     } else {

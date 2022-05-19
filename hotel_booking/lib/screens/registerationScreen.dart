@@ -156,9 +156,7 @@ class registerationScreen extends StatelessWidget {
                               "name": name.text,
                               "phone": phone.text
                             };
-                            _db.collection("users").add(user).then(
-                                (DocumentReference doc) => print(
-                                    'DocumentSnapshot added with ID: ${doc.id}'));
+                            await _db.collection("users").add(user);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
