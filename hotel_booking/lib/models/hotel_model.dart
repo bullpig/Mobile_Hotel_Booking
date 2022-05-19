@@ -34,8 +34,8 @@ List<Hotel> temp_favorite = [
       name: 'KIM HOTEL',
       address:
           '12 ngõ 75 Cầu Đất, Chương Dương Độ, Hoàn Kiếm, Hà Nội, Việt Nam',
-      twohourprice: 175,
-      overnightprice: 300,
+      twohourprice: 175000,
+      overnightprice: 300000,
       rating: 5,
       introduction:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit.In porta euismod neque, vel sagittis augue suscipit et. In sapien ipsum, vehicula sit amet ante non, sollicitudin venenatis est.Vivamus imperdiet venenatis tellus eget fringilla.'),

@@ -106,11 +106,12 @@ class _HotelDetailState extends State<HotelDetail> {
             flex: 5,
             child: Padding(
               padding: const EdgeInsets.only(
-                left: 16,
+                left: 15,
                 top: 24,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                // mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
                     widget.hotel.name,
@@ -163,7 +164,7 @@ class _HotelDetailState extends State<HotelDetail> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          '${widget.hotel.twohourprice}đ',
+                          '${widget.hotel.twohourprice.toInt()}đ',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -172,7 +173,7 @@ class _HotelDetailState extends State<HotelDetail> {
                         Text('Hai giờ đầu'),
                         SizedBox(height: 10),
                         Text(
-                          '${widget.hotel.overnightprice}đ',
+                          '${widget.hotel.overnightprice.toInt()}đ',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
