@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/models/hotel_model.dart';
 import 'package:hotel_booking/screens/hotelDetails.dart';
 // import 'package:hotel_app/screens/hotelDetails.dart';
@@ -10,13 +11,20 @@ import 'package:hotel_booking/screens/hotelDetails.dart';
 // import 'package:hotel_app/widgets/twoHourspicker.dart';
 
 class FavouriteScreen extends StatefulWidget {
-  Hotel hotel;
-  FavouriteScreen({required this.hotel});
+  FavouriteScreen({Key? key}) : super(key: key);
   @override
   _FavouriteScreenState createState() => _FavouriteScreenState();
 }
 
 class _FavouriteScreenState extends State<FavouriteScreen> {
+  List<Hotel> favoriteHotel = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getFavoriteHotel().then((value) => setState(() => favoriteHotel = value));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,9 +44,9 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
       ),
       body: ListView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: temp_favorite.length,
+        itemCount: favoriteHotel.length,
         itemBuilder: (BuildContext context, int index) {
-          Hotel hotel = temp_favorite[index];
+          Hotel hotel = favoriteHotel[index];
           return GestureDetector(
             onTap: () {
               Navigator.push(
@@ -57,7 +65,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       image: DecorationImage(
-                        image: AssetImage(
+                        image: NetworkImage(
                           hotel.imageUrl,
                         ),
                         fit: BoxFit.cover,

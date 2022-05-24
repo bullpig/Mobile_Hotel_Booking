@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 // import 'package:hotel_app/screens/search.dart';
 import 'package:hotel_booking/widgets/destination_carsousel.dart';
@@ -11,10 +12,11 @@ class MainHomeScreen extends StatefulWidget {
 }
 
 class _MainHomeScreenState extends State<MainHomeScreen> {
+  String city = "01";
+
   @override
   void initState() {
     super.initState();
-    loadDataOfDestinations();
     print("Main Home called");
   }
 
@@ -66,7 +68,9 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
               ),
             ),
             SizedBox(height: 20.0),
-            DestinationCarousel(),
+            DestinationCarousel(
+              city: city,
+            ),
             SizedBox(
               height: 20.0,
             ),
