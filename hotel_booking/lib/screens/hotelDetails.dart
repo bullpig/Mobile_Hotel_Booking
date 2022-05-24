@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/api_controller.dart';
-// import 'package:hotel_app/screens/checkoutScreen.dart';
+import '../screens/paymentScreen.dart';
 // import 'package:hotel_app/screens/favouriteScreen.dart';
 import 'package:hotel_booking/models/hotel_model.dart';
 import 'package:hotel_booking/utils/utils.dart';
@@ -224,158 +224,6 @@ class _HotelDetailState extends State<HotelDetail> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // children: [
-                    //   Column(
-                    //     children: [
-                    //       Container(
-                    //         height: 32,
-                    //         width: 32,
-                    //         decoration: BoxDecoration(
-                    //           boxShadow: [
-                    //             BoxShadow(
-                    //               color: Colors.black.withOpacity(0.2),
-                    //               blurRadius: 3,
-                    //               spreadRadius: 2,
-                    //             )
-                    //           ],
-                    //           color: Colors.white,
-                    //           borderRadius: BorderRadius.circular(4),
-                    //         ),
-                    //         child: Icon(
-                    //           Icons.local_parking,
-                    //           color: Theme.of(context).primaryColor,
-                    //         ),
-                    //       ),
-                    //       SizedBox(height: 8),
-                    //       Text('Park'),
-                    //     ],
-                    //   ),
-                    //   Column(
-                    //     children: [
-                    //       Container(
-                    //         height: 32,
-                    //         width: 32,
-                    //         decoration: BoxDecoration(
-                    //           boxShadow: [
-                    //             BoxShadow(
-                    //               color: Colors.black.withOpacity(0.2),
-                    //               blurRadius: 3,
-                    //               spreadRadius: 2,
-                    //             )
-                    //           ],
-                    //           color: Colors.white,
-                    //           borderRadius: BorderRadius.circular(4),
-                    //         ),
-                    //         child: Icon(
-                    //           Icons.pool,
-                    //           color: Theme.of(context).primaryColor,
-                    //         ),
-                    //       ),
-                    //       SizedBox(height: 8),
-                    //       Text('Pool'),
-                    //     ],
-                    //   ),
-                    //   Column(
-                    //     children: [
-                    //       Container(
-                    //         height: 32,
-                    //         width: 32,
-                    //         decoration: BoxDecoration(
-                    //           boxShadow: [
-                    //             BoxShadow(
-                    //               color: Colors.black.withOpacity(0.2),
-                    //               blurRadius: 3,
-                    //               spreadRadius: 2,
-                    //             )
-                    //           ],
-                    //           color: Colors.white,
-                    //           borderRadius: BorderRadius.circular(4),
-                    //         ),
-                    //         child: Icon(
-                    //           Icons.bathtub,
-                    //           color: Theme.of(context).primaryColor,
-                    //         ),
-                    //       ),
-                    //       SizedBox(height: 8),
-                    //       Text('Bath'),
-                    //     ],
-                    //   ),
-                    //   Column(
-                    //     children: [
-                    //       Container(
-                    //         height: 32,
-                    //         width: 32,
-                    //         decoration: BoxDecoration(
-                    //           boxShadow: [
-                    //             BoxShadow(
-                    //               color: Colors.black.withOpacity(0.2),
-                    //               blurRadius: 3,
-                    //               spreadRadius: 2,
-                    //             )
-                    //           ],
-                    //           color: Colors.white,
-                    //           borderRadius: BorderRadius.circular(4),
-                    //         ),
-                    //         child: Icon(
-                    //           Icons.local_drink,
-                    //           color: Theme.of(context).primaryColor,
-                    //         ),
-                    //       ),
-                    //       SizedBox(height: 8),
-                    //       Text('Bar'),
-                    //     ],
-                    //   ),
-                    //   Column(
-                    //     children: [
-                    //       Container(
-                    //         height: 32,
-                    //         width: 32,
-                    //         decoration: BoxDecoration(
-                    //           boxShadow: [
-                    //             BoxShadow(
-                    //               color: Colors.black.withOpacity(0.2),
-                    //               blurRadius: 3,
-                    //               spreadRadius: 2,
-                    //             )
-                    //           ],
-                    //           color: Colors.white,
-                    //           borderRadius: BorderRadius.circular(4),
-                    //         ),
-                    //         child: Icon(
-                    //           Icons.wifi,
-                    //           color: Theme.of(context).primaryColor,
-                    //         ),
-                    //       ),
-                    //       SizedBox(height: 8),
-                    //       Text('Wifi'),
-                    //     ],
-                    //   ),
-                    //   Column(
-                    //     children: [
-                    //       Container(
-                    //         height: 32,
-                    //         width: 32,
-                    //         decoration: BoxDecoration(
-                    //           boxShadow: [
-                    //             BoxShadow(
-                    //               color: Colors.black.withOpacity(0.2),
-                    //               blurRadius: 3,
-                    //               spreadRadius: 2,
-                    //             )
-                    //           ],
-                    //           color: Colors.white,
-                    //           borderRadius: BorderRadius.circular(4),
-                    //         ),
-                    //         child: Icon(
-                    //           Icons.fitness_center,
-                    //           color: Theme.of(context).primaryColor,
-                    //         ),
-                    //       ),
-                    //       SizedBox(height: 8),
-                    //       Text('Gym'),
-                    //     ],
-                    //   ),
-                    // ],
                     children: widget.hotel.services
                         .map((e) => Column(
                               children: [
@@ -438,14 +286,14 @@ class _HotelDetailState extends State<HotelDetail> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (_) => PaymentScreen(
-                    //       hotel: widget.hotel,
-                    //     ),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => PaymentScreen(
+                          hotel: widget.hotel,
+                        ),
+                      ),
+                    );
                   },
                   child: Container(
                     width: 240,
