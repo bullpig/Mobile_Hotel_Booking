@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hotel_booking/screens/seeallScreen.dart';
 //import 'package:hotel_app/screens/checkoutScreen.dart';
 import '../screens/destinationScreen.dart';
 import 'package:hotel_booking/screens/homeScreen.dart';
 // import 'package:hotel_app/screens/nearbyScreen.dart';
 // import 'package:hotel_app/models/district.dart';
-// import 'package:hotel_app/screens/seeallScreen.dart';
 import '../api_controller.dart';
 
 import '../models/destination_model.dart';
@@ -54,12 +54,14 @@ class _DestinationCarousel extends State<DestinationCarousel> {
                       letterSpacing: 1.0,
                     ),
                   ),
-                  onPressed: () => {} //Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (_) => SeeAllScreen(),
-                  //   ),
-                  // ),
+                  onPressed: () => {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => SeeAllScreen(),
+                          ),
+                        ),
+                      }
                   ),
             ],
           ),

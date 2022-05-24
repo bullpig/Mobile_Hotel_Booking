@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/screens/homeScreen.dart';
+import 'package:hotel_booking/screens/loginScreen.dart';
 import 'package:hotel_booking/screens/mainHomeScreen.dart';
 import '../models/constants.dart';
 
@@ -11,6 +12,7 @@ class ProfileScreen extends StatefulWidget {
 
 Future<void> _signOut() async {
   await FirebaseAuth.instance.signOut();
+
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
@@ -77,6 +79,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     title: Text(labels[index]),
                     onTap:() {
                       _signOut();
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginScreen(),
+                          ),
+                        );
                     }
                   );
                 }),

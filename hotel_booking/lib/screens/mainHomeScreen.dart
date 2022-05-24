@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-// import 'package:hotel_app/screens/search.dart';
+import 'package:hotel_booking/screens/search.dart';
 import 'package:hotel_booking/widgets/destination_carsousel.dart';
-// import 'package:hotel_app/widgets/hotel_carousel.dart';
+import 'package:hotel_booking/widgets/hotel_carousel.dart';
 import '../models/destination_model.dart';
 
 
@@ -20,13 +20,13 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
     print("Main Home called");
   }
 
-  Future<void> _pullRefresh() async {
-    List<WordPair> freshWords = await WordDataSource().getFutureWords(delay: 2);
-    setState(() {
-      words = freshWords;
-    });
-    // why use freshWords var? https://stackoverflow.com/a/52992836/2301224
-  }
+  // Future<void> _pullRefresh() async {
+  //   List<WordPair> freshWords = await WordDataSource().getFutureWords(delay: 2);
+  //   setState(() {
+  //     words = freshWords;
+  //   });
+  //   // why use freshWords var? https://stackoverflow.com/a/52992836/2301224
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +47,8 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
                   IconButton(
                     icon: Icon(Icons.search),
                     onPressed: () {
-                      // Navigator.push(
-                      //     context, MaterialPageRoute(builder: (_) => Search()));
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (_) => Search()));
                     },
                     color: Theme.of(context).primaryColor,
                   ),
@@ -74,7 +74,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
             SizedBox(
               height: 20.0,
             ),
-            // HotelCarousel(),
+            HotelCarousel(),
           ],
         ),
       ),
