@@ -4,6 +4,7 @@ import 'package:hotel_booking/widgets/destination_carsousel.dart';
 // import 'package:hotel_app/widgets/hotel_carousel.dart';
 import '../models/destination_model.dart';
 
+
 class MainHomeScreen extends StatefulWidget {
   @override
   _MainHomeScreenState createState() => _MainHomeScreenState();
@@ -15,6 +16,14 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
     super.initState();
     loadDataOfDestinations();
     print("Main Home called");
+  }
+
+  Future<void> _pullRefresh() async {
+    List<WordPair> freshWords = await WordDataSource().getFutureWords(delay: 2);
+    setState(() {
+      words = freshWords;
+    });
+    // why use freshWords var? https://stackoverflow.com/a/52992836/2301224
   }
 
   @override
