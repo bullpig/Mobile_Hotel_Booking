@@ -15,6 +15,8 @@ enum BookType {
   ALLDAY
 }
 
+enum PaymentType { checkIn }
+
 bool isSameDate(DateTime date1, DateTime date2) {
   return date1.year == date2.year &&
       date1.month == date2.month &&

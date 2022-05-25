@@ -229,7 +229,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                                   Padding(
                                     padding: const EdgeInsets.all(5.0),
                                     child: Container(
-                                      width: 70.0,
+                                      width: 80.0,
                                       decoration: BoxDecoration(
                                         color: Theme.of(context).accentColor,
                                         borderRadius:
@@ -245,7 +245,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                                     width: 10.0,
                                   ),
                                   Container(
-                                    width: 70.0,
+                                    width: 80.0,
                                     decoration: BoxDecoration(
                                       color: Theme.of(context).accentColor,
                                       borderRadius: BorderRadius.circular(10.0),

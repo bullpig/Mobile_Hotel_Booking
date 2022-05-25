@@ -1,32 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/api_controller.dart';
+import 'package:hotel_booking/models/constants.dart';
 import 'package:hotel_booking/utils/utils.dart';
 import 'package:hotel_booking/widgets/alldayPicker.dart';
 import '../models/hotel_model.dart';
-//import 'package:hotel_app/screens/success.dart';
+import './success.dart';
 import '../widgets/overNightpicker.dart';
 import '../widgets/twoHoursPicker.dart';
-
-enum Status { first, second, third, fourth }
 
 class PaymentScreen extends StatefulWidget {
   final Hotel hotel;
   PaymentScreen({required this.hotel});
   @override
-  _PaymentScreenState createState() => _PaymentScreenState();
+  PaymentScreenState createState() => PaymentScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
-  Status _type = Status.first;
+class PaymentScreenState extends State<PaymentScreen> {
+  PaymentType paymentType = PaymentType.checkIn;
   int value = 0;
 
-  final Labels = [
+  final paymentTypeLabels = [
     'Thanh toán tại khách sạn',
-    'Internet Banking (Thẻ ATM)',
-    'Thẻ tín dụng',
-    'Paypal',
   ];
-  final LabelsIcon = [
+  final paymentTypeIcons = [
     Icons.money_off,
     Icons.credit_card,
     Icons.payment,
@@ -235,98 +232,36 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
             child: Column(
               children: [
+                SizedBox(
+                  height: 10.0,
+                ),
                 Text(
                   'CHỌN PHƯƠNG THỨC THANH TOÁN',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                ListTile(
-                  leading: Radio<Status>(
-                    value: Status.first,
-                    activeColor: Theme.of(context).primaryColor,
-                    groupValue: _type,
-                    onChanged: (Status? value) {
-                      setState(() {
-                        _type = value!;
-                      });
-                    },
-                  ),
-                  title: Text(
-                    Labels[0],
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
+                for (int i = 0; i < paymentTypeLabels.length; i++)
+                  ListTile(
+                    leading: Radio<PaymentType>(
+                      value: PaymentType.values[i],
+                      activeColor: Theme.of(context).primaryColor,
+                      groupValue: paymentType,
+                      onChanged: (PaymentType? value) {
+                        setState(() {
+                          paymentType = value!;
+                        });
+                      },
+                    ),
+                    title: Text(
+                      paymentTypeLabels[i],
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    trailing: Icon(
+                      paymentTypeIcons[i],
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  trailing: Icon(
-                    LabelsIcon[0],
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-                ListTile(
-                  leading: Radio<Status>(
-                    value: Status.second,
-                    activeColor: Theme.of(context).primaryColor,
-                    groupValue: _type,
-                    onChanged: (Status? value) {
-                      setState(() {
-                        _type = value!;
-                      });
-                    },
-                  ),
-                  title: Text(
-                    Labels[1],
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  trailing: Icon(
-                    LabelsIcon[2],
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-                ListTile(
-                  leading: Radio<Status>(
-                    value: Status.third,
-                    activeColor: Theme.of(context).primaryColor,
-                    groupValue: _type,
-                    onChanged: (Status? value) {
-                      setState(() {
-                        _type = value!;
-                      });
-                    },
-                  ),
-                  title: Text(
-                    Labels[2],
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  trailing: Icon(
-                    LabelsIcon[2],
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-                ListTile(
-                  leading: Radio<Status>(
-                    value: Status.fourth,
-                    activeColor: Theme.of(context).primaryColor,
-                    groupValue: _type,
-                    onChanged: (Status? value) {
-                      setState(() {
-                        _type = value!;
-                      });
-                    },
-                  ),
-                  title: Text(
-                    Labels[3],
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  trailing: Icon(
-                    LabelsIcon[3],
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
               ],
             ),
           ),
@@ -343,7 +278,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                 ),
                 Text(
-                  'Giờ bắt đầu theo giờ: từ 6:00',
+                  'Giờ bắt đầu theo giờ: từ 8:00',
                   style: TextStyle(
                     fontSize: 18.0,
                   ),
@@ -355,7 +290,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                 ),
                 Text(
-                  'Giờ theo ngày: 14: 00 ~ 12:00',
+                  'Giờ theo ngày: 14:00 ~ 12:00',
                   style: TextStyle(
                     fontSize: 18.0,
                   ),
@@ -413,12 +348,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 borderRadius: new BorderRadius.circular(10.0),
               ),
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (_) => Success(),
-                //   ),
-                // );
+                //bool bookingStatus = await createBooking(widget.hotel.id, bookType, startTime, endTime, paymentType, isPaid)
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => Success(),
+                  ),
+                );
               },
             ),
           ),

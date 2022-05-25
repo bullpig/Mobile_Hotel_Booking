@@ -20,14 +20,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
     print("Main Home called");
   }
 
-  // Future<void> _pullRefresh() async {
-  //   List<WordPair> freshWords = await WordDataSource().getFutureWords(delay: 2);
-  //   setState(() {
-  //     words = freshWords;
-  //   });
-  //   // why use freshWords var? https://stackoverflow.com/a/52992836/2301224
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

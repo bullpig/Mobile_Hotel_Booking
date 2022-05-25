@@ -223,31 +223,37 @@ class _HotelDetailState extends State<HotelDetail> {
                     height: 16,
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: widget.hotel.services
-                        .map((e) => Column(
+                        .map((e) => Wrap(
                               children: [
-                                Container(
-                                  height: 32,
-                                  width: 32,
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        blurRadius: 3,
-                                        spreadRadius: 2,
-                                      )
-                                    ],
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Icon(
-                                    services[e],
-                                    color: Theme.of(context).primaryColor,
-                                  ),
+                                Column(
+                                  children: [
+                                    Container(
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            blurRadius: 3,
+                                            spreadRadius: 2,
+                                          )
+                                        ],
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: Icon(
+                                        services[e],
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(e),
+                                  ],
                                 ),
-                                SizedBox(height: 8),
-                                Text(e),
+                                SizedBox(width: 5)
                               ],
                             ))
                         .toList(),

@@ -1,8 +1,11 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/screens/paymentScreen.dart';
 import 'package:intl/intl.dart';
+import '../screens/paymentScreen.dart';
 
 class AllDayPicker extends StatefulWidget {
-
   static const String idScreen = 'allday';
 
   @override
@@ -10,16 +13,22 @@ class AllDayPicker extends StatefulWidget {
 }
 
 class _AllDatePickerState extends State<AllDayPicker> {
-
-
   DateTime currentDate = DateTime.now();
+  late final ancestralState;
 
   String getFrom() {
     return DateFormat('dd/MM/yyyy').format(currentDate);
   }
 
   String getUntil() {
-    return DateFormat('dd/MM/yyyy').format(currentDate.add(const Duration(days: 1)));
+    return DateFormat('dd/MM/yyyy')
+        .format(currentDate.add(const Duration(days: 1)));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    ancestralState = context.findAncestorStateOfType<PaymentScreenState>();
   }
 
   @override
@@ -100,6 +109,9 @@ class _AllDatePickerState extends State<AllDayPicker> {
 
     setState(() {
       currentDate = newDate;
+      ancestralState.setState(() {
+        
+      });
     });
   }
 }

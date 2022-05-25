@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/models/destination_model.dart';
 import 'package:hotel_booking/models/district.dart';
+import '../screens/destinationScreen.dart';
 
 class SeeAllScreen extends StatefulWidget {
+  List<Destination> destinations;
+
+  SeeAllScreen({Key? key, required this.destinations}) : super(key: key);
+
   @override
   _SeeAllScreenState createState() => _SeeAllScreenState();
 }
@@ -27,26 +33,25 @@ class _SeeAllScreenState extends State<SeeAllScreen> {
       body: Stack(
         alignment: Alignment.topCenter,
         children: [
-          /*Text(
-            'Chọn quận/huyện bạn muốn xem',
-            
-          ),*/
           Container(
-            child: ListView.builder(
-              itemCount: districts.length,
-              padding: EdgeInsets.only(top: 0.0),
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(districts[index]),
-                  onTap: () {},
-                );
-              }
-            )
-          ),
-
+              child: ListView.builder(
+                  itemCount: widget.destinations.length,
+                  padding: EdgeInsets.only(top: 0.0),
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(widget.destinations[index].name),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => DestinationScreen(
+                            destination: widget.destinations[index],
+                          ),
+                        ),
+                      ),
+                    );
+                  })),
         ],
       ),
-
     );
   }
 }
