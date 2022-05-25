@@ -45,9 +45,9 @@ class PaymentScreenState extends State<PaymentScreen> {
 
   String getPrice(int value) {
     if (value == 0) {
-      return '\$${widget.hotel.twohourprice}';
+      return '${widget.hotel.twohourprice.toInt()}đ';
     } else {
-      return '\$${widget.hotel.overnightprice}';
+      return '\$${widget.hotel.overnightprice.toInt()}đ';
     }
   }
 
