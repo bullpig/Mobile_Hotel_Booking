@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 List<String> chipsMobile = [
-  'Ghế tình yêu',
   'Luxury Hotel',
   'Rooftop Bar',
   'Honeymoon',
