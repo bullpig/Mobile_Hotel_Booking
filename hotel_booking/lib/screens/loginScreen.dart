@@ -126,8 +126,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   'Không có tài khoản? Đăng ký ngay!',
                 ),
                 onPressed: () {
-                  // Navigator.pushNamedAndRemoveUntil(
-                  //     context, registerationScreen.idScreen, (route) => false);
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(

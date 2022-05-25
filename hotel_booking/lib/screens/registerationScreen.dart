@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/screens/loginScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -149,12 +150,14 @@ class registerationScreen extends StatelessWidget {
                                     email: email.text, password: password.text);
                             var uid = newUser.user.uid.toString();
                             var registeredEmail = newUser.user.email;
-                            var user = <String, dynamic>{
-                              "email": registeredEmail,
-                              "name": name.text,
-                              "phone": phone.text
-                            };
-                            await _db.collection("users").doc(uid).set(user);
+                            // var user = <String, dynamic>{
+                            //   "email": registeredEmail,
+                            //   "name": name.text,
+                            //   "phone": phone.text
+                            // };
+                            // await _db.collection("users").doc(uid).set(user);
+                            await addUserInfo(
+                                uid, registeredEmail, phone.text, name.text);
                             Navigator.push(
                               context,
                               MaterialPageRoute(

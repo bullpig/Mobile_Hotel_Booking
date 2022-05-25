@@ -1,8 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/models/hotel_model.dart';
 import 'package:hotel_booking/screens/hotelDetails.dart';
 
-class HotelCarousel extends StatelessWidget {
+class HotelCarousel extends StatefulWidget {
+  @override
+  State<HotelCarousel> createState() => HotelCarouselState();
+}
+
+class HotelCarouselState extends State<HotelCarousel> {
+  List<Hotel> suggestedHotels = [];
+
+  @override
+  void initState() {
+    super.initState();
+    asyncInitState();
+  }
+
+  void asyncInitState() async {
+    getSuggestHotels().then((value) => setState(() => suggestedHotels = value));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -38,9 +56,9 @@ class HotelCarousel extends StatelessWidget {
           height: 300.0,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: temp_favorite.length,
+            itemCount: suggestedHotels.length,
             itemBuilder: (BuildContext context, int index) {
-              Hotel hotel = temp_favorite[index];
+              Hotel hotel = suggestedHotels[index];
               return GestureDetector(
                 onTap: () => Navigator.push(
                   context,
@@ -57,9 +75,9 @@ class HotelCarousel extends StatelessWidget {
                     alignment: Alignment.topCenter,
                     children: [
                       Positioned(
-                        bottom: 15.0,
+                        bottom: 0,
                         child: Container(
-                          height: 120.0,
+                          height: 150.0,
                           width: 240.0,
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -74,7 +92,7 @@ class HotelCarousel extends StatelessWidget {
                                 Text(
                                   hotel.name,
                                   style: TextStyle(
-                                    fontSize: 22.0,
+                                    fontSize: 20.0,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 1.2,
                                   ),
@@ -119,7 +137,7 @@ class HotelCarousel extends StatelessWidget {
                           child: Image(
                             height: 180.0,
                             width: 220.0,
-                            image: AssetImage(hotel.imageUrl),
+                            image: NetworkImage(hotel.imageUrl),
                             fit: BoxFit.cover,
                           ),
                         ),
