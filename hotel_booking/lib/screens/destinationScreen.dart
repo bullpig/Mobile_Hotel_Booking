@@ -237,7 +237,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                                       ),
                                       alignment: Alignment.center,
                                       child: Text(
-                                        '\$${hotel.twohourprice}',
+                                        '${hotel.twohourprice.toInt()}đ',
                                       ),
                                     ),
                                   ),
@@ -252,7 +252,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                                     ),
                                     alignment: Alignment.center,
                                     child: Text(
-                                      '\$${hotel.overnightprice}',
+                                      '${hotel.overnightprice.toInt()}đ',
                                     ),
                                   ),
                                 ],

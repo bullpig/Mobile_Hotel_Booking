@@ -109,7 +109,7 @@ class HotelCarouselState extends State<HotelCarousel> {
                                 ),
                                 SizedBox(height: 2.0),
                                 Text(
-                                  '\$${hotel.overnightprice} / Một đêm',
+                                  '${hotel.overnightprice.toInt()}đ / Một đêm',
                                   style: TextStyle(
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.w600,
