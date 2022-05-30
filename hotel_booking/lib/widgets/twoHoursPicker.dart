@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/screens/paymentScreen.dart';
 import 'package:intl/intl.dart';
 import 'package:time_picker_widget/time_picker_widget.dart';
 import '../utils/utils.dart';
@@ -15,20 +16,23 @@ class TwoHoursPicker extends StatefulWidget {
 
 class _TwoHoursPickerState extends State<TwoHoursPicker> {
   late DateTime nowDate;
-
+  late PaymentScreenState? parentState;
   @override
   void initState() {
     super.initState();
+    parentState = context.findAncestorStateOfType<PaymentScreenState>();
     updateTime();
   }
 
   void updateTime() {
-    print("Called");
     final currentTime = DateTime.now();
 
     if (20 < currentTime.hour || currentTime.hour < 8) {
       final nextDate = currentTime.add(Duration(days: 1));
       nowDate = DateTime(nextDate.year, nextDate.month, nextDate.day, 8, 0);
+      print("updateTime called");
+      print(parentState == null);
+
       return;
     }
 
@@ -39,6 +43,10 @@ class _TwoHoursPickerState extends State<TwoHoursPicker> {
       final offset = 60 - currentTime.minute;
       nowDate = DateTime.now().add(Duration(minutes: offset));
     }
+  }
+
+  void setNowDate(DateTime date) {
+
   }
 
   String getHour() {

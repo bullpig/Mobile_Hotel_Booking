@@ -17,8 +17,11 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class PaymentScreenState extends State<PaymentScreen> {
+
+
+  BookingType bookingType = BookingType.twoHours;
   PaymentType paymentType = PaymentType.checkIn;
-  int value = 0;
+  int totalPayment = 0;
 
   final paymentTypeLabels = [
     'Thanh toán tại khách sạn',
@@ -36,19 +39,15 @@ class PaymentScreenState extends State<PaymentScreen> {
     AllDayPicker(),
   ];
 
-  BookType bookType = BookType.TWO_HOURS;
+  // int getTotalPayment() {
+  //   if (bookingType == BookingType.twoHours) {
+
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
-  }
-
-  String getPrice(int value) {
-    if (value == 0) {
-      return '${widget.hotel.twohourprice.toInt()}đ';
-    } else {
-      return '\$${widget.hotel.overnightprice.toInt()}đ';
-    }
   }
 
   @override
@@ -120,7 +119,7 @@ class PaymentScreenState extends State<PaymentScreen> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            bookType = BookType.TWO_HOURS;
+                            bookingType = BookingType.twoHours;
                           });
                         },
                         child: Padding(
@@ -138,7 +137,7 @@ class PaymentScreenState extends State<PaymentScreen> {
                                 'Giờ',
                                 style: TextStyle(
                                   fontSize: 18.0,
-                                  color: bookType == BookType.TWO_HOURS
+                                  color: bookingType == BookingType.twoHours
                                       ? Colors.black
                                       : Colors.grey,
                                 ),
@@ -153,7 +152,7 @@ class PaymentScreenState extends State<PaymentScreen> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            bookType = BookType.OVERNIGHT;
+                            bookingType = BookingType.overnight;
                           });
                         },
                         child: Container(
@@ -169,7 +168,7 @@ class PaymentScreenState extends State<PaymentScreen> {
                               'Qua Đêm',
                               style: TextStyle(
                                 fontSize: 18.0,
-                                color: bookType == BookType.OVERNIGHT
+                                color: bookingType == BookingType.overnight
                                     ? Colors.black
                                     : Colors.grey,
                               ),
@@ -184,7 +183,7 @@ class PaymentScreenState extends State<PaymentScreen> {
                       GestureDetector(
                         onTap: () {
                           setState(() {
-                            bookType = BookType.ALLDAY;
+                            bookingType = BookingType.allday;
                           });
                         },
                         child: Container(
@@ -200,7 +199,7 @@ class PaymentScreenState extends State<PaymentScreen> {
                               'Cả ngày',
                               style: TextStyle(
                                 fontSize: 18.0,
-                                color: bookType == BookType.ALLDAY
+                                color: bookingType == BookingType.allday
                                     ? Colors.black
                                     : Colors.grey,
                               ),
@@ -213,7 +212,7 @@ class PaymentScreenState extends State<PaymentScreen> {
                   ),
                 ),
                 SizedBox(height: 30.0),
-                tabs[bookType.index],
+                tabs[bookingType.index],
               ],
             ),
           ),
@@ -318,7 +317,7 @@ class PaymentScreenState extends State<PaymentScreen> {
                   ),
                 ),
                 Text(
-                  getPrice(bookType.index),
+                  "${totalPayment}VND",
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontSize: 20.0,
@@ -348,7 +347,7 @@ class PaymentScreenState extends State<PaymentScreen> {
                 borderRadius: new BorderRadius.circular(10.0),
               ),
               onPressed: () {
-                //bool bookingStatus = await createBooking(widget.hotel.id, bookType, startTime, endTime, paymentType, isPaid)
+                //bool bookingStatus = await createBooking(widget.hotel.id, bookingType, startTime, endTime, paymentType, isPaid)
                 Navigator.push(
                   context,
                   MaterialPageRoute(

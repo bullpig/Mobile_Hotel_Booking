@@ -9,11 +9,7 @@ final services = {
   "gym": Icons.fitness_center,
 };
 
-enum BookType {
-  TWO_HOURS,
-  OVERNIGHT,
-  ALLDAY
-}
+enum BookingType { twoHours, overnight, allday }
 
 enum PaymentType { checkIn }
 
@@ -22,3 +18,5 @@ bool isSameDate(DateTime date1, DateTime date2) {
       date1.month == date2.month &&
       date1.day == date2.day;
 }
+
+const maxRatingStar = 5;
