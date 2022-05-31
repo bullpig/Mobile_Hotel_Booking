@@ -108,13 +108,13 @@ class HotelCarouselState extends State<HotelCarousel> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 SizedBox(height: 2.0),
-                                Text(
-                                  '${hotel.overnightprice.toInt()}đ / Một đêm',
-                                  style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                                // Text(
+                                //   '${hotel.overnightprice.toInt()}đ / Một đêm',
+                                //   style: TextStyle(
+                                //     fontSize: 18.0,
+                                //     fontWeight: FontWeight.w600,
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),

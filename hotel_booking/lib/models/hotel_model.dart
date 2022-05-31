@@ -1,53 +1,31 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Hotel {
-  String imageUrl;
+  String id;
   String name;
   String address;
-  String introduction;
-  double twohourprice;
-  double overnightprice;
-  int rating;
+  String districtId;
+  String phone;
+  String imageUrl;
+  GeoPoint location;
   List<String> services;
-  String id;
-
-  double longitude;
-  double latitude;
+  String description;
+  double rating;
+  List<String> rooms;
 
   Hotel({
-    required this.id,
-    this.imageUrl = "",
+    this.id = "",
     this.name = "",
     this.address = "",
-    this.introduction = "",
-    this.twohourprice = 0.0,
-    this.overnightprice = 0.0,
-    this.rating = 0,
-    this.longitude = 0.0,
-    this.latitude = 0.0,
+    this.districtId = "",
+    this.phone = "",
+    this.imageUrl = "",
+    this.location = const GeoPoint(0, 0),
     this.services = const [],
+    this.description = "",
+    this.rating = 0.0,
+    this.rooms = const [],
   });
 }
 
-List<Hotel> temp_favorite = [
-  Hotel(
-      id: "121",
-      imageUrl: 'assets/images/hotel0.jpg',
-      name: 'KIM HOTEL',
-      address:
-          '12 ngõ 75 Cầu Đất, Chương Dương Độ, Hoàn Kiếm, Hà Nội, Việt Nam',
-      twohourprice: 175000,
-      overnightprice: 300000,
-      rating: 5,
-      introduction:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit.In porta euismod neque, vel sagittis augue suscipit et. In sapien ipsum, vehicula sit amet ante non, sollicitudin venenatis est.Vivamus imperdiet venenatis tellus eget fringilla.'),
-  Hotel(
-      id: '01',
-      imageUrl: 'assets/images/hotel1.jpg',
-      name: 'KIM HOTEL',
-      address:
-          '12 ngõ 75 Cầu Đất, Chương Dương Độ, Hoàn Kiếm, Hà Nội, Việt Nam',
-      twohourprice: 175,
-      overnightprice: 300,
-      rating: 5,
-      introduction:
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit.In porta euismod neque, vel sagittis augue suscipit et. In sapien ipsum, vehicula sit amet ante non, sollicitudin venenatis est.Vivamus imperdiet venenatis tellus eget fringilla.'),
-];
+List<Hotel> temp_favorite = [];

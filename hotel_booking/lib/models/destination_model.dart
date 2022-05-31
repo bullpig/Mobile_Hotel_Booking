@@ -9,16 +9,13 @@ class Destination {
   String name;
   String description;
   String city;
-  List<Hotel> hotels = [];
+  int totalHotel;
 
   Destination(
       {required this.id,
       required this.imageUrl,
       required this.name,
       required this.city,
-      this.description = ""});
-
-  Future<void> getterHotels() async {
-    this.hotels = await getHotelsByDestination(this.name);
-  }
+      this.description = "",
+      this.totalHotel = 0});
 }

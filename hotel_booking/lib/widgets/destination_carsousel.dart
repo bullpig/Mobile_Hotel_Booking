@@ -108,7 +108,7 @@ class _DestinationCarousel extends State<DestinationCarousel> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${destination.hotels.length} khách sạn',
+                                    '${destination.totalHotel} khách sạn',
                                     style: TextStyle(
                                       fontSize: 22.0,
                                       fontWeight: FontWeight.w600,

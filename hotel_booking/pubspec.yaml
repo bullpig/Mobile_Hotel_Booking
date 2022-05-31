@@ -40,6 +40,7 @@ dependencies:
   cloud_firestore: ^0.14.4
   font_awesome_flutter: ^9.0.0
   time_picker_widget: ^1.0.0+10
+  readmore: ^2.1.0
 
 dev_dependencies:
   flutter_test:

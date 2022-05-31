@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/screens/paymentScreen.dart';
 import 'package:intl/intl.dart';
 import 'package:time_picker_widget/time_picker_widget.dart';
 import '../utils/utils.dart';
@@ -15,30 +16,49 @@ class TwoHoursPicker extends StatefulWidget {
 
 class _TwoHoursPickerState extends State<TwoHoursPicker> {
   late DateTime nowDate;
+  late PaymentScreenState? parentState;
 
   @override
   void initState() {
     super.initState();
-    updateTime();
+    parentState = context.findAncestorStateOfType<PaymentScreenState>();
+    initTime();
   }
 
-  void updateTime() {
-    print("Called");
+  DateTime getInitTime() {
     final currentTime = DateTime.now();
 
-    if (20 < currentTime.hour || currentTime.hour < 8) {
+    if (currentTime.isAfter(DateTime(
+            currentTime.year, currentTime.month, currentTime.day, 20, 0)) ||
+        currentTime.isBefore(DateTime(
+            currentTime.year, currentTime.month, currentTime.day, 8, 0))) {
       final nextDate = currentTime.add(Duration(days: 1));
-      nowDate = DateTime(nextDate.year, nextDate.month, nextDate.day, 8, 0);
-      return;
+      return DateTime(nextDate.year, nextDate.month, nextDate.day, 8, 0);
     }
 
     if (currentTime.minute <= 30) {
-      final offset = 30 - currentTime.minute;
-      nowDate = DateTime.now().add(Duration(minutes: offset));
+      return DateTime(currentTime.year, currentTime.month, currentTime.day,
+          currentTime.hour, 30);
     } else {
-      final offset = 60 - currentTime.minute;
-      nowDate = DateTime.now().add(Duration(minutes: offset));
+      return DateTime(currentTime.year, currentTime.month, currentTime.day,
+          currentTime.add(Duration(hours: 1)).hour, 30);
     }
+  }
+
+  void initTime() {
+    nowDate = getInitTime();
+    parentState?.startDate = nowDate;
+    parentState?.endDate = nowDate.add(const Duration(hours: 2));
+  }
+
+  void setNowDate(DateTime date) {
+    setState(() {
+      nowDate = date;
+    });
+    parentState?.setState(() {
+      parentState?.startDate = nowDate;
+      parentState?.endDate = nowDate.add(const Duration(hours: 2));
+    });
   }
 
   String getHour() {
@@ -119,25 +139,27 @@ class _TwoHoursPickerState extends State<TwoHoursPicker> {
   }
 
   Future pickDateTime(BuildContext context) async {
-    await pickDate(context).then((value) => pickTime(context, value));
+    await pickDate(context).then((value) {
+      if (value != null) {
+        pickTime(context, value);
+      }
+    });
   }
 
-  Future<DateTime> pickDate(BuildContext context) async {
+  Future<DateTime?> pickDate(BuildContext context) async {
     final newDate = await showDatePicker(
         context: context,
         initialDate: nowDate,
-        firstDate: nowDate,
-        lastDate: DateTime(DateTime.now().year + 5));
-    if (newDate == null) return nowDate;
-    setState(() {
-      nowDate = DateTime(
-        newDate.year,
-        newDate.month,
-        newDate.day,
-        nowDate.hour,
-        nowDate.minute,
-      );
-    });
+        firstDate: getInitTime(),
+        lastDate: getInitTime().add(Duration(days: 30)));
+    if (newDate == null) return null;
+    setNowDate(DateTime(
+      newDate.year,
+      newDate.month,
+      newDate.day,
+      nowDate.hour,
+      nowDate.minute,
+    ));
     return newDate;
   }
 
@@ -155,19 +177,18 @@ class _TwoHoursPickerState extends State<TwoHoursPicker> {
             (isSameDate(date, currentTime)
                 ? time.hour >= currentTime.hour
                 : true) &&
-            time.hour <= 20 &&
+            (time.hour <= 19 || (time.hour == 20 && time.minute == 0)) &&
             time.minute % 30 == 0 &&
             ((time.hour == 8) ? time.minute == 0 : true),
-        onFailValidation: (context) => log('Unavailable selection'));
+        onFailValidation: (context) => ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Thời gian không hợp lệ"))));
     if (newTime == null) return TimeOfDay.fromDateTime(nowDate);
-    setState(() {
-      nowDate = DateTime(
-        date.year,
-        date.month,
-        date.day,
-        newTime.hour,
-        newTime.minute,
-      );
-    });
+    setNowDate(DateTime(
+      date.year,
+      date.month,
+      date.day,
+      newTime.hour,
+      newTime.minute,
+    ));
   }
 }

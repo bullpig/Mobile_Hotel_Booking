@@ -82,7 +82,7 @@ class _SearchState extends State<Search> {
           //   textColor: Theme.of(context).primaryColor,
           // ),
           // SizedBox(height: 20.0),
-          // HotelCarousel(),
+          //HotelCarousel(),
         ],
       ),
     );

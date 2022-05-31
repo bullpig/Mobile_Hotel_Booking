@@ -13,22 +13,51 @@ class AllDayPicker extends StatefulWidget {
 }
 
 class _AllDatePickerState extends State<AllDayPicker> {
-  DateTime currentDate = DateTime.now();
-  late final ancestralState;
+  late DateTimeRange _dateRange;
 
-  String getFrom() {
-    return DateFormat('dd/MM/yyyy').format(currentDate);
-  }
-
-  String getUntil() {
-    return DateFormat('dd/MM/yyyy')
-        .format(currentDate.add(const Duration(days: 1)));
-  }
+  late PaymentScreenState? parentState;
 
   @override
   void initState() {
     super.initState();
-    ancestralState = context.findAncestorStateOfType<PaymentScreenState>();
+    parentState = context.findAncestorStateOfType<PaymentScreenState>();
+    initTime();
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      parentState?.setState(() {});
+    });
+  }
+
+  void initTime() {
+    final now = DateTime.now();
+    final startDate = DateTime(now.year, now.month, now.day, 14, 0);
+    final endDate = startDate.add(Duration(hours: 22));
+
+    _dateRange = DateTimeRange(start: startDate, end: endDate);
+
+    parentState?.startDate = _dateRange.start;
+    parentState?.endDate = _dateRange.end;
+  }
+
+  void setDateRange(DateTimeRange dateRange) {
+    setState(() {
+      final startDate = DateTime(dateRange.start.year, dateRange.start.month,
+          dateRange.start.day, 14, 0);
+      final endDate = DateTime(
+          dateRange.end.year, dateRange.end.month, dateRange.end.day, 12, 0);
+      _dateRange = DateTimeRange(start: startDate, end: endDate);
+    });
+    parentState?.setState(() {
+      parentState?.startDate = _dateRange.start;
+      parentState?.endDate = _dateRange.end;
+    });
+  }
+
+  String getFrom() {
+    return DateFormat('dd/MM/yyyy').format(_dateRange.start);
+  }
+
+  String getUntil() {
+    return DateFormat('dd/MM/yyyy').format(_dateRange.end);
   }
 
   @override
@@ -98,20 +127,15 @@ class _AllDatePickerState extends State<AllDayPicker> {
   }
 
   Future pickDateRange(BuildContext context) async {
-    final newDate = await showDatePicker(
-      context: context,
-      firstDate: DateTime.now(),
-      lastDate: DateTime(DateTime.now().year + 5),
-      initialDate: currentDate,
-    );
+    final newDateRange = await showDateRangePicker(
+        context: context,
+        initialDateRange: _dateRange,
+        firstDate: DateTime.now(),
+        lastDate: DateTime.now().add(Duration(days: 30)));
+    if (newDateRange == null) {
+      return;
+    }
 
-    if (newDate == null) return;
-
-    setState(() {
-      currentDate = newDate;
-      ancestralState.setState(() {
-        
-      });
-    });
+    setDateRange(newDateRange);
   }
 }

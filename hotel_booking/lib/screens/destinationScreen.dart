@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hotel_booking/api_controller.dart';
+import 'package:hotel_booking/models/room.dart';
 import 'package:hotel_booking/screens/hotelDetails.dart';
+import 'package:hotel_booking/screens/listRoomsScreen.dart';
 import '../models/destination_model.dart';
 import '../models/hotel_model.dart';
+import '../utils/utils.dart';
 //import 'package:hotel_app/screens/hotelDetails.dart';
 
 class DestinationScreen extends StatefulWidget {
@@ -13,13 +17,17 @@ class DestinationScreen extends StatefulWidget {
 }
 
 class _DestinationScreenState extends State<DestinationScreen> {
-  Text _buildRatingStars(int rating) {
-    String stars = '';
-    for (int i = 0; i < rating; i++) {
-      stars += '⭐ ';
-    }
-    stars.trim();
-    return Text(stars);
+  List<Hotel> listHotel = [];
+
+  @override
+  void initState() {
+    super.initState();
+    asyncInitState();
+  }
+
+  void asyncInitState() async {
+    getHotelsByDestination(widget.destination.id)
+        .then((value) => setState(() => listHotel = value));
   }
 
   @override
@@ -52,9 +60,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 10.0, vertical: 40.0),
+              SafeArea(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -80,7 +86,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.destination.city,
+                      widget.destination.name,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 24.0,
@@ -124,9 +130,9 @@ class _DestinationScreenState extends State<DestinationScreen> {
                 top: 10.0,
                 bottom: 15.0,
               ),
-              itemCount: widget.destination.hotels.length,
+              itemCount: listHotel.length,
               itemBuilder: (BuildContext context, int index) {
-                Hotel hotel = widget.destination.hotels[index];
+                Hotel hotel = listHotel[index];
                 return GestureDetector(
                   onTap: () => Navigator.push(
                     context,
@@ -135,7 +141,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                         hotel: hotel,
                       ),
                     ),
-                  ),
+                  ).then((value) => setState(() {})),
                   child: Stack(
                     children: [
                       Container(
@@ -150,111 +156,75 @@ class _DestinationScreenState extends State<DestinationScreen> {
                         child: Padding(
                           padding: EdgeInsets.fromLTRB(140.0, 20.0, 20.0, 20.0),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    width: 120.0,
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          hotel.name,
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          maxLines: 2,
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10.0),
-                                          child: Text(
-                                            hotel.address,
-                                            style: TextStyle(
-                                              color: Colors.grey,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ],
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: Text(
+                                      hotel.name,
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      maxLines: 2,
                                     ),
                                   ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        // '${hotel.twohourprice.toInt()}đ',
-                                        '${hotel.twohourprice.toInt()}đ',
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10.0),
+                                    child: Text(
+                                      hotel.address,
+                                      style: TextStyle(
+                                        color: Colors.grey,
                                       ),
-                                      Text(
-                                        '2 giờ đầu',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                      Text(
-                                        '${hotel.overnightprice.toInt()}đ',
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Một đêm',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
                                 ],
                               ),
                               SizedBox(
                                 height: 10.0,
                               ),
-                              _buildRatingStars(hotel.rating),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: buildRatingStars(hotel.rating),
+                              ),
                               SizedBox(height: 10.0),
                               Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.all(5.0),
+                                    padding: EdgeInsets.only(left: 10),
                                     child: Container(
-                                      width: 80.0,
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context).accentColor,
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
+                                      child: Wrap(
+                                        spacing: 10,
+                                        runSpacing: 8,
+                                        children: hotel.rooms
+                                            .map(
+                                              (room) => Container(
+                                                width: 80.0,
+                                                decoration: BoxDecoration(
+                                                  color: Theme.of(context)
+                                                      .accentColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                ),
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  room,
+                                                ),
+                                              ),
+                                            )
+                                            .toList(),
                                       ),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        '${hotel.twohourprice.toInt()}đ',
-                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  Container(
-                                    width: 80.0,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).accentColor,
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      '${hotel.overnightprice.toInt()}đ',
-                                    ),
-                                  ),
+                                  )
                                 ],
                               ),
                             ],
