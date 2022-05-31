@@ -10,26 +10,23 @@ import '../models/hotel_model.dart';
 //import 'package:hotel_app/screens/hotelDetails.dart';
 
 class ListRommsScreen extends StatefulWidget {
-  final Hotel hotel;
-  const ListRommsScreen({Key? key, required this.hotel}) : super(key: key);
+  final List<Room> listRooms;
+  const ListRommsScreen({Key? key, required this.listRooms}) : super(key: key);
   @override
   _ListRommsScreenState createState() => _ListRommsScreenState();
 }
 
 class _ListRommsScreenState extends State<ListRommsScreen> {
-
-  List<Room> listRooms = [];
-
   @override
   void initState() {
     super.initState();
-    asyncInitState();
+    //asyncInitState();
   }
 
-  void asyncInitState() async {
-    getRoomByHotel(widget.hotel.id)
-        .then((value) => setState(() => listRooms = value));
-  }
+  // void asyncInitState() async {
+  //   getRoomByHotel(widget.hotel.id)
+  //       .then((value) => setState(() => listRooms = value));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +47,7 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Text(
-                    'Test hotel',
+                    'Chọn phòng',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -69,23 +66,16 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
                 //top: 10.0,
                 bottom: 15.0,
               ),
-              itemCount: temp_favorite.length,
+              itemCount: widget.listRooms.length,
               itemBuilder: (BuildContext context, int index) {
-                Hotel hotel = temp_favorite[index];
+                Room room = widget.listRooms[index];
                 return GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => PaymentScreen(
-                        hotel: hotel,
-                      ),
-                    ),
-                  ),
+                  onTap: () => Navigator.pop(context, room),
                   child: Stack(
                     children: [
                       Container(
                         margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-                        height: 200.0,
+                        //height: 200.0,
                         width: 400.0,
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -103,27 +93,16 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    width: 120.0,
                                     child: Column(
                                       children: [
                                         Text(
-                                          hotel.name,
+                                          room.name,
                                           style: TextStyle(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.w600,
                                           ),
                                           maxLines: 2,
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 10.0),
-                                          child: Text(
-                                            hotel.address,
-                                            style: TextStyle(
-                                              color: Colors.grey,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ],
                                     ),
@@ -132,72 +111,104 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        '0đ',
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${room.priceTwoHours}VND",
+                                            style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Text(
+                                            '2 giờ đầu',
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        '2 giờ đầu',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                        ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${room.priceOvernight}VND",
+                                            style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Qua đêm',
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        '${0}đ',
-                                        style: TextStyle(
-                                          fontSize: 16.0,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Một đêm',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                        ),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "${room.priceAllday}VND",
+                                            style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Theo ngày',
+                                            style: TextStyle(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 5,
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ],
                               ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              //_buildRatingStars(hotel.rating),
                               SizedBox(height: 10.0),
                               Row(
                                 children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Container(
-                                      width: 80.0,
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context).accentColor,
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        '${0}đ',
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 10.0,
-                                  ),
                                   Container(
-                                    width: 80.0,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).accentColor,
-                                      borderRadius: BorderRadius.circular(10.0),
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.5,
+                                    child: Wrap(
+                                      spacing: 10,
+                                      runSpacing: 8,
+                                      children: room.description
+                                          .map(
+                                            (room) => Container(
+                                              width: 80.0,
+                                              decoration: BoxDecoration(
+                                                color: Theme.of(context)
+                                                    .accentColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                              ),
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                room,
+                                              ),
+                                            ),
+                                          )
+                                          .toList(),
                                     ),
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      '${0}đ',
-                                    ),
-                                  ),
+                                  )
                                 ],
                               ),
                             ],
@@ -209,7 +220,7 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
                         top: 15.0,
                         bottom: 15.0,
                         child: Image.network(
-                          hotel.imageUrl,
+                          room.imageUrl,
                           height: 180.0,
                           width: 120.0,
                           fit: BoxFit.cover,

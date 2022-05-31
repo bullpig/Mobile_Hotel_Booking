@@ -30,37 +30,6 @@ class _DestinationScreenState extends State<DestinationScreen> {
         .then((value) => setState(() => listHotel = value));
   }
 
-  Widget _buildRatingStars(double currentRating) {
-    int integerPart = currentRating.toInt();
-    double demicalPart = currentRating - integerPart;
-    bool isHalfStar = demicalPart >= 0.5 ? true : false;
-    int noStarPart = maxRatingStar - integerPart - (isHalfStar ? 1 : 0);
-
-    var stars = [];
-    var createStart = (IconData icon) => Icon(
-          icon,
-          color: Color.fromRGBO(251, 218, 75, 1),
-          size: 16,
-        );
-
-    for (int i = 0; i < integerPart; i++) {
-      stars.add(createStart(Icons.star));
-    }
-
-    if (isHalfStar) {
-      stars.add(createStart(Icons.star_half_outlined));
-    }
-
-    for (int i = 0; i < noStarPart; i++) {
-      stars.add(createStart(Icons.star_outline));
-    }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [...stars],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,7 +141,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                         hotel: hotel,
                       ),
                     ),
-                  ),
+                  ).then((value) => setState(() {})),
                   child: Stack(
                     children: [
                       Container(
@@ -222,34 +191,38 @@ class _DestinationScreenState extends State<DestinationScreen> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: _buildRatingStars(hotel.rating),
+                                child: buildRatingStars(hotel.rating),
                               ),
                               SizedBox(height: 10.0),
                               Row(
                                 children: [
-                                  Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.5,
-                                    child: Wrap(
-                                      spacing: 10,
-                                      runSpacing: 8,
-                                      children: hotel.rooms
-                                          .map(
-                                            (room) => Container(
-                                              width: 80.0,
-                                              decoration: BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .accentColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: Container(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
+                                      child: Wrap(
+                                        spacing: 10,
+                                        runSpacing: 8,
+                                        children: hotel.rooms
+                                            .map(
+                                              (room) => Container(
+                                                width: 80.0,
+                                                decoration: BoxDecoration(
+                                                  color: Theme.of(context)
+                                                      .accentColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                ),
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  room,
+                                                ),
                                               ),
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                room,
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
+                                            )
+                                            .toList(),
+                                      ),
                                     ),
                                   )
                                 ],

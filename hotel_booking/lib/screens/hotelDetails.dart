@@ -4,14 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hotel_booking/api_controller.dart';
+import 'package:hotel_booking/models/room.dart';
 import 'package:hotel_booking/screens/listRoomsScreen.dart';
 import 'package:readmore/readmore.dart';
 import '../screens/paymentScreen.dart';
-// import 'package:hotel_app/screens/favouriteScreen.dart';
 import 'package:hotel_booking/models/hotel_model.dart';
 import 'package:hotel_booking/utils/utils.dart';
-// import 'package:hotel_app/screens/hotelLocationScreen.dart';
-// import 'package:hotel_app/screens/seeallScreen.dart';
 
 class HotelDetail extends StatefulWidget {
   final Hotel hotel;
@@ -21,7 +19,11 @@ class HotelDetail extends StatefulWidget {
 }
 
 class _HotelDetailState extends State<HotelDetail> {
-  late bool _isFavorite = false;
+  bool _isFavorite = false;
+  List<Room> _listRooms = const [];
+  Room _currentRoom = Room();
+  int _userRating = 0;
+
   final ScrollController _hideButtonController = ScrollController();
   bool _isVisible = true;
 
@@ -32,9 +34,6 @@ class _HotelDetailState extends State<HotelDetail> {
       if (_hideButtonController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         if (_isVisible == true) {
-          /* only set when the previous state is false
-             * Less widget rebuilds 
-             */
           setState(() {
             _isVisible = false;
           });
@@ -43,9 +42,6 @@ class _HotelDetailState extends State<HotelDetail> {
         if (_hideButtonController.position.userScrollDirection ==
             ScrollDirection.forward) {
           if (_isVisible == false) {
-            /* only set when the previous state is false
-               * Less widget rebuilds 
-               */
             setState(() {
               _isVisible = true;
             });
@@ -59,53 +55,55 @@ class _HotelDetailState extends State<HotelDetail> {
   void asyncInitState() async {
     getHotelFavoriteStatus(widget.hotel.id)
         .then((value) => setState(() => _isFavorite = value));
+    getRoomsByHotel(widget.hotel.id).then((value) {
+      setState(() {
+        _listRooms = value;
+        _currentRoom = value[0];
+      });
+    });
+    getUserRating(widget.hotel.id).then((value) {
+      setState(() {
+        _userRating = value;
+      });
+    });
   }
 
-  Widget _buildRatingStars(double currentRating) {
-    int integerPart = currentRating.toInt();
-    double demicalPart = currentRating - integerPart;
-    bool isHalfStar = demicalPart >= 0.5 ? true : false;
-    int noStarPart = maxRatingStar - integerPart - (isHalfStar ? 1 : 0);
+  void _setUserRating(int rating) {
+    setState(() {
+      _userRating = rating;
+      setUserRating(widget.hotel.id, rating)
+          .then((value) => _reloadHotelRating());
+    });
+  }
 
-    var stars = [];
-    var createStart = (IconData icon) => Icon(
-          icon,
-          color: Color.fromRGBO(251, 218, 75, 1),
-          size: 16,
-        );
-
-    for (int i = 0; i < integerPart; i++) {
-      stars.add(createStart(Icons.star));
-    }
-
-    if (isHalfStar) {
-      stars.add(createStart(Icons.star_half_outlined));
-    }
-
-    for (int i = 0; i < noStarPart; i++) {
-      stars.add(createStart(Icons.star_outline));
-    }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [...stars],
-    );
+  void _reloadHotelRating() {
+    getHotelRating(widget.hotel.id)
+        .then((value) => setState(() => widget.hotel.rating = value));
   }
 
   Widget _buildVoteRating(int currentRating) {
     var stars = [];
-    var createStart = (IconData icon) => Icon(
-          icon,
-          color: Color.fromRGBO(251, 218, 75, 1),
-          size: 32,
+    var createStart = (IconData icon, int rating) => InkWell(
+          onTap: () {
+            if (rating == _userRating) {
+              _setUserRating(0);
+            } else {
+              _setUserRating(rating);
+            }
+          },
+          child: Icon(
+            icon,
+            color: Color.fromRGBO(251, 218, 75, 1),
+            size: 32,
+          ),
         );
 
     for (int i = 0; i < currentRating; i++) {
-      stars.add(createStart(Icons.star));
+      stars.add(createStart(Icons.star, i + 1));
     }
 
     for (int i = 0; i < maxRatingStar - currentRating; i++) {
-      stars.add(createStart(Icons.star_outline));
+      stars.add(createStart(Icons.star_outline, currentRating + i + 1));
     }
 
     return Row(
@@ -199,7 +197,7 @@ class _HotelDetailState extends State<HotelDetail> {
                         SizedBox(
                           height: 8,
                         ),
-                        _buildRatingStars(widget.hotel.rating),
+                        buildRatingStars(widget.hotel.rating),
                         SizedBox(
                           height: 8,
                         ),
@@ -307,7 +305,18 @@ class _HotelDetailState extends State<HotelDetail> {
                         ),
                         InkWell(
                           onTap: () {
-                            
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ListRommsScreen(
+                                  listRooms: _listRooms,
+                                ),
+                              ),
+                            ).then((value) {
+                              if (value != null) {
+                                setState(() => _currentRoom = value);
+                              }
+                            });
                           },
                           child: Container(
                               width: MediaQuery.of(context).size.width * 0.9,
@@ -330,7 +339,7 @@ class _HotelDetailState extends State<HotelDetail> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        "Phong donw",
+                                        _currentRoom.name,
                                         style: TextStyle(
                                             fontSize: 16,
                                             color:
@@ -382,10 +391,13 @@ class _HotelDetailState extends State<HotelDetail> {
                             child: Padding(
                               padding: EdgeInsets.only(
                                   top: 12, bottom: 12, left: 8, right: 8),
-                              child: _buildVoteRating(3),
+                              child: _buildVoteRating(_userRating),
                             ))
                       ]))
             ],
+          ),
+          SizedBox(
+            height: 32,
           ),
         ],
       )),
@@ -421,8 +433,9 @@ class _HotelDetailState extends State<HotelDetail> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => ListRommsScreen(
-                          hotel: widget.hotel,
+                        builder: (_) => PaymentScreen(
+                          hotelName: widget.hotel.name,
+                          room: _currentRoom,
                         ),
                       ),
                     );

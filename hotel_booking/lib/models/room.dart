@@ -3,7 +3,7 @@ class Room {
   String hotelId;
   String name;
   String imageUrl;
-  String description;
+  List<String> description;
   int priceTwoHours;
   int priceOvernight;
   int priceAllday;
@@ -13,7 +13,7 @@ class Room {
       this.hotelId = "",
       this.name = "",
       this.imageUrl = "",
-      this.description = "",
+      this.description = const [],
       this.priceTwoHours = 0,
       this.priceOvernight = 0,
       this.priceAllday = 0});
