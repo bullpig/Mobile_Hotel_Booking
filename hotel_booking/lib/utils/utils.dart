@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 final services = {
-  "parking": Icons.local_parking,
-  "pool": Icons.pool,
-  "bath": Icons.bathtub,
-  "bar": Icons.local_drink,
-  "wifi": Icons.wifi,
-  "gym": Icons.fitness_center,
+  "Parking": Icons.local_parking,
+  "Pool": Icons.pool,
+  "Bath": Icons.bathtub,
+  "Bar": Icons.local_drink,
+  "Wifi": Icons.wifi,
+  "Gym": Icons.fitness_center,
+  "Elevator" : Icons.elevator,
+  "NETFLIX" : Icons.camera_roll, 
 };
 
 enum BookingType { twoHours, overnight, allday }

@@ -145,8 +145,8 @@ class _DestinationScreenState extends State<DestinationScreen> {
                   child: Stack(
                     children: [
                       Container(
-                        margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-                        height: 200.0,
+                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+                        height: 230.0,
                         // width: double.infinity,
                         width: 400.0,
                         decoration: BoxDecoration(
@@ -154,7 +154,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(140.0, 20.0, 20.0, 20.0),
+                          padding: EdgeInsets.fromLTRB(140.0, 5.0, 5.0, 5.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,7 +181,8 @@ class _DestinationScreenState extends State<DestinationScreen> {
                                       style: TextStyle(
                                         color: Colors.grey,
                                       ),
-                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 3,
+                                      // overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
                                 ],
@@ -190,24 +191,23 @@ class _DestinationScreenState extends State<DestinationScreen> {
                                 height: 10.0,
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(10.0),
+                                padding: const EdgeInsets.all(5.0),
                                 child: buildRatingStars(hotel.rating),
                               ),
-                              SizedBox(height: 10.0),
+                              SizedBox(height: 15.0),
                               Row(
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(left: 10),
+                                    padding: EdgeInsets.only(left: 3),
                                     child: Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.5,
+                                      width: MediaQuery.of(context).size.width * 0.5,
                                       child: Wrap(
-                                        spacing: 10,
-                                        runSpacing: 8,
+                                        spacing: 5,
+                                        runSpacing: 5,
                                         children: hotel.rooms
                                             .map(
                                               (room) => Container(
-                                                width: 80.0,
+                                                width: 180.0,
                                                 decoration: BoxDecoration(
                                                   color: Theme.of(context)
                                                       .accentColor,

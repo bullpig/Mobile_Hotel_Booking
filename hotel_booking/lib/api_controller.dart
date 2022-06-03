@@ -269,7 +269,10 @@ Future<List<Room>> getRoomsByHotel(String hotelId) async {
   List<Room> rooms = [];
 
   try {
-    var event = await db.collection("rooms").get();
+    var event = await db
+      .collection("rooms")
+      .where("hotelId", isEqualTo: hotelId)
+      .get();
 
     for (var doc in event.docs) {
       var docData = doc.data();

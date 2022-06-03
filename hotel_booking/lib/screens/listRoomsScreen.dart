@@ -93,8 +93,9 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    child: Column(
-                                      children: [
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 5.0),
+                                      child: 
                                         Text(
                                           room.name,
                                           style: TextStyle(
@@ -104,12 +105,12 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                         ),
-                                      ],
+                                      
                                     ),
                                   ),
                                   Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Column(
                                         crossAxisAlignment:
