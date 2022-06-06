@@ -148,16 +148,18 @@ class registerationScreen extends StatelessWidget {
                             final newUser =
                                 await _auth.createUserWithEmailAndPassword(
                                     email: email.text, password: password.text);
-                            var uid = newUser.user.uid.toString();
-                            var registeredEmail = newUser.user.email;
+                            var uid = newUser.user?.uid.toString();
+                            var registeredEmail = newUser.user?.email;
                             // var user = <String, dynamic>{
                             //   "email": registeredEmail,
                             //   "name": name.text,
                             //   "phone": phone.text
                             // };
                             // await _db.collection("users").doc(uid).set(user);
-                            await addUserInfo(
-                                uid, registeredEmail, phone.text, name.text);
+                            if (uid != null && registeredEmail != null) {
+                              await addUserInfo(
+                                  uid, registeredEmail, phone.text, name.text);
+                            }
                             Navigator.push(
                               context,
                               MaterialPageRoute(

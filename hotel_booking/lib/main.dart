@@ -10,7 +10,7 @@ void main() async {
   HttpOverrides.global = MyHttpOverrides();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  FirebaseAuth.instance.authStateChanges().listen((User user) {
+  FirebaseAuth.instance.authStateChanges().listen((User? user) {
     if (user == null) {
       runApp(MyApp(auth: false));
     } else {

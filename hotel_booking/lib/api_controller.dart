@@ -81,12 +81,12 @@ Future<List<Destination>> getDestination(String city) async {
 
 Future<void> setHotelFavoriteStatus(String hotelId, bool isFavorite) async {
   if (isFavorite) {
-    final userRef = db.collection("users").doc(auth.currentUser.uid);
+    final userRef = db.collection("users").doc(auth.currentUser?.uid);
     await userRef.update({
       "favoriteHotel": FieldValue.arrayUnion([hotelId])
     });
   } else {
-    final userRef = db.collection("users").doc(auth.currentUser.uid);
+    final userRef = db.collection("users").doc(auth.currentUser?.uid);
     await userRef.update({
       "favoriteHotel": FieldValue.arrayRemove([hotelId])
     });
@@ -94,7 +94,7 @@ Future<void> setHotelFavoriteStatus(String hotelId, bool isFavorite) async {
 }
 
 Future<List<String>> getFavoriteHotelIds() async {
-  var doc = await db.collection("users").doc(auth.currentUser.uid).get();
+  var doc = await db.collection("users").doc(auth.currentUser?.uid).get();
   var hotelIds = List<String>.from(doc.get("favoriteHotel") ?? []);
 
   return hotelIds;
@@ -154,7 +154,7 @@ Future<bool> createBooking(
     bool isPaid) async {
   try {
     var order = <String, dynamic>{
-      "userId": auth.currentUser.uid.toString(),
+      "userId": auth.currentUser?.uid.toString(),
       "hotelId": hotelId,
       "roomId": roomId,
       "bookingType": bookingType.name,
@@ -231,16 +231,15 @@ Future<int> getUserRating(String hotelId) async {
   int rating = 0;
 
   try {
-    var doc = await db
-        .collection("rating")
-        .doc(hotelId + auth.currentUser.uid.toString())
-        .get();
+    var uid = auth.currentUser?.uid.toString();
+    if (uid != null) {
+      var doc = await db.collection("rating").doc(hotelId + uid).get();
+      if (!doc.exists) {
+        return rating;
+      }
 
-    if (!doc.exists) {
-      return rating;
+      rating = doc.get("rating");
     }
-
-    rating = doc.get("rating");
   } catch (e) {
     print(e);
   }
@@ -250,15 +249,16 @@ Future<int> getUserRating(String hotelId) async {
 
 Future<bool> setUserRating(String hotelId, int rating) async {
   try {
-    await db
-        .collection("rating")
-        .doc(hotelId + auth.currentUser.uid.toString())
-        .set({
-      "userId": auth.currentUser.uid.toString(),
-      "hotelId": hotelId,
-      "rating": rating,
-    });
-    return true;
+    var uid = auth.currentUser?.uid.toString();
+    if (uid != null) {
+      await db.collection("rating").doc(hotelId + uid).set({
+        "userId": auth.currentUser?.uid.toString(),
+        "hotelId": hotelId,
+        "rating": rating,
+      });
+      return true;
+    }
+    return false;
   } catch (e) {
     print(e);
     return false;
@@ -269,10 +269,8 @@ Future<List<Room>> getRoomsByHotel(String hotelId) async {
   List<Room> rooms = [];
 
   try {
-    var event = await db
-      .collection("rooms")
-      .where("hotelId", isEqualTo: hotelId)
-      .get();
+    var event =
+        await db.collection("rooms").where("hotelId", isEqualTo: hotelId).get();
 
     for (var doc in event.docs) {
       var docData = doc.data();
