@@ -285,77 +285,77 @@ class _HotelDetailState extends State<HotelDetail> {
               ),
             ],
           ),
-          Row(
-            children: [
-              Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16, top: 32),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Chọn phòng',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ListRommsScreen(
-                                  listRooms: _listRooms,
-                                ),
-                              ),
-                            ).then((value) {
-                              if (value != null) {
-                                setState(() => _currentRoom = value);
-                              }
-                            });
-                          },
-                          child: Container(
-                              width: MediaQuery.of(context).size.width * 0.9,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10.0),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black26,
-                                    offset: Offset(0.0, 2.0),
-                                    blurRadius: 6.0,
-                                  )
-                                ],
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                    top: 16, bottom: 16, left: 8, right: 8),
-                                child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        _currentRoom.name,
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            fontWeight: FontWeight.w600),
-                                      ),
-                                      Icon(
-                                        Icons.arrow_forward_ios_outlined,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                    ]),
-                              )),
-                        )
-                      ]))
-            ],
-          ),
+          // Row(
+          //   children: [
+          //     Padding(
+          //         padding: const EdgeInsets.only(left: 16, right: 16, top: 32),
+          //         child: Column(
+          //             crossAxisAlignment: CrossAxisAlignment.start,
+          //             mainAxisAlignment: MainAxisAlignment.center,
+          //             children: [
+          //               Text(
+          //                 'Chọn phòng',
+          //                 style: TextStyle(
+          //                   color: Colors.black,
+          //                   fontWeight: FontWeight.bold,
+          //                 ),
+          //               ),
+          //               SizedBox(
+          //                 height: 8,
+          //               ),
+          //               InkWell(
+          //                 onTap: () {
+          //                   Navigator.push(
+          //                     context,
+          //                     MaterialPageRoute(
+          //                       builder: (_) => ListRommsScreen(
+          //                         listRooms: _listRooms,
+          //                       ),
+          //                     ),
+          //                   ).then((value) {
+          //                     if (value != null) {
+          //                       setState(() => _currentRoom = value);
+          //                     }
+          //                   });
+          //                 },
+          //                 child: Container(
+          //                     width: MediaQuery.of(context).size.width * 0.9,
+          //                     decoration: BoxDecoration(
+          //                       color: Colors.white,
+          //                       borderRadius: BorderRadius.circular(10.0),
+          //                       boxShadow: [
+          //                         BoxShadow(
+          //                           color: Colors.black26,
+          //                           offset: Offset(0.0, 2.0),
+          //                           blurRadius: 6.0,
+          //                         )
+          //                       ],
+          //                     ),
+          //                     child: Padding(
+          //                       padding: EdgeInsets.only(
+          //                           top: 16, bottom: 16, left: 8, right: 8),
+          //                       child: Row(
+          //                           mainAxisAlignment:
+          //                               MainAxisAlignment.spaceBetween,
+          //                           children: [
+          //                             Text(
+          //                               _currentRoom.name,
+          //                               style: TextStyle(
+          //                                   fontSize: 16,
+          //                                   color:
+          //                                       Theme.of(context).primaryColor,
+          //                                   fontWeight: FontWeight.w600),
+          //                             ),
+          //                             Icon(
+          //                               Icons.arrow_forward_ios_outlined,
+          //                               color: Theme.of(context).primaryColor,
+          //                             ),
+          //                           ]),
+          //                     )),
+          //               )
+          //             ]))
+          //   ],
+          // ),
           Row(
             children: [
               Padding(
@@ -434,8 +434,7 @@ class _HotelDetailState extends State<HotelDetail> {
                       context,
                       MaterialPageRoute(
                         builder: (_) => PaymentScreen(
-                          hotelName: widget.hotel.name,
-                          room: _currentRoom,
+                          hotel: widget.hotel,
                         ),
                       ),
                     );

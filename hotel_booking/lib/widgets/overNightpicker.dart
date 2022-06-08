@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/utils/utils.dart';
 import 'package:intl/intl.dart';
 
 import '../screens/paymentScreen.dart';
@@ -17,24 +18,19 @@ class _OverNightPickerState extends State<OverNightPicker> {
   void initState() {
     super.initState();
     parentState = context.findAncestorStateOfType<PaymentScreenState>();
-    initTime();
-  }
-
-  void initTime() {
-    final now = DateTime.now();
-    currentDate = DateTime(now.year, now.month, now.day, 22, 0);
-    parentState?.startDate = currentDate;
-    parentState?.endDate = currentDate.add(Duration(hours: 12));
+    currentDate = getOvernightInitTime();
   }
 
   void setCurrentDate(DateTime date) {
     setState(() {
       currentDate = DateTime(date.year, date.month, date.day, 22, 0);
     });
-    parentState?.setState(() {
-      parentState?.startDate = currentDate;
-      parentState?.endDate = currentDate.add(const Duration(hours: 12));
-    });
+    // parentState?.setState(() {
+    //   parentState?.startDate = currentDate;
+    //   parentState?.endDate = currentDate.add(const Duration(hours: 12));
+    // });
+    parentState?.setDate(
+        currentDate, currentDate.add(const Duration(hours: 12)));
   }
 
   String getFrom() {
