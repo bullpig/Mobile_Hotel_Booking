@@ -93,23 +93,25 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.27,
                                     child: Padding(
-                                      padding: EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 5.0),
-                                      child: 
-                                        Text(
-                                          room.name,
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
+                                      padding: EdgeInsets.fromLTRB(
+                                          10.0, 5.0, 5.0, 5.0),
+                                      child: Text(
+                                        room.name,
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.w600,
                                         ),
-                                      
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
                                   ),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Column(
@@ -119,7 +121,7 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
                                           Text(
                                             "${room.priceTwoHours}VND",
                                             style: TextStyle(
-                                              fontSize: 16.0,
+                                              fontSize: 15.0,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -141,7 +143,7 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
                                           Text(
                                             "${room.priceOvernight}VND",
                                             style: TextStyle(
-                                              fontSize: 16.0,
+                                              fontSize: 15.0,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
@@ -163,7 +165,7 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
                                           Text(
                                             "${room.priceAllday}VND",
                                             style: TextStyle(
-                                              fontSize: 16.0,
+                                              fontSize: 15.0,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),

@@ -274,12 +274,86 @@ Future<List<Room>> getRoomsByHotel(String hotelId) async {
 
     for (var doc in event.docs) {
       var docData = doc.data();
+      try {
+        var room = Room(
+          id: doc.id.toString(),
+          name: docData["name"],
+          hotelId: docData["hotelId"],
+          imageUrl: docData["imageUrl"],
+          description: List<String>.from(docData["description"] ?? []),
+          priceTwoHours: docData["priceTwoHours"],
+          priceOvernight: docData["priceOvernight"],
+          priceAllday: docData["priceAllday"],
+        );
+        rooms.add(room);
+      } catch (err) {
+        print(err);
+      }
+    }
+  } catch (e) {
+    print(e);
+  }
+
+  return rooms;
+}
+
+Future<List<Room>> getAvailableRooms(
+    String hotelId, DateTime startDate, DateTime endDate) async {
+  List<Room> rooms = [];
+
+  List<String> unavailableRoomIds = [];
+
+  try {
+    var ordersQuery = await db
+        .collection("orders")
+        .where("hotelId", isEqualTo: hotelId)
+        .where("userId", isEqualTo: auth.currentUser!.uid)
+        .get();
+
+    for (var doc in ordersQuery.docs) {
+      var docData = doc.data();
+      DateTime orderStartDate = docData["startTime"].toDate();
+      DateTime orderEndDate = docData["endTime"].toDate();
+      if (!(orderEndDate.isBefore(startDate) ||
+              orderEndDate.isAtSameMomentAs(startDate)) &&
+          !(orderStartDate.isAfter(endDate) ||
+              orderStartDate.isAtSameMomentAs(endDate))) {
+        unavailableRoomIds.add(docData["roomId"]);
+      }
+    }
+  } catch (e) {
+    print(e);
+  }
+
+  print(unavailableRoomIds.toString());
+
+  try {
+    var event;
+
+    if (unavailableRoomIds.isNotEmpty) {
+      event = await db
+          .collection("rooms")
+          .where("hotelId", isEqualTo: hotelId)
+          .where(FieldPath.documentId, whereNotIn: unavailableRoomIds)
+          .get();
+    } else {
+      event = await db
+          .collection("rooms")
+          .where("hotelId", isEqualTo: hotelId)
+          .get();
+    }
+
+    print(event.docs.toString());
+
+    for (var doc in event.docs) {
+      var docData = doc.data();
+
       var room = Room(
         id: doc.id.toString(),
         name: docData["name"],
         hotelId: docData["hotelId"],
         imageUrl: docData["imageUrl"],
-        description: List<String>.from(docData["description"]),
+        description: List<String>.from(docData["description"] ?? []),
         priceTwoHours: docData["priceTwoHours"],
         priceOvernight: docData["priceOvernight"],
         priceAllday: docData["priceAllday"],

@@ -7,8 +7,8 @@ final services = {
   "Bar": Icons.local_drink,
   "Wifi": Icons.wifi,
   "Gym": Icons.fitness_center,
-  "Elevator" : Icons.elevator,
-  "NETFLIX" : Icons.camera_roll, 
+  "Elevator": Icons.elevator,
+  "NETFLIX": Icons.camera_roll,
 };
 
 enum BookingType { twoHours, overnight, allday }
@@ -66,3 +66,37 @@ Widget buildRatingStars(double currentRating) {
     ],
   );
 }
+
+DateTime getTwoHoursInitTime() {
+  final currentTime = DateTime.now();
+
+  if (currentTime.isAfter(
+      DateTime(currentTime.year, currentTime.month, currentTime.day, 20, 0))) {
+    final nextDate = currentTime.add(Duration(days: 1));
+    return DateTime(nextDate.year, nextDate.month, nextDate.day, 8, 0);
+  }
+
+  if (currentTime.isBefore(
+      DateTime(currentTime.year, currentTime.month, currentTime.day, 8, 0))) {
+    return DateTime(currentTime.year, currentTime.month, currentTime.day, 8, 0);
+  }
+
+  if (currentTime.minute <= 30) {
+    return DateTime(currentTime.year, currentTime.month, currentTime.day,
+        currentTime.hour, 30);
+  } else {
+    return DateTime(currentTime.year, currentTime.month, currentTime.day,
+        currentTime.add(Duration(hours: 1)).hour, 0);
+  }
+}
+
+DateTime getOvernightInitTime() {
+  final now = DateTime.now();
+  return DateTime(now.year, now.month, now.day, 22, 0);
+}
+
+DateTime getAlldayInitTime() {
+  final now = DateTime.now();
+  return DateTime(now.year, now.month, now.day, 14, 0);
+}
+

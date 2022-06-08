@@ -9,21 +9,24 @@ import '../models/hotel_model.dart';
 import './success.dart';
 import '../widgets/overNightpicker.dart';
 import '../widgets/twoHoursPicker.dart';
+import 'listRoomsScreen.dart';
 
 class PaymentScreen extends StatefulWidget {
-  final Room room;
-  final String hotelName;
-  PaymentScreen({required this.room, required this.hotelName});
+  final Hotel hotel;
+  PaymentScreen({Key? key, required this.hotel}) : super(key: key);
   @override
   PaymentScreenState createState() => PaymentScreenState();
 }
 
 class PaymentScreenState extends State<PaymentScreen> {
   BookingType bookingType = BookingType.twoHours;
-  DateTime startDate = DateTime(0);
-  DateTime endDate = DateTime(0);
+  late DateTime startDate;
+  late DateTime endDate;
 
   PaymentType paymentType = PaymentType.checkIn;
+
+  List<Room> _listRooms = const [];
+  Room? _currentRoom;
 
   Widget getTimePicker(BookingType bookingType) {
     switch (bookingType) {
@@ -41,12 +44,12 @@ class PaymentScreenState extends State<PaymentScreen> {
   int getTotalPayment() {
     switch (bookingType) {
       case BookingType.twoHours:
-        return widget.room.priceTwoHours;
+        return _currentRoom!.priceTwoHours;
       case BookingType.overnight:
-        return widget.room.priceOvernight;
+        return _currentRoom!.priceOvernight;
       case BookingType.allday:
         var totalDays = daysBetween(startDate, endDate);
-        return totalDays * widget.room.priceAllday;
+        return totalDays * _currentRoom!.priceAllday;
     }
   }
 
@@ -59,6 +62,56 @@ class PaymentScreenState extends State<PaymentScreen> {
   @override
   void initState() {
     super.initState();
+    startDate = getTwoHoursInitTime();
+    endDate = getTwoHoursInitTime().add(const Duration(hours: 2));
+    getListRooms();
+  }
+
+  void getListRooms() async {
+    getAvailableRooms(widget.hotel.id, startDate, endDate)
+        .then((value) => setState(() {
+              _listRooms = value;
+              if (_listRooms.isNotEmpty) {
+                _currentRoom = _listRooms[0];
+              } else {
+                _currentRoom = null;
+              }
+            }));
+  }
+
+  void setDate(DateTime _startDate, DateTime _endDate) {
+    setState(() {
+      startDate = _startDate;
+      endDate = _endDate;
+      getListRooms();
+    });
+  }
+
+  void onPressConfirm() async {
+    if (_currentRoom == null) {
+      return;
+    }
+    bool bookingStatus = await createBooking(
+      widget.hotel.id,
+      _currentRoom!.id,
+      bookingType,
+      startDate,
+      endDate,
+      paymentType,
+      getTotalPayment(),
+      false,
+    );
+    if (bookingStatus) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => Success(),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Đặt phòng thất bại!")));
+    }
   }
 
   @override
@@ -84,7 +137,7 @@ class PaymentScreenState extends State<PaymentScreen> {
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Text(
-                        '${widget.hotelName} - ${widget.room.name}',
+                        widget.hotel.name,
                         style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -135,6 +188,10 @@ class PaymentScreenState extends State<PaymentScreen> {
                             onTap: () {
                               setState(() {
                                 bookingType = BookingType.twoHours;
+                                startDate = getTwoHoursInitTime();
+                                endDate = getTwoHoursInitTime()
+                                    .add(const Duration(hours: 2));
+                                getListRooms();
                               });
                             },
                             child: Padding(
@@ -168,6 +225,10 @@ class PaymentScreenState extends State<PaymentScreen> {
                             onTap: () {
                               setState(() {
                                 bookingType = BookingType.overnight;
+                                startDate = getOvernightInitTime();
+                                endDate = getOvernightInitTime()
+                                    .add(const Duration(hours: 12));
+                                getListRooms();
                               });
                             },
                             child: Container(
@@ -199,6 +260,10 @@ class PaymentScreenState extends State<PaymentScreen> {
                             onTap: () {
                               setState(() {
                                 bookingType = BookingType.allday;
+                                startDate = getAlldayInitTime();
+                                endDate = getAlldayInitTime()
+                                    .add(const Duration(hours: 22));
+                                getListRooms();
                               });
                             },
                             child: Container(
@@ -231,7 +296,74 @@ class PaymentScreenState extends State<PaymentScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 20.0),
+              SizedBox(height: 16.0),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      offset: Offset(0.0, 2.0),
+                      blurRadius: 6.0,
+                    )
+                  ],
+                ),
+                child: Padding(
+                    padding:
+                        const EdgeInsets.only(left: 16, right: 16, top: 16),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'CHỌN PHÒNG',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => ListRommsScreen(
+                                    listRooms: _listRooms,
+                                  ),
+                                ),
+                              ).then((value) {
+                                if (value != null) {
+                                  setState(() => _currentRoom = value);
+                                }
+                              });
+                            },
+                            child: Container(
+                                width: MediaQuery.of(context).size.width * 0.9,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 16, bottom: 16, left: 8),
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          _currentRoom?.name ??
+                                              "Không có phòng phù hợp",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ]),
+                                )),
+                          )
+                        ])),
+              ),
+              SizedBox(
+                height: 16,
+              ),
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -319,33 +451,35 @@ class PaymentScreenState extends State<PaymentScreen> {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'TỔNG CỘNG',
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+              if (_currentRoom != null)
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'TỔNG CỘNG',
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "${getTotalPayment()}VND",
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )
-                  ],
+                      Text(
+                        "${getTotalPayment()}VND",
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: RaisedButton(
+                  disabledColor: Theme.of(context).disabledColor,
                   color: Theme.of(context).primaryColor,
                   textColor: Colors.white,
                   child: Container(
@@ -362,29 +496,7 @@ class PaymentScreenState extends State<PaymentScreen> {
                   shape: new RoundedRectangleBorder(
                     borderRadius: new BorderRadius.circular(10.0),
                   ),
-                  onPressed: () async {
-                    bool bookingStatus = await createBooking(
-                      widget.room.hotelId,
-                      widget.room.id,
-                      bookingType,
-                      startDate,
-                      endDate,
-                      paymentType,
-                      getTotalPayment(),
-                      false,
-                    );
-                    if (bookingStatus) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => Success(),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Đặt phòng thất bại!")));
-                    }
-                  },
+                  onPressed: (_currentRoom == null) ? null : onPressConfirm,
                 ),
               ),
             ],
