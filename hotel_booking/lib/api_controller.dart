@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hotel_booking/models/destination_model.dart';
+import 'package:hotel_booking/models/order.dart';
 import 'package:hotel_booking/models/room.dart';
 import 'package:hotel_booking/utils/utils.dart';
 
@@ -176,25 +177,29 @@ Future<bool> createBooking(
 Future<List<Hotel>> getSuggestHotels() async {
   List<Hotel> hotels = [];
 
-  var event = await db.collection("hotels").limit(5).get();
+  try {
+    var event = await db.collection("hotels").limit(5).get();
 
-  for (var doc in event.docs) {
-    var docData = doc.data();
-    var hotel = Hotel(
-      id: doc.id.toString(),
-      name: docData["name"],
-      address: docData["address"],
-      districtId: docData["districtId"],
-      phone: docData["phone"],
-      imageUrl: docData["imageUrl"],
-      location: docData["location"],
-      services: List<String>.from(docData["services"]),
-      description: docData["description"],
-      //rating: docData["rating"],
-      rooms: List<String>.from(docData["rooms"]),
-    );
-    hotel.rating = await getHotelRating(hotel.id);
-    hotels.add(hotel);
+    for (var doc in event.docs) {
+      var docData = doc.data();
+      var hotel = Hotel(
+        id: doc.id.toString(),
+        name: docData["name"],
+        address: docData["address"],
+        districtId: docData["districtId"],
+        phone: docData["phone"],
+        imageUrl: docData["imageUrl"],
+        location: docData["location"],
+        services: List<String>.from(docData["services"]),
+        description: docData["description"],
+        //rating: docData["rating"],
+        rooms: List<String>.from(docData["rooms"]),
+      );
+      hotel.rating = await getHotelRating(hotel.id);
+      hotels.add(hotel);
+    }
+  } catch (e) {
+    log(e.toString());
   }
 
   return hotels;
@@ -365,4 +370,40 @@ Future<List<Room>> getAvailableRooms(
   }
 
   return rooms;
+}
+
+Future<List<Order>> getOrders() async {
+  List<Order> orders = [];
+
+  try {
+    var event = await db
+        .collection("orders")
+        .where("userId", isEqualTo: auth.currentUser?.uid.toString())
+        .get();
+
+    for (var doc in event.docs) {
+      var docData = doc.data();
+      var order = Order(
+        id: doc.id,
+        hotelId: docData["hotelId"],
+        roomId: docData["roomId"],
+        bookingType: docData["bookingType"],
+        startTime: docData["startTime"].toDate(),
+        endTime: docData["endTime"].toDate(),
+        paymentType: docData["paymentType"],
+        totalPayment: docData["totalPayment"],
+        paymentStaus: docData["paymentStatus"],
+      );
+      var room = await db.collection("rooms").doc(order.roomId).get();
+      order.roomName = room.get("name");
+      order.roomImageUrl = room.get("imageUrl");
+      var hotel = await db.collection("hotels").doc(order.hotelId).get();
+      order.hotelName = hotel.get("name");
+      orders.add(order);
+    }
+  } catch (e) {
+    log(e.toString());
+  }
+
+  return orders;
 }

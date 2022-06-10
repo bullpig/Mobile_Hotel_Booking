@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 final services = {
   "Parking": Icons.local_parking,
@@ -100,3 +101,6 @@ DateTime getAlldayInitTime() {
   return DateTime(now.year, now.month, now.day, 14, 0);
 }
 
+String formatTime(DateTime dateTime) {
+  return DateFormat("HH:mm dd/MM/yyyy").format(dateTime);
+}

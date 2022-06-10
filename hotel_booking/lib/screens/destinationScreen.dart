@@ -200,7 +200,8 @@ class _DestinationScreenState extends State<DestinationScreen> {
                                   Padding(
                                     padding: EdgeInsets.only(left: 3),
                                     child: Container(
-                                      width: MediaQuery.of(context).size.width * 0.5,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
                                       child: Wrap(
                                         spacing: 5,
                                         runSpacing: 5,
