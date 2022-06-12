@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/api_controller.dart';
@@ -17,7 +18,7 @@ class FavouriteScreen extends StatefulWidget {
 }
 
 class _FavouriteScreenState extends State<FavouriteScreen> {
-  List<Hotel> favoriteHotel = [];
+  List<ShortenHotel> favoriteHotel = tempHotel;
 
   @override
   void initState() {
@@ -31,7 +32,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
       appBar: AppBar(
         title: Text(
           'Danh sách yêu thích',
-          style: TextStyle(color: Theme.of(context).primaryColor),
+          style: TextStyle(color: Colors.blue),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -46,13 +47,13 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         scrollDirection: Axis.vertical,
         itemCount: favoriteHotel.length,
         itemBuilder: (BuildContext context, int index) {
-          Hotel hotel = favoriteHotel[index];
+          ShortenHotel hotel = favoriteHotel[index];
           return GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (_) => HotelDetail(hotel: hotel),
+                  builder: (_) => HotelDetail(hotelId: hotel.id),
                 ),
               );
             },
@@ -65,9 +66,10 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       image: DecorationImage(
-                        image: NetworkImage(
-                          hotel.imageUrl,
-                        ),
+                        image: (hotel.imageUrl.isNotEmpty
+                                ? CachedNetworkImageProvider(hotel.imageUrl)
+                                : const AssetImage("assets/images/loading.gif"))
+                            as ImageProvider,
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -80,7 +82,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => HotelDetail(hotel: hotel),
+                            builder: (_) => HotelDetail(hotelId: hotel.id),
                           ),
                         );
                       },

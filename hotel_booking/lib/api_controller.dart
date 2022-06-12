@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hotel_booking/models/destination_model.dart';
+import 'package:hotel_booking/models/order.dart';
 import 'package:hotel_booking/models/room.dart';
 import 'package:hotel_booking/utils/utils.dart';
 
@@ -23,8 +24,8 @@ Future<bool> addUserInfo(
   }
 }
 
-Future<List<Hotel>> getHotelsByDestination(String destinationId) async {
-  List<Hotel> hotels = [];
+Future<List<ShortenHotel>> getHotelsByDestination(String destinationId) async {
+  List<ShortenHotel> hotels = [];
 
   var event = await db
       .collection("hotels")
@@ -32,18 +33,17 @@ Future<List<Hotel>> getHotelsByDestination(String destinationId) async {
       .get();
   for (var doc in event.docs) {
     var docData = doc.data();
-    var hotel = Hotel(
+    var hotel = ShortenHotel(
       id: doc.id.toString(),
       name: docData["name"],
       address: docData["address"],
-      districtId: docData["districtId"],
-      phone: docData["phone"],
       imageUrl: docData["imageUrl"],
-      location: docData["location"],
-      services: List<String>.from(docData["services"]),
-      description: docData["description"],
       rooms: List<String>.from(docData["rooms"]),
     );
+    if (hotel.rooms.length > 3) {
+      hotel.rooms = hotel.rooms.sublist(0, 3);
+      hotel.rooms.add("...");
+    }
     hotel.rating = await getHotelRating(hotel.id);
     hotels.add(hotel);
   }
@@ -72,7 +72,7 @@ Future<List<Destination>> getDestination(String city) async {
       dest.totalHotel = hotels.docs.length;
       destinations.add(dest);
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -108,8 +108,8 @@ Future<bool> getHotelFavoriteStatus(String hotelId) async {
   return false;
 }
 
-Future<List<Hotel>> getFavoriteHotel() async {
-  List<Hotel> hotels = [];
+Future<List<ShortenHotel>> getFavoriteHotel() async {
+  List<ShortenHotel> hotels = [];
 
   var hotelIds = await getFavoriteHotelIds();
 
@@ -124,19 +124,13 @@ Future<List<Hotel>> getFavoriteHotel() async {
 
   for (var doc in event.docs) {
     var docData = doc.data();
-    var hotel = Hotel(
+    var hotel = ShortenHotel(
       id: doc.id.toString(),
       name: docData["name"],
       address: docData["address"],
-      districtId: docData["districtId"],
-      phone: docData["phone"],
       imageUrl: docData["imageUrl"],
-      location: docData["location"],
-      services: List<String>.from(docData["services"]),
-      description: docData["description"],
       rooms: List<String>.from(docData["rooms"]),
     );
-    hotel.rating = await getHotelRating(hotel.id);
     hotels.add(hotel);
   }
 
@@ -164,7 +158,6 @@ Future<bool> createBooking(
       "totalPayment": totalPayment,
       "paymentStatus": isPaid,
     };
-    print(order);
     await db.collection("orders").add(order);
     return true;
   } catch (e) {
@@ -173,28 +166,41 @@ Future<bool> createBooking(
   }
 }
 
-Future<List<Hotel>> getSuggestHotels() async {
-  List<Hotel> hotels = [];
+Future<List<ShortenHotel>> getSuggestHotels(String cityId) async {
+  List<ShortenHotel> hotels = [];
 
-  var event = await db.collection("hotels").limit(5).get();
+  try {
+    var destQuery = await db
+        .collection("districts")
+        .where("cityId", isEqualTo: cityId)
+        .get();
 
-  for (var doc in event.docs) {
-    var docData = doc.data();
-    var hotel = Hotel(
-      id: doc.id.toString(),
-      name: docData["name"],
-      address: docData["address"],
-      districtId: docData["districtId"],
-      phone: docData["phone"],
-      imageUrl: docData["imageUrl"],
-      location: docData["location"],
-      services: List<String>.from(docData["services"]),
-      description: docData["description"],
-      //rating: docData["rating"],
-      rooms: List<String>.from(docData["rooms"]),
-    );
-    hotel.rating = await getHotelRating(hotel.id);
-    hotels.add(hotel);
+    for (var dest in destQuery.docs) {
+      String destId = dest.id;
+      var hotelQuery = await db
+          .collection("hotels")
+          .where("districtId", isEqualTo: destId)
+          .get();
+      List<ShortenHotel> destHotels = [];
+      for (var doc in hotelQuery.docs) {
+        var docData = doc.data();
+        var hotel = ShortenHotel(
+          id: doc.id.toString(),
+          name: docData["name"],
+          address: docData["address"],
+          imageUrl: docData["imageUrl"],
+        );
+        hotel.rating = await getHotelRating(hotel.id);
+        destHotels.add(hotel);
+      }
+      if (destHotels.isNotEmpty) {
+        destHotels.sort(((a, b) => a.rating.compareTo(b.rating)));
+        hotels.add(destHotels.last);
+      }
+    }
+
+  } catch (e) {
+    log(e.toString());
   }
 
   return hotels;
@@ -221,7 +227,7 @@ Future<double> getHotelRating(String hotelId) async {
     var roundedString = rawRating.toStringAsFixed(1);
     rating = double.parse(roundedString);
   } catch (e) {
-    print(e);
+    log(e.toString());
   }
 
   return rating;
@@ -241,7 +247,7 @@ Future<int> getUserRating(String hotelId) async {
       rating = doc.get("rating");
     }
   } catch (e) {
-    print(e);
+    log(e.toString());
   }
 
   return rating;
@@ -260,7 +266,7 @@ Future<bool> setUserRating(String hotelId, int rating) async {
     }
     return false;
   } catch (e) {
-    print(e);
+    log(e.toString());
     return false;
   }
 }
@@ -287,11 +293,11 @@ Future<List<Room>> getRoomsByHotel(String hotelId) async {
         );
         rooms.add(room);
       } catch (err) {
-        print(err);
+        log(err.toString());
       }
     }
   } catch (e) {
-    print(e);
+    log(e.toString());
   }
 
   return rooms;
@@ -322,10 +328,8 @@ Future<List<Room>> getAvailableRooms(
       }
     }
   } catch (e) {
-    print(e);
+    log(e.toString());
   }
-
-  print(unavailableRoomIds.toString());
 
   try {
     var event;
@@ -343,8 +347,6 @@ Future<List<Room>> getAvailableRooms(
           .get();
     }
 
-    print(event.docs.toString());
-
     for (var doc in event.docs) {
       var docData = doc.data();
 
@@ -361,8 +363,67 @@ Future<List<Room>> getAvailableRooms(
       rooms.add(room);
     }
   } catch (e) {
-    print(e);
+    log(e.toString());
   }
 
   return rooms;
+}
+
+Future<List<Order>> getOrders() async {
+  List<Order> orders = [];
+
+  try {
+    var event = await db
+        .collection("orders")
+        .where("userId", isEqualTo: auth.currentUser?.uid.toString())
+        .get();
+
+    for (var doc in event.docs) {
+      var docData = doc.data();
+      var order = Order(
+        id: doc.id,
+        hotelId: docData["hotelId"],
+        roomId: docData["roomId"],
+        bookingType: docData["bookingType"],
+        startTime: docData["startTime"].toDate(),
+        endTime: docData["endTime"].toDate(),
+        paymentType: docData["paymentType"],
+        totalPayment: docData["totalPayment"],
+        paymentStaus: docData["paymentStatus"],
+      );
+      var room = await db.collection("rooms").doc(order.roomId).get();
+      order.roomName = room.get("name");
+      order.roomImageUrl = room.get("imageUrl");
+      var hotel = await db.collection("hotels").doc(order.hotelId).get();
+      order.hotelName = hotel.get("name");
+      orders.add(order);
+    }
+  } catch (e) {
+    log(e.toString());
+  }
+
+  return orders;
+}
+
+Future<Hotel> getHotelById(String hotelId) async {
+  Hotel hotel = Hotel();
+  hotel.id = hotelId;
+
+  try {
+    var doc = await db.collection("hotels").doc(hotelId).get();
+    hotel.name = doc.get("name");
+    hotel.address = doc.get("address");
+    hotel.districtId = doc.get("districtId");
+    hotel.phone = doc.get("phone");
+    hotel.imageUrl = doc.get("imageUrl");
+    hotel.location = doc.get("location");
+    hotel.services = List<String>.from(doc.get("services"));
+    hotel.description = doc.get("description");
+    hotel.rooms = List<String>.from(doc.get("rooms"));
+    hotel.rating = await getHotelRating(hotel.id);
+  } catch (e) {
+    log(e.toString());
+  }
+
+  return hotel;
 }

@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,15 +13,18 @@ import 'package:hotel_booking/models/hotel_model.dart';
 import 'package:hotel_booking/utils/utils.dart';
 
 class HotelDetail extends StatefulWidget {
-  final Hotel hotel;
-  HotelDetail({required this.hotel});
+  String hotelId;
+
+  HotelDetail({Key? key, required this.hotelId}) : super(key: key);
+
   @override
   _HotelDetailState createState() => _HotelDetailState();
 }
 
 class _HotelDetailState extends State<HotelDetail> {
+  late Hotel _hotel = Hotel();
+
   bool _isFavorite = false;
-  List<Room> _listRooms = const [];
   Room _currentRoom = Room();
   int _userRating = 0;
 
@@ -53,15 +57,14 @@ class _HotelDetailState extends State<HotelDetail> {
   }
 
   void asyncInitState() async {
-    getHotelFavoriteStatus(widget.hotel.id)
+    getHotelById(widget.hotelId).then(
+      (value) => setState(() {
+        _hotel = value;
+      }),
+    );
+    getHotelFavoriteStatus(widget.hotelId)
         .then((value) => setState(() => _isFavorite = value));
-    getRoomsByHotel(widget.hotel.id).then((value) {
-      setState(() {
-        _listRooms = value;
-        _currentRoom = value[0];
-      });
-    });
-    getUserRating(widget.hotel.id).then((value) {
+    getUserRating(widget.hotelId).then((value) {
       setState(() {
         _userRating = value;
       });
@@ -71,14 +74,14 @@ class _HotelDetailState extends State<HotelDetail> {
   void _setUserRating(int rating) {
     setState(() {
       _userRating = rating;
-      setUserRating(widget.hotel.id, rating)
+      setUserRating(widget.hotelId, rating)
           .then((value) => _reloadHotelRating());
     });
   }
 
   void _reloadHotelRating() {
-    getHotelRating(widget.hotel.id)
-        .then((value) => setState(() => widget.hotel.rating = value));
+    getHotelRating(widget.hotelId)
+        .then((value) => setState(() => _hotel.rating = value));
   }
 
   Widget _buildVoteRating(int currentRating) {
@@ -125,13 +128,14 @@ class _HotelDetailState extends State<HotelDetail> {
                 width: MediaQuery.of(context).size.width,
                 height: 240,
                 child: Hero(
-                  tag: widget.hotel.imageUrl,
+                  tag: "hotelImage",
                   child: ClipRRect(
-                    //borderRadius: BorderRadius.circular(30.0),
-                    child: Image.network(
-                      widget.hotel.imageUrl,
-                      fit: BoxFit.cover,
-                    ),
+                    child: _hotel.imageUrl.isNotEmpty
+                        ? CachedNetworkImage(
+                            imageUrl: _hotel.imageUrl,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.asset('assets/images/loading.gif'),
                   ),
                 ),
               ),
@@ -171,7 +175,7 @@ class _HotelDetailState extends State<HotelDetail> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.hotel.name,
+                          _hotel.name,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 20,
@@ -185,7 +189,7 @@ class _HotelDetailState extends State<HotelDetail> {
                           height: 8,
                         ),
                         Text(
-                          widget.hotel.address,
+                          _hotel.address,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
@@ -197,12 +201,12 @@ class _HotelDetailState extends State<HotelDetail> {
                         SizedBox(
                           height: 8,
                         ),
-                        buildRatingStars(widget.hotel.rating),
+                        buildRatingStars(_hotel.rating),
                         SizedBox(
                           height: 8,
                         ),
                         ReadMoreText(
-                          widget.hotel.description,
+                          _hotel.description,
                           trimLines: 4,
                           colorClickableText: Theme.of(context).primaryColor,
                           moreStyle: TextStyle(
@@ -245,7 +249,7 @@ class _HotelDetailState extends State<HotelDetail> {
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: widget.hotel.services
+                      children: _hotel.services
                           .map((e) => Wrap(
                                 children: [
                                   Column(
@@ -285,77 +289,6 @@ class _HotelDetailState extends State<HotelDetail> {
               ),
             ],
           ),
-          // Row(
-          //   children: [
-          //     Padding(
-          //         padding: const EdgeInsets.only(left: 16, right: 16, top: 32),
-          //         child: Column(
-          //             crossAxisAlignment: CrossAxisAlignment.start,
-          //             mainAxisAlignment: MainAxisAlignment.center,
-          //             children: [
-          //               Text(
-          //                 'Chọn phòng',
-          //                 style: TextStyle(
-          //                   color: Colors.black,
-          //                   fontWeight: FontWeight.bold,
-          //                 ),
-          //               ),
-          //               SizedBox(
-          //                 height: 8,
-          //               ),
-          //               InkWell(
-          //                 onTap: () {
-          //                   Navigator.push(
-          //                     context,
-          //                     MaterialPageRoute(
-          //                       builder: (_) => ListRommsScreen(
-          //                         listRooms: _listRooms,
-          //                       ),
-          //                     ),
-          //                   ).then((value) {
-          //                     if (value != null) {
-          //                       setState(() => _currentRoom = value);
-          //                     }
-          //                   });
-          //                 },
-          //                 child: Container(
-          //                     width: MediaQuery.of(context).size.width * 0.9,
-          //                     decoration: BoxDecoration(
-          //                       color: Colors.white,
-          //                       borderRadius: BorderRadius.circular(10.0),
-          //                       boxShadow: [
-          //                         BoxShadow(
-          //                           color: Colors.black26,
-          //                           offset: Offset(0.0, 2.0),
-          //                           blurRadius: 6.0,
-          //                         )
-          //                       ],
-          //                     ),
-          //                     child: Padding(
-          //                       padding: EdgeInsets.only(
-          //                           top: 16, bottom: 16, left: 8, right: 8),
-          //                       child: Row(
-          //                           mainAxisAlignment:
-          //                               MainAxisAlignment.spaceBetween,
-          //                           children: [
-          //                             Text(
-          //                               _currentRoom.name,
-          //                               style: TextStyle(
-          //                                   fontSize: 16,
-          //                                   color:
-          //                                       Theme.of(context).primaryColor,
-          //                                   fontWeight: FontWeight.w600),
-          //                             ),
-          //                             Icon(
-          //                               Icons.arrow_forward_ios_outlined,
-          //                               color: Theme.of(context).primaryColor,
-          //                             ),
-          //                           ]),
-          //                     )),
-          //               )
-          //             ]))
-          //   ],
-          // ),
           Row(
             children: [
               Padding(
@@ -409,7 +342,7 @@ class _HotelDetailState extends State<HotelDetail> {
                     setState(() {
                       _isFavorite = !_isFavorite;
                     });
-                    await setHotelFavoriteStatus(widget.hotel.id, _isFavorite);
+                    await setHotelFavoriteStatus(widget.hotelId, _isFavorite);
                   },
                   child: Container(
                     width: 60,
@@ -434,7 +367,7 @@ class _HotelDetailState extends State<HotelDetail> {
                       context,
                       MaterialPageRoute(
                         builder: (_) => PaymentScreen(
-                          hotel: widget.hotel,
+                          hotel: _hotel,
                         ),
                       ),
                     );

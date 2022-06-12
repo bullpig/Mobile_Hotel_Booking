@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 final services = {
   "Parking": Icons.local_parking,
@@ -13,6 +14,12 @@ final services = {
 
 enum BookingType { twoHours, overnight, allday }
 
+final bookingTypeToText = {
+  BookingType.twoHours: "Theo giờ",
+  BookingType.overnight: "Qua đêm",
+  BookingType.allday: "Theo ngày",
+};
+
 enum PaymentType { checkIn }
 
 bool isSameDate(DateTime date1, DateTime date2) {
@@ -22,7 +29,7 @@ bool isSameDate(DateTime date1, DateTime date2) {
 }
 
 final paymentTypeLabels = {
-  PaymentType.checkIn: 'Thanh toán tại khách sạn',
+  PaymentType.checkIn: 'Thanh toán khi nhận phòng',
 };
 final paymentTypeIcons = {
   PaymentType.checkIn: Icons.money,
@@ -100,3 +107,6 @@ DateTime getAlldayInitTime() {
   return DateTime(now.year, now.month, now.day, 14, 0);
 }
 
+String formatTime(DateTime dateTime) {
+  return DateFormat("HH:mm dd/MM/yyyy").format(dateTime);
+}
