@@ -18,7 +18,7 @@ class _NearbyScreenState extends State<NearbyScreen> {
       appBar: AppBar(
         title: Text(
           'Gần đây',
-          style: TextStyle(color: Theme.of(context).primaryColor),
+          style: TextStyle(color: Colors.blue),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,

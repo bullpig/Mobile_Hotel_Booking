@@ -1,11 +1,13 @@
 import 'dart:ffi';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/models/order.dart';
 import 'package:hotel_booking/models/room.dart';
+import 'package:hotel_booking/screens/bookingDetail.dart';
 import 'package:hotel_booking/screens/hotelDetails.dart';
 import 'package:hotel_booking/screens/listRoomsScreen.dart';
 import 'package:readmore/readmore.dart';
@@ -19,7 +21,7 @@ class ListOrderScreen extends StatefulWidget {
 }
 
 class ListOrderState extends State<ListOrderScreen> {
-  List<Order> _listOrders = [];
+  List<Order> _listOrders = tempOrders;
 
   @override
   void initState() {
@@ -40,7 +42,7 @@ class ListOrderState extends State<ListOrderScreen> {
         appBar: AppBar(
           title: Text(
             'Phòng đã đặt',
-            style: TextStyle(color: Theme.of(context).primaryColor),
+            style: TextStyle(color: Colors.blue),
           ),
           centerTitle: true,
           backgroundColor: Colors.white,
@@ -52,6 +54,8 @@ class ListOrderState extends State<ListOrderScreen> {
           ),
         ),
         body: SafeArea(
+            child: Padding(
+          padding: EdgeInsets.only(top: 8),
           child: ListView.builder(
               itemCount: _listOrders.length,
               itemBuilder: (BuildContext context, int index) {
@@ -60,24 +64,21 @@ class ListOrderState extends State<ListOrderScreen> {
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => HotelDetail(
-                        hotel: Hotel(),
-                      ),
+                      builder: (_) => BookingDetail(order: order),
                     ),
-                  ).then((value) => setState(() {})),
+                  ),
                   child: Stack(
                     children: [
                       Container(
-                        margin: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 5.0),
-                        height: 100.0,
-                        // width: double.infinity,
+                        margin: EdgeInsets.fromLTRB(5.0, 0, 5.0, 5.0),
                         width: MediaQuery.of(context).size.width,
+                        height: 120,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(20.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.fromLTRB(140.0, 5.0, 5.0, 5.0),
+                          padding: EdgeInsets.fromLTRB(140.0, 10.0, 5.0, 5.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,13 +118,14 @@ class ListOrderState extends State<ListOrderScreen> {
                                         color: Colors.grey,
                                         fontSize: 13,
                                       ),
-                                      maxLines: 1,
+                                      maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
+                                      softWrap: true,
                                     ),
                                   ),
                                   Padding(
                                       padding: const EdgeInsets.only(
-                                          left: 10.0, top: 15),
+                                          left: 10.0, top: 30),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
@@ -147,19 +149,24 @@ class ListOrderState extends State<ListOrderScreen> {
                       ),
                       Positioned(
                         left: 20.0,
-                        top: 20.0,
+                        top: 10.0,
                         bottom: 15.0,
-                        child: Image.network(
-                          order.roomImageUrl,
-                          height: 80.0,
-                          width: 120.0,
-                          fit: BoxFit.cover,
-                        ),
+                        child: order.roomImageUrl.isNotEmpty
+                            ? CachedNetworkImage(
+                                imageUrl: order.roomImageUrl,
+                                width: 120.0,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                "assets/images/loading.gif",
+                                width: 120.0,
+                                fit: BoxFit.cover,
+                              ),
                       ),
                     ],
                   ),
                 );
               }),
-        ));
+        )));
   }
 }

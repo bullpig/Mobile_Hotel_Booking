@@ -32,18 +32,15 @@ class Order {
 
 var tempOrders = [
   Order(
-    id: "",
-    hotelId: "",
-    hotelName: "Temp Hotel",
-    roomId: "",
-    roomName: "Phong VIP",
-    roomImageUrl:
-        "https://go2joy.s3-ap-southeast-1.amazonaws.com/hotel/1190_1565152182487/2_1_182_1566199339936.jpg",
-    bookingType: "twoHours",
-    startTime: DateTime(2022, 6, 10, 20, 0),
-    endTime: DateTime(2022, 6, 10, 22, 0),
-    paymentType: "checkIn",
-    totalPayment: 200000,
-    paymentStaus: false,
-  )
+    startTime: DateTime(0),
+    endTime: DateTime(0),
+  ),
+  Order(
+    startTime: DateTime(0),
+    endTime: DateTime(0),
+  ),
+  Order(
+    startTime: DateTime(0),
+    endTime: DateTime(0),
+  ),
 ];

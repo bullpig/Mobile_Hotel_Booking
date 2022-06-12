@@ -14,6 +14,12 @@ final services = {
 
 enum BookingType { twoHours, overnight, allday }
 
+final bookingTypeToText = {
+  BookingType.twoHours: "Theo giờ",
+  BookingType.overnight: "Qua đêm",
+  BookingType.allday: "Theo ngày",
+};
+
 enum PaymentType { checkIn }
 
 bool isSameDate(DateTime date1, DateTime date2) {
@@ -23,7 +29,7 @@ bool isSameDate(DateTime date1, DateTime date2) {
 }
 
 final paymentTypeLabels = {
-  PaymentType.checkIn: 'Thanh toán tại khách sạn',
+  PaymentType.checkIn: 'Thanh toán khi nhận phòng',
 };
 final paymentTypeIcons = {
   PaymentType.checkIn: Icons.money,

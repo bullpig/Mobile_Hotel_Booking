@@ -12,7 +12,7 @@ class _EventScreenState extends State<EventScreen> {
       appBar: AppBar(
         title: Text(
           'Khuyến mãi / Sự kiện',
-          style: TextStyle(color: Theme.of(context).primaryColor),
+          style: TextStyle(color: Colors.blue),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,

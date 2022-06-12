@@ -12,6 +12,7 @@ class MainHomeScreen extends StatefulWidget {
 }
 
 class _MainHomeScreenState extends State<MainHomeScreen> {
+
   String city = "01";
 
   @override
@@ -66,7 +67,7 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
             SizedBox(
               height: 20.0,
             ),
-            HotelCarousel(),
+            HotelCarousel(cityId: city,),
           ],
         ),
       ),
