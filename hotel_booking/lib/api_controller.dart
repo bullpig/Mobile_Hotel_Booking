@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hotel_booking/models/destination_model.dart';
 import 'package:hotel_booking/models/location_hotel.dart';
+import 'package:hotel_booking/models/order.dart';
 import 'package:hotel_booking/models/room.dart';
 import 'package:hotel_booking/utils/utils.dart';
 import 'package:location/location.dart';
@@ -25,8 +26,8 @@ Future<bool> addUserInfo(
   }
 }
 
-Future<List<Hotel>> getHotelsByDestination(String destinationId) async {
-  List<Hotel> hotels = [];
+Future<List<ShortenHotel>> getHotelsByDestination(String destinationId) async {
+  List<ShortenHotel> hotels = [];
 
   var event = await db
       .collection("hotels")
@@ -34,18 +35,17 @@ Future<List<Hotel>> getHotelsByDestination(String destinationId) async {
       .get();
   for (var doc in event.docs) {
     var docData = doc.data();
-    var hotel = Hotel(
+    var hotel = ShortenHotel(
       id: doc.id.toString(),
       name: docData["name"],
       address: docData["address"],
-      districtId: docData["districtId"],
-      phone: docData["phone"],
       imageUrl: docData["imageUrl"],
-      location: docData["location"],
-      services: List<String>.from(docData["services"]),
-      description: docData["description"],
       rooms: List<String>.from(docData["rooms"]),
     );
+    if (hotel.rooms.length > 3) {
+      hotel.rooms = hotel.rooms.sublist(0, 3);
+      hotel.rooms.add("...");
+    }
     hotel.rating = await getHotelRating(hotel.id);
     hotels.add(hotel);
   }
@@ -74,7 +74,7 @@ Future<List<Destination>> getDestination(String city) async {
       dest.totalHotel = hotels.docs.length;
       destinations.add(dest);
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 
@@ -110,8 +110,8 @@ Future<bool> getHotelFavoriteStatus(String hotelId) async {
   return false;
 }
 
-Future<List<Hotel>> getFavoriteHotel() async {
-  List<Hotel> hotels = [];
+Future<List<ShortenHotel>> getFavoriteHotel() async {
+  List<ShortenHotel> hotels = [];
 
   var hotelIds = await getFavoriteHotelIds();
 
@@ -126,19 +126,13 @@ Future<List<Hotel>> getFavoriteHotel() async {
 
   for (var doc in event.docs) {
     var docData = doc.data();
-    var hotel = Hotel(
+    var hotel = ShortenHotel(
       id: doc.id.toString(),
       name: docData["name"],
       address: docData["address"],
-      districtId: docData["districtId"],
-      phone: docData["phone"],
       imageUrl: docData["imageUrl"],
-      location: docData["location"],
-      services: List<String>.from(docData["services"]),
-      description: docData["description"],
       rooms: List<String>.from(docData["rooms"]),
     );
-    hotel.rating = await getHotelRating(hotel.id);
     hotels.add(hotel);
   }
 
@@ -166,7 +160,6 @@ Future<bool> createBooking(
       "totalPayment": totalPayment,
       "paymentStatus": isPaid,
     };
-    print(order);
     await db.collection("orders").add(order);
     return true;
   } catch (e) {
@@ -175,28 +168,40 @@ Future<bool> createBooking(
   }
 }
 
-Future<List<Hotel>> getSuggestHotels() async {
-  List<Hotel> hotels = [];
+Future<List<ShortenHotel>> getSuggestHotels(String cityId) async {
+  List<ShortenHotel> hotels = [];
 
-  var event = await db.collection("hotels").limit(5).get();
+  try {
+    var destQuery = await db
+        .collection("districts")
+        .where("cityId", isEqualTo: cityId)
+        .get();
 
-  for (var doc in event.docs) {
-    var docData = doc.data();
-    var hotel = Hotel(
-      id: doc.id.toString(),
-      name: docData["name"],
-      address: docData["address"],
-      districtId: docData["districtId"],
-      phone: docData["phone"],
-      imageUrl: docData["imageUrl"],
-      location: docData["location"],
-      services: List<String>.from(docData["services"]),
-      description: docData["description"],
-      //rating: docData["rating"],
-      rooms: List<String>.from(docData["rooms"]),
-    );
-    hotel.rating = await getHotelRating(hotel.id);
-    hotels.add(hotel);
+    for (var dest in destQuery.docs) {
+      String destId = dest.id;
+      var hotelQuery = await db
+          .collection("hotels")
+          .where("districtId", isEqualTo: destId)
+          .get();
+      List<ShortenHotel> destHotels = [];
+      for (var doc in hotelQuery.docs) {
+        var docData = doc.data();
+        var hotel = ShortenHotel(
+          id: doc.id.toString(),
+          name: docData["name"],
+          address: docData["address"],
+          imageUrl: docData["imageUrl"],
+        );
+        hotel.rating = await getHotelRating(hotel.id);
+        destHotels.add(hotel);
+      }
+      if (destHotels.isNotEmpty) {
+        destHotels.sort(((a, b) => a.rating.compareTo(b.rating)));
+        hotels.add(destHotels.last);
+      }
+    }
+  } catch (e) {
+    log(e.toString());
   }
 
   return hotels;
@@ -223,7 +228,7 @@ Future<double> getHotelRating(String hotelId) async {
     var roundedString = rawRating.toStringAsFixed(1);
     rating = double.parse(roundedString);
   } catch (e) {
-    print(e);
+    log(e.toString());
   }
 
   return rating;
@@ -243,7 +248,7 @@ Future<int> getUserRating(String hotelId) async {
       rating = doc.get("rating");
     }
   } catch (e) {
-    print(e);
+    log(e.toString());
   }
 
   return rating;
@@ -262,7 +267,7 @@ Future<bool> setUserRating(String hotelId, int rating) async {
     }
     return false;
   } catch (e) {
-    print(e);
+    log(e.toString());
     return false;
   }
 }
@@ -276,12 +281,82 @@ Future<List<Room>> getRoomsByHotel(String hotelId) async {
 
     for (var doc in event.docs) {
       var docData = doc.data();
+      try {
+        var room = Room(
+          id: doc.id.toString(),
+          name: docData["name"],
+          hotelId: docData["hotelId"],
+          imageUrl: docData["imageUrl"],
+          description: List<String>.from(docData["description"] ?? []),
+          priceTwoHours: docData["priceTwoHours"],
+          priceOvernight: docData["priceOvernight"],
+          priceAllday: docData["priceAllday"],
+        );
+        rooms.add(room);
+      } catch (err) {
+        log(err.toString());
+      }
+    }
+  } catch (e) {
+    log(e.toString());
+  }
+
+  return rooms;
+}
+
+Future<List<Room>> getAvailableRooms(
+    String hotelId, DateTime startDate, DateTime endDate) async {
+  List<Room> rooms = [];
+
+  List<String> unavailableRoomIds = [];
+
+  try {
+    var ordersQuery = await db
+        .collection("orders")
+        .where("hotelId", isEqualTo: hotelId)
+        .where("userId", isEqualTo: auth.currentUser!.uid)
+        .get();
+
+    for (var doc in ordersQuery.docs) {
+      var docData = doc.data();
+      DateTime orderStartDate = docData["startTime"].toDate();
+      DateTime orderEndDate = docData["endTime"].toDate();
+      if (!(orderEndDate.isBefore(startDate) ||
+              orderEndDate.isAtSameMomentAs(startDate)) &&
+          !(orderStartDate.isAfter(endDate) ||
+              orderStartDate.isAtSameMomentAs(endDate))) {
+        unavailableRoomIds.add(docData["roomId"]);
+      }
+    }
+  } catch (e) {
+    log(e.toString());
+  }
+
+  try {
+    var event;
+
+    if (unavailableRoomIds.isNotEmpty) {
+      event = await db
+          .collection("rooms")
+          .where("hotelId", isEqualTo: hotelId)
+          .where(FieldPath.documentId, whereNotIn: unavailableRoomIds)
+          .get();
+    } else {
+      event = await db
+          .collection("rooms")
+          .where("hotelId", isEqualTo: hotelId)
+          .get();
+    }
+
+    for (var doc in event.docs) {
+      var docData = doc.data();
+
       var room = Room(
         id: doc.id.toString(),
         name: docData["name"],
         hotelId: docData["hotelId"],
         imageUrl: docData["imageUrl"],
-        description: List<String>.from(docData["description"]),
+        description: List<String>.from(docData["description"] ?? []),
         priceTwoHours: docData["priceTwoHours"],
         priceOvernight: docData["priceOvernight"],
         priceAllday: docData["priceAllday"],
@@ -289,7 +364,7 @@ Future<List<Room>> getRoomsByHotel(String hotelId) async {
       rooms.add(room);
     }
   } catch (e) {
-    print(e);
+    log(e.toString());
   }
 
   return rooms;
@@ -351,4 +426,63 @@ Future<List<Hotel>> getHotelSortByLocation(LocationData myLocation) async {
   }
 
   return hotels;
+}
+
+Future<List<Order>> getOrders() async {
+  List<Order> orders = [];
+
+  try {
+    var event = await db
+        .collection("orders")
+        .where("userId", isEqualTo: auth.currentUser?.uid.toString())
+        .get();
+
+    for (var doc in event.docs) {
+      var docData = doc.data();
+      var order = Order(
+        id: doc.id,
+        hotelId: docData["hotelId"],
+        roomId: docData["roomId"],
+        bookingType: docData["bookingType"],
+        startTime: docData["startTime"].toDate(),
+        endTime: docData["endTime"].toDate(),
+        paymentType: docData["paymentType"],
+        totalPayment: docData["totalPayment"],
+        paymentStaus: docData["paymentStatus"],
+      );
+      var room = await db.collection("rooms").doc(order.roomId).get();
+      order.roomName = room.get("name");
+      order.roomImageUrl = room.get("imageUrl");
+      var hotel = await db.collection("hotels").doc(order.hotelId).get();
+      order.hotelName = hotel.get("name");
+      orders.add(order);
+    }
+  } catch (e) {
+    log(e.toString());
+  }
+
+  return orders;
+}
+
+Future<Hotel> getHotelById(String hotelId) async {
+  Hotel hotel = Hotel();
+  hotel.id = hotelId;
+
+  try {
+    var doc = await db.collection("hotels").doc(hotelId).get();
+    hotel.name = doc.get("name");
+    hotel.address = doc.get("address");
+    hotel.districtId = doc.get("districtId");
+    hotel.phone = doc.get("phone");
+    hotel.imageUrl = doc.get("imageUrl");
+    hotel.location = doc.get("location");
+    hotel.services = List<String>.from(doc.get("services"));
+    hotel.description = doc.get("description");
+    hotel.rooms = List<String>.from(doc.get("rooms"));
+    hotel.rating = await getHotelRating(hotel.id);
+  } catch (e) {
+    log(e.toString());
+  }
+
+  return hotel;
 }

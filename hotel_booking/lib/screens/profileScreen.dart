@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/screens/homeScreen.dart';
+import 'package:hotel_booking/screens/listOrderScreen.dart';
 import 'package:hotel_booking/screens/loginScreen.dart';
 import 'package:hotel_booking/screens/mainHomeScreen.dart';
 import '../models/constants.dart';
@@ -12,7 +13,6 @@ class ProfileScreen extends StatefulWidget {
 
 Future<void> _signOut() async {
   await FirebaseAuth.instance.signOut();
-
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
@@ -67,27 +67,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
             height: 88.0,
           ),
           Expanded(
-            child: ListView.builder(
-                itemCount: labels.length,
-                padding: EdgeInsets.only(top: 0.0),
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    leading: Icon(
-                      icons[index],
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    title: Text(labels[index]),
-                    onTap:() {
-                      _signOut();
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginScreen(),
-                          ),
-                        );
-                    }
-                  );
-                }),
+            child: ListView(children: [
+              ListTile(
+                  leading: Icon(
+                    Icons.list_alt,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  title: Text("Phòng đã đặt"),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ListOrderScreen(),
+                      ),
+                    );
+                  }),
+              ListTile(
+                  leading: Icon(
+                    Icons.logout,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  title: Text("Đăng xuất"),
+                  onTap: () {
+                    _signOut();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(),
+                      ),
+                    );
+                  }),
+            ]),
           ),
         ],
       ),

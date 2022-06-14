@@ -41,9 +41,10 @@ dependencies:
   time_picker_widget: ^1.0.0+10
   readmore: ^2.1.0
   dio: ^4.0.0
-  flutter_polyline_points: ^0.2.6
+  flutter_polyline_points: ^1.0.0
   location: ^4.2.0
   google_maps_flutter: ^2.0.2
+  cached_network_image: ^3.2.0
 
 dev_dependencies:
   flutter_test:

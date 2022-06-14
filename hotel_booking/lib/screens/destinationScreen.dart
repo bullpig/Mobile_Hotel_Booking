@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hotel_booking/api_controller.dart';
@@ -17,7 +18,7 @@ class DestinationScreen extends StatefulWidget {
 }
 
 class _DestinationScreenState extends State<DestinationScreen> {
-  List<Hotel> listHotel = [];
+  List<ShortenHotel> listHotel = tempHotel;
 
   @override
   void initState() {
@@ -38,7 +39,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
           Stack(
             children: [
               Container(
-                height: MediaQuery.of(context).size.width,
+                height: 240,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(30.0),
                   boxShadow: [
@@ -53,9 +54,11 @@ class _DestinationScreenState extends State<DestinationScreen> {
                   tag: widget.destination.imageUrl,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(30.0),
-                    child: Image.network(
-                      widget.destination.imageUrl,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.destination.imageUrl,
                       fit: BoxFit.cover,
+                      height: 240,
+                      width: MediaQuery.of(context).size.width,
                     ),
                   ),
                 ),
@@ -80,8 +83,8 @@ class _DestinationScreenState extends State<DestinationScreen> {
                 ),
               ),
               Positioned(
-                left: 20.0,
-                bottom: 20.0,
+                left: 10.0,
+                bottom: 10.0,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -132,13 +135,13 @@ class _DestinationScreenState extends State<DestinationScreen> {
               ),
               itemCount: listHotel.length,
               itemBuilder: (BuildContext context, int index) {
-                Hotel hotel = listHotel[index];
+                ShortenHotel hotel = listHotel[index];
                 return GestureDetector(
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) => HotelDetail(
-                        hotel: hotel,
+                        hotelId: hotel.id,
                       ),
                     ),
                   ).then((value) => setState(() {})),
@@ -146,9 +149,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                     children: [
                       Container(
                         margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                        height: 230.0,
-                        // width: double.infinity,
-                        width: 400.0,
+                        height: 220.0,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20.0),
@@ -172,6 +173,8 @@ class _DestinationScreenState extends State<DestinationScreen> {
                                         fontWeight: FontWeight.w600,
                                       ),
                                       maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: false,
                                     ),
                                   ),
                                   Padding(
@@ -182,7 +185,8 @@ class _DestinationScreenState extends State<DestinationScreen> {
                                         color: Colors.grey,
                                       ),
                                       maxLines: 3,
-                                      // overflow: TextOverflow.ellipsis,
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: false,
                                     ),
                                   ),
                                 ],
@@ -200,17 +204,18 @@ class _DestinationScreenState extends State<DestinationScreen> {
                                   Padding(
                                     padding: EdgeInsets.only(left: 3),
                                     child: Container(
-                                      width: MediaQuery.of(context).size.width * 0.5,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.5,
                                       child: Wrap(
                                         spacing: 5,
                                         runSpacing: 5,
                                         children: hotel.rooms
                                             .map(
                                               (room) => Container(
-                                                width: 180.0,
+                                                width: 160.0,
                                                 decoration: BoxDecoration(
-                                                  color: Theme.of(context)
-                                                      .accentColor,
+                                                  color: Color.fromARGB(
+                                                      255, 216, 236, 241),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           10.0),
@@ -218,6 +223,9 @@ class _DestinationScreenState extends State<DestinationScreen> {
                                                 alignment: Alignment.center,
                                                 child: Text(
                                                   room,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  softWrap: false,
                                                 ),
                                               ),
                                             )
@@ -235,12 +243,17 @@ class _DestinationScreenState extends State<DestinationScreen> {
                         left: 20.0,
                         top: 15.0,
                         bottom: 15.0,
-                        child: Image.network(
-                          hotel.imageUrl,
-                          height: 180.0,
-                          width: 120.0,
-                          fit: BoxFit.cover,
-                        ),
+                        child: hotel.imageUrl.isNotEmpty
+                            ? CachedNetworkImage(
+                                imageUrl: hotel.imageUrl,
+                                width: 120.0,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset(
+                                'assets/images/loading.gif',
+                                width: 120.0,
+                                fit: BoxFit.cover,
+                              ),
                       ),
                     ],
                   ),

@@ -12,10 +12,15 @@ class Destination {
   int totalHotel;
 
   Destination(
-      {required this.id,
-      required this.imageUrl,
-      required this.name,
-      required this.city,
+      {this.id = "",
+      this.imageUrl = "",
+      this.name = "",
+      this.city = "",
       this.description = "",
       this.totalHotel = 0});
 }
+
+List<Destination> tempDestination = [
+  Destination(),
+  Destination(),
+];

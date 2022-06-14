@@ -1,15 +1,21 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/models/hotel_model.dart';
 import 'package:hotel_booking/screens/hotelDetails.dart';
+import 'package:hotel_booking/utils/utils.dart';
 
 class HotelCarousel extends StatefulWidget {
+  String cityId;
+
+  HotelCarousel({Key? key, required this.cityId}) : super(key: key);
+
   @override
   State<HotelCarousel> createState() => HotelCarouselState();
 }
 
 class HotelCarouselState extends State<HotelCarousel> {
-  List<Hotel> suggestedHotels = [];
+  List<ShortenHotel> suggestedHotels = tempHotel;
 
   @override
   void initState() {
@@ -18,7 +24,7 @@ class HotelCarouselState extends State<HotelCarousel> {
   }
 
   void asyncInitState() async {
-    getSuggestHotels().then((value) => setState(() => suggestedHotels = value));
+    getSuggestHotels(widget.cityId).then((value) => setState(() => suggestedHotels = value));
   }
 
   @override
@@ -28,27 +34,27 @@ class HotelCarouselState extends State<HotelCarousel> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                'Gợi ý cho bạn',
+                'Nổi bật',
                 style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.5,
                 ),
               ),
-              GestureDetector(
-                onTap: () {},
-                child: Text(
-                  'Xem tất cả',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.0,
-                  ),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () {},
+              //   child: Text(
+              //     'Xem tất cả',
+              //     style: TextStyle(
+              //       color: Theme.of(context).primaryColor,
+              //       fontWeight: FontWeight.w600,
+              //       letterSpacing: 1.0,
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -58,13 +64,13 @@ class HotelCarouselState extends State<HotelCarousel> {
             scrollDirection: Axis.horizontal,
             itemCount: suggestedHotels.length,
             itemBuilder: (BuildContext context, int index) {
-              Hotel hotel = suggestedHotels[index];
+              ShortenHotel hotel = suggestedHotels[index];
               return GestureDetector(
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => HotelDetail(
-                      hotel: hotel,
+                      hotelId: hotel.id,
                     ),
                   ),
                 ),
@@ -94,7 +100,6 @@ class HotelCarouselState extends State<HotelCarousel> {
                                   style: TextStyle(
                                     fontSize: 20.0,
                                     fontWeight: FontWeight.w600,
-                                    letterSpacing: 1.2,
                                   ),
                                 ),
                                 SizedBox(
@@ -108,13 +113,7 @@ class HotelCarouselState extends State<HotelCarousel> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 SizedBox(height: 2.0),
-                                // Text(
-                                //   '${hotel.overnightprice.toInt()}đ / Một đêm',
-                                //   style: TextStyle(
-                                //     fontSize: 18.0,
-                                //     fontWeight: FontWeight.w600,
-                                //   ),
-                                // ),
+                                buildRatingStars(hotel.rating),
                               ],
                             ),
                           ),
@@ -137,7 +136,10 @@ class HotelCarouselState extends State<HotelCarousel> {
                           child: Image(
                             height: 180.0,
                             width: 220.0,
-                            image: NetworkImage(hotel.imageUrl),
+                            image: (hotel.imageUrl.isNotEmpty
+                                    ? CachedNetworkImageProvider(hotel.imageUrl)
+                                    : AssetImage("assets/images/loading.gif"))
+                                as ImageProvider,
                             fit: BoxFit.cover,
                           ),
                         ),

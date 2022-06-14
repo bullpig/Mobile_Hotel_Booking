@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 final services = {
   "Parking": Icons.local_parking,
@@ -7,11 +8,17 @@ final services = {
   "Bar": Icons.local_drink,
   "Wifi": Icons.wifi,
   "Gym": Icons.fitness_center,
-  "Elevator" : Icons.elevator,
-  "NETFLIX" : Icons.camera_roll, 
+  "Elevator": Icons.elevator,
+  "NETFLIX": Icons.camera_roll,
 };
 
 enum BookingType { twoHours, overnight, allday }
+
+final bookingTypeToText = {
+  BookingType.twoHours: "Theo giờ",
+  BookingType.overnight: "Qua đêm",
+  BookingType.allday: "Theo ngày",
+};
 
 enum PaymentType { checkIn }
 
@@ -22,7 +29,7 @@ bool isSameDate(DateTime date1, DateTime date2) {
 }
 
 final paymentTypeLabels = {
-  PaymentType.checkIn: 'Thanh toán tại khách sạn',
+  PaymentType.checkIn: 'Thanh toán khi nhận phòng',
 };
 final paymentTypeIcons = {
   PaymentType.checkIn: Icons.money,
@@ -65,4 +72,41 @@ Widget buildRatingStars(double currentRating) {
       )
     ],
   );
+}
+
+DateTime getTwoHoursInitTime() {
+  final currentTime = DateTime.now();
+
+  if (currentTime.isAfter(
+      DateTime(currentTime.year, currentTime.month, currentTime.day, 20, 0))) {
+    final nextDate = currentTime.add(Duration(days: 1));
+    return DateTime(nextDate.year, nextDate.month, nextDate.day, 8, 0);
+  }
+
+  if (currentTime.isBefore(
+      DateTime(currentTime.year, currentTime.month, currentTime.day, 8, 0))) {
+    return DateTime(currentTime.year, currentTime.month, currentTime.day, 8, 0);
+  }
+
+  if (currentTime.minute <= 30) {
+    return DateTime(currentTime.year, currentTime.month, currentTime.day,
+        currentTime.hour, 30);
+  } else {
+    return DateTime(currentTime.year, currentTime.month, currentTime.day,
+        currentTime.add(Duration(hours: 1)).hour, 0);
+  }
+}
+
+DateTime getOvernightInitTime() {
+  final now = DateTime.now();
+  return DateTime(now.year, now.month, now.day, 22, 0);
+}
+
+DateTime getAlldayInitTime() {
+  final now = DateTime.now();
+  return DateTime(now.year, now.month, now.day, 14, 0);
+}
+
+String formatTime(DateTime dateTime) {
+  return DateFormat("HH:mm dd/MM/yyyy").format(dateTime);
 }

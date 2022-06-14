@@ -11,10 +11,10 @@ class TwoHoursPicker extends StatefulWidget {
   static const String idScreen = 'twohours';
 
   @override
-  _TwoHoursPickerState createState() => _TwoHoursPickerState();
+  TwoHoursPickerState createState() => TwoHoursPickerState();
 }
 
-class _TwoHoursPickerState extends State<TwoHoursPicker> {
+class TwoHoursPickerState extends State<TwoHoursPicker> {
   late DateTime nowDate;
   late PaymentScreenState? parentState;
 
@@ -22,43 +22,14 @@ class _TwoHoursPickerState extends State<TwoHoursPicker> {
   void initState() {
     super.initState();
     parentState = context.findAncestorStateOfType<PaymentScreenState>();
-    initTime();
-  }
-
-  DateTime getInitTime() {
-    final currentTime = DateTime.now();
-
-    if (currentTime.isAfter(DateTime(
-            currentTime.year, currentTime.month, currentTime.day, 20, 0)) ||
-        currentTime.isBefore(DateTime(
-            currentTime.year, currentTime.month, currentTime.day, 8, 0))) {
-      final nextDate = currentTime.add(Duration(days: 1));
-      return DateTime(nextDate.year, nextDate.month, nextDate.day, 8, 0);
-    }
-
-    if (currentTime.minute <= 30) {
-      return DateTime(currentTime.year, currentTime.month, currentTime.day,
-          currentTime.hour, 30);
-    } else {
-      return DateTime(currentTime.year, currentTime.month, currentTime.day,
-          currentTime.add(Duration(hours: 1)).hour, 30);
-    }
-  }
-
-  void initTime() {
-    nowDate = getInitTime();
-    parentState?.startDate = nowDate;
-    parentState?.endDate = nowDate.add(const Duration(hours: 2));
+    nowDate = getTwoHoursInitTime();
   }
 
   void setNowDate(DateTime date) {
     setState(() {
       nowDate = date;
     });
-    parentState?.setState(() {
-      parentState?.startDate = nowDate;
-      parentState?.endDate = nowDate.add(const Duration(hours: 2));
-    });
+    parentState?.setDate(nowDate, nowDate.add(const Duration(hours: 2)));
   }
 
   String getHour() {
@@ -150,8 +121,8 @@ class _TwoHoursPickerState extends State<TwoHoursPicker> {
     final newDate = await showDatePicker(
         context: context,
         initialDate: nowDate,
-        firstDate: getInitTime(),
-        lastDate: getInitTime().add(Duration(days: 30)));
+        firstDate: getTwoHoursInitTime(),
+        lastDate: getTwoHoursInitTime().add(Duration(days: 30)));
     if (newDate == null) return null;
     setNowDate(DateTime(
       newDate.year,

@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:async';
+import 'dart:core';
+
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/api_controller.dart';
 import 'package:location/location.dart';
@@ -20,7 +24,7 @@ class _NearbyScreenState extends State<NearScreen> {
   @override
   void initState() {
     super.initState();
-  run();
+    run();
   }
 
   void asyncInitState() async {
@@ -39,7 +43,10 @@ class _NearbyScreenState extends State<NearScreen> {
     });
   }
 
-  void run() async {}
+  void run() async {
+    await getLocation();
+    asyncInitState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,12 +79,13 @@ class _NearbyScreenState extends State<NearScreen> {
             itemCount: listHotel.length,
             itemBuilder: (BuildContext context, int index) {
               Hotel hotel = listHotel[index];
+              String hotelId = hotel.id;
               return GestureDetector(
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => HotelDetail(
-                      hotel: hotel,
+                      hotelId: hotelId,
                     ),
                   ),
                 ).then((value) => setState(() {})),

@@ -52,4 +52,22 @@ class Hotel {
   }
 }
 
-List<Hotel> temp_favorite = [];
+class ShortenHotel {
+  String id;
+  String name;
+  String address;
+  String imageUrl;
+  double rating;
+  List<String> rooms;
+
+  ShortenHotel({
+    this.id = "",
+    this.name = "",
+    this.address = "",
+    this.imageUrl = "",
+    this.rating = 0.0,
+    this.rooms = const [],
+  });
+}
+
+var tempHotel = [ShortenHotel(), ShortenHotel()];

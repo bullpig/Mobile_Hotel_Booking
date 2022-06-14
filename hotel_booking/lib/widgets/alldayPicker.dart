@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/screens/paymentScreen.dart';
+import 'package:hotel_booking/utils/utils.dart';
 import 'package:intl/intl.dart';
 import '../screens/paymentScreen.dart';
 
@@ -22,20 +23,16 @@ class _AllDatePickerState extends State<AllDayPicker> {
     super.initState();
     parentState = context.findAncestorStateOfType<PaymentScreenState>();
     initTime();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      parentState?.setState(() {});
-    });
+    // WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    //   parentState?.setState(() {});
+    // });
   }
 
   void initTime() {
-    final now = DateTime.now();
-    final startDate = DateTime(now.year, now.month, now.day, 14, 0);
+    final startDate = getAlldayInitTime();
     final endDate = startDate.add(Duration(hours: 22));
 
     _dateRange = DateTimeRange(start: startDate, end: endDate);
-
-    parentState?.startDate = _dateRange.start;
-    parentState?.endDate = _dateRange.end;
   }
 
   void setDateRange(DateTimeRange dateRange) {
@@ -50,6 +47,7 @@ class _AllDatePickerState extends State<AllDayPicker> {
       parentState?.startDate = _dateRange.start;
       parentState?.endDate = _dateRange.end;
     });
+    parentState?.setDate(_dateRange.start, _dateRange.end);
   }
 
   String getFrom() {

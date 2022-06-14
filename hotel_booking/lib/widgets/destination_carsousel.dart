@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hotel_booking/screens/seeallScreen.dart';
@@ -20,7 +21,7 @@ class DestinationCarousel extends StatefulWidget {
 }
 
 class _DestinationCarousel extends State<DestinationCarousel> {
-  List<Destination> listDestination = [];
+  List<Destination> listDestination = tempDestination;
 
   @override
   void initState() {
@@ -29,7 +30,8 @@ class _DestinationCarousel extends State<DestinationCarousel> {
   }
 
   void asyncInitState() async {
-    getDestination(widget.city).then((value) => setState(() => listDestination = value));
+    getDestination(widget.city)
+        .then((value) => setState(() => listDestination = value));
   }
 
   @override
@@ -62,8 +64,9 @@ class _DestinationCarousel extends State<DestinationCarousel> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) =>
-                                SeeAllScreen(destinations: listDestination,),
+                            builder: (_) => SeeAllScreen(
+                              destinations: listDestination,
+                            ),
                           ),
                         ),
                       }),
@@ -144,12 +147,19 @@ class _DestinationCarousel extends State<DestinationCarousel> {
                                 tag: destination.imageUrl,
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(20.0),
-                                  child: Image.network(
-                                    destination.imageUrl,
-                                    height: 180.0,
-                                    width: 180.0,
-                                    fit: BoxFit.cover,
-                                  ),
+                                  child: destination.imageUrl.isNotEmpty
+                                      ? CachedNetworkImage(
+                                          imageUrl: destination.imageUrl,
+                                          height: 180.0,
+                                          width: 180.0,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Image.asset(
+                                          'assets/images/loading.gif',
+                                          height: 180.0,
+                                          width: 180.0,
+                                          fit: BoxFit.cover,
+                                        ),
                                 ),
                               ),
                               Positioned(
