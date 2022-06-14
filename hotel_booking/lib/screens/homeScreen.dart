@@ -6,6 +6,8 @@ import 'package:hotel_booking/screens/favouriteScreen.dart';
 import 'package:hotel_booking/screens/mainHomeScreen.dart';
 import 'package:hotel_booking/screens/nearbyScreen.dart';
 import 'package:hotel_booking/screens/profileScreen.dart';
+
+import 'nearScreen.dart';
 // import 'package:hotel_app/screens/favouriteScreen.dart';
 // import 'package:hotel_app/screens/mainHomeScreen.dart';
 // import 'package:hotel_app/screens/nearbyScreen.dart';
@@ -27,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final Tabs = [
     MainHomeScreen(),
-    NearbyScreen(),
+    NearScreen(),
     FavouriteScreen(),
     EventScreen(),
     ProfileScreen(),

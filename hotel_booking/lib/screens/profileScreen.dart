@@ -22,7 +22,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Column(
         children: [
           Stack(
-            overflow: Overflow.visible,
+            // overflow: Overflow.visible,
             alignment: Alignment.center,
             children: [
               Container(

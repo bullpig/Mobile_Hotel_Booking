@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hotel_booking/models/destination_model.dart';
+import 'package:hotel_booking/models/location_hotel.dart';
 import 'package:hotel_booking/models/room.dart';
 import 'package:hotel_booking/utils/utils.dart';
+import 'package:location/location.dart';
 
 import './models/hotel_model.dart';
 
@@ -291,4 +293,62 @@ Future<List<Room>> getRoomsByHotel(String hotelId) async {
   }
 
   return rooms;
+}
+
+// Future<List<LocationHotel>> getLocationAllHotel() async {
+//   List<LocationHotel> locationHotels = [];
+
+//   try {
+//     var event = await db.collection("hotels").get();
+//     print(event.toString());
+//     print("gg");
+//     for (var doc in event.docs) {
+//       var docData = doc.data();
+//       var locationHotel = LocationHotel(
+//         doc.id.toString(),
+//         docData['location'].latitude,
+//         docData['location'].longitude,
+//       );
+//       locationHotels.add(locationHotel);
+//     }
+//   } catch (e) {
+//     print(e);
+//   }
+//   locationHotels.sort(((a, b) => a.))
+//   return locationHotels;
+// }
+
+Future<List<Hotel>> getHotelSortByLocation(LocationData myLocation) async {
+  List<Hotel> hotels = [];
+
+  try {
+    var event = await db.collection("hotels").get();
+    for (var doc in event.docs) {
+      var docData = doc.data();
+      var hotel = Hotel(
+        id: doc.id.toString(),
+        name: docData["name"],
+        address: docData["address"],
+        districtId: docData["districtId"],
+        phone: docData["phone"],
+        imageUrl: docData["imageUrl"],
+        location: docData["location"],
+        services: List<String>.from(docData["services"]),
+        description: docData["description"],
+        rooms: List<String>.from(docData["rooms"]),
+      );
+      hotel.rating = await getHotelRating(hotel.id);
+      hotel.setDistance(myLocation);
+      hotels.add(hotel);
+      print(hotel.toString());
+    }
+    hotels.sort(((a, b) => a.distance.compareTo(b.distance)));
+    for (var i in hotels) {
+      print(i.distance);
+    }
+  } catch (e) {
+    print(e);
+  }
+
+  return hotels;
 }
