@@ -7,6 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/models/room.dart';
 import 'package:hotel_booking/screens/listRoomsScreen.dart';
+import 'package:hotel_booking/screens/nearbyScreen.dart';
 import 'package:readmore/readmore.dart';
 import 'selectRoomScreen.dart';
 import 'package:hotel_booking/models/hotel_model.dart';
@@ -156,11 +157,14 @@ class _HotelDetailState extends State<HotelDetail> {
               Positioned(
                 right: 20.0,
                 bottom: 20.0,
-                child: Icon(
-                  Icons.location_on,
+                child: IconButton(
+                  icon: Icon(Icons.location_on),
                   color: Colors.white70,
-                  size: 25.0,
+                  // size: 25.0,
+                  onPressed:() => Navigator.push(context, MaterialPageRoute(builder: (context) => MapScreen(),),),
                 ),
+
+                
               )
             ],
           ),
