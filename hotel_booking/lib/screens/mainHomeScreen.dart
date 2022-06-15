@@ -18,7 +18,6 @@ class _MainHomeScreenState extends State<MainHomeScreen> {
   @override
   void initState() {
     super.initState();
-    print("Main Home called");
   }
 
   @override

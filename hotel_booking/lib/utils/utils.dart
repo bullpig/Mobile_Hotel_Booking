@@ -20,7 +20,7 @@ final bookingTypeToText = {
   BookingType.allday: "Theo ngày",
 };
 
-enum PaymentType { checkIn }
+enum PaymentType { checkIn, momo }
 
 bool isSameDate(DateTime date1, DateTime date2) {
   return date1.year == date2.year &&
@@ -30,9 +30,11 @@ bool isSameDate(DateTime date1, DateTime date2) {
 
 final paymentTypeLabels = {
   PaymentType.checkIn: 'Thanh toán khi nhận phòng',
+  PaymentType.momo: 'Thanh toán bằng Momo',
 };
 final paymentTypeIcons = {
   PaymentType.checkIn: Icons.money,
+  PaymentType.momo: Icons.account_balance_wallet,
 };
 
 const maxRatingStar = 5;

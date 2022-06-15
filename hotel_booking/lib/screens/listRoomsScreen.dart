@@ -1,10 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/models/room.dart';
 import 'package:hotel_booking/screens/hotelDetails.dart';
-import 'package:hotel_booking/screens/paymentScreen.dart';
+import 'package:hotel_booking/screens/selectRoomScreen.dart';
 import '../models/destination_model.dart';
 import '../models/hotel_model.dart';
 //import 'package:hotel_app/screens/hotelDetails.dart';
@@ -93,8 +94,8 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.27,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.27,
                                     child: Padding(
                                       padding: EdgeInsets.fromLTRB(
                                           10.0, 5.0, 5.0, 5.0),
@@ -222,12 +223,14 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
                         left: 20.0,
                         top: 15.0,
                         bottom: 15.0,
-                        child: Image.network(
-                          room.imageUrl,
-                          height: 180.0,
-                          width: 120.0,
-                          fit: BoxFit.cover,
-                        ),
+                        child: room.imageUrl.isNotEmpty
+                            ? CachedNetworkImage(
+                                imageUrl: room.imageUrl,
+                                height: 180.0,
+                                width: 120.0,
+                                fit: BoxFit.cover,
+                              )
+                            : Image.asset("assets/images/loading.gif"),
                       ),
                     ],
                   ),

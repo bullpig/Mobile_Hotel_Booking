@@ -137,7 +137,7 @@ Future<List<ShortenHotel>> getFavoriteHotel() async {
   return hotels;
 }
 
-Future<bool> createBooking(
+Future<String> createBooking(
     String hotelId,
     String roomId,
     BookingType bookingType,
@@ -157,12 +157,13 @@ Future<bool> createBooking(
       "paymentType": paymentType.name,
       "totalPayment": totalPayment,
       "paymentStatus": isPaid,
+      "bookingTime": FieldValue.serverTimestamp(),
     };
-    await db.collection("orders").add(order);
-    return true;
+    var orderDoc = await db.collection("orders").add(order);
+    return orderDoc.id;
   } catch (e) {
     log(e.toString());
-    return false;
+    return "";
   }
 }
 
@@ -198,7 +199,6 @@ Future<List<ShortenHotel>> getSuggestHotels(String cityId) async {
         hotels.add(destHotels.last);
       }
     }
-
   } catch (e) {
     log(e.toString());
   }
@@ -376,6 +376,7 @@ Future<List<Order>> getOrders() async {
     var event = await db
         .collection("orders")
         .where("userId", isEqualTo: auth.currentUser?.uid.toString())
+        .orderBy("bookingTime", descending: true)
         .get();
 
     for (var doc in event.docs) {
@@ -384,10 +385,10 @@ Future<List<Order>> getOrders() async {
         id: doc.id,
         hotelId: docData["hotelId"],
         roomId: docData["roomId"],
-        bookingType: docData["bookingType"],
+        bookingType: BookingType.values.byName(docData["bookingType"]),
         startTime: docData["startTime"].toDate(),
         endTime: docData["endTime"].toDate(),
-        paymentType: docData["paymentType"],
+        paymentType: PaymentType.values.byName(docData["paymentType"]),
         totalPayment: docData["totalPayment"],
         paymentStaus: docData["paymentStatus"],
       );
@@ -426,4 +427,18 @@ Future<Hotel> getHotelById(String hotelId) async {
   }
 
   return hotel;
+}
+
+Future<bool> updatePaymentStatus(String orderId, bool paymentStatus) async {
+  try {
+    final userRef = db.collection("orders").doc(orderId);
+    await userRef.update({
+      "paymentStatus": paymentStatus,
+    });
+    return true;
+  } catch (e) {
+    log(e.toString());
+  }
+
+  return false;
 }
