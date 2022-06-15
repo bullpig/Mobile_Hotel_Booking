@@ -106,9 +106,10 @@ class _MapScreenState extends State<MapScreen> {
     // _getLocation();
     return Scaffold(
       appBar: AppBar(
-        centerTitle: false,
+        
+        centerTitle: true,
         title: const Text(
-          'Google Maps',
+          'Bản Đồ',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
