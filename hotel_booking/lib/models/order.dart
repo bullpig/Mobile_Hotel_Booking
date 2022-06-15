@@ -7,10 +7,10 @@ class Order {
   String hotelName;
   String roomName;
   String roomImageUrl;
-  String bookingType;
+  BookingType bookingType;
   DateTime startTime;
   DateTime endTime;
-  String paymentType;
+  PaymentType paymentType;
   int totalPayment;
   bool paymentStaus;
 
@@ -21,10 +21,10 @@ class Order {
     this.roomId = "",
     this.roomName = "",
     this.roomImageUrl = "",
-    this.bookingType = "",
+    this.bookingType = BookingType.twoHours,
     required this.startTime,
     required this.endTime,
-    this.paymentType = "",
+    this.paymentType = PaymentType.checkIn,
     this.totalPayment = 0,
     this.paymentStaus = false,
   });

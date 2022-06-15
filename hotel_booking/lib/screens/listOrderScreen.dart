@@ -11,7 +11,7 @@ import 'package:hotel_booking/screens/bookingDetail.dart';
 import 'package:hotel_booking/screens/hotelDetails.dart';
 import 'package:hotel_booking/screens/listRoomsScreen.dart';
 import 'package:readmore/readmore.dart';
-import '../screens/paymentScreen.dart';
+import 'selectRoomScreen.dart';
 import 'package:hotel_booking/models/hotel_model.dart';
 import 'package:hotel_booking/utils/utils.dart';
 
@@ -80,7 +80,7 @@ class ListOrderState extends State<ListOrderScreen> {
                         child: Padding(
                           padding: EdgeInsets.fromLTRB(140.0, 10.0, 5.0, 5.0),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Column(
@@ -123,26 +123,29 @@ class ListOrderState extends State<ListOrderScreen> {
                                       softWrap: true,
                                     ),
                                   ),
-                                  Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 10.0, top: 30),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            "${order.totalPayment}VND",
-                                            style: TextStyle(
-                                              color: Colors.lightBlue,
-                                              fontSize: 13,
-                                            ),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ],
-                                      )),
                                 ],
                               ),
+                              Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        "${order.totalPayment}VND ",
+                                        style: TextStyle(
+                                          color: Colors.lightBlue,
+                                          fontSize: 13,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      if (order.paymentStaus) Icon(
+                                        Icons.check_circle,
+                                        color: Colors.green,
+                                        size: 12,
+                                      )
+                                    ],
+                                  )),
                             ],
                           ),
                         ),

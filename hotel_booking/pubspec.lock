@@ -98,6 +98,13 @@ packages:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
     source: hosted
+    version: "1.0.5"
+  eventify:
+    dependency: transitive
+    description:
+      name: eventify
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "1.0.4"
   dio:
     dependency: "direct main"
@@ -324,6 +331,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+  momo_vn:
+    dependency: "direct main"
+    description:
+      name: momo_vn
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.2"
   octo_image:
     dependency: transitive
     description:

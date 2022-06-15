@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hotel_booking/utils/utils.dart';
 import 'package:intl/intl.dart';
 
-import '../screens/paymentScreen.dart';
+import '../screens/selectRoomScreen.dart';
 
 class OverNightPicker extends StatefulWidget {
   static const String idScreen = 'overnight';
@@ -13,11 +13,11 @@ class OverNightPicker extends StatefulWidget {
 
 class _OverNightPickerState extends State<OverNightPicker> {
   DateTime currentDate = DateTime.now();
-  late PaymentScreenState? parentState;
+  late SelectRoomScreenState? parentState;
   @override
   void initState() {
     super.initState();
-    parentState = context.findAncestorStateOfType<PaymentScreenState>();
+    parentState = context.findAncestorStateOfType<SelectRoomScreenState>();
     currentDate = getOvernightInitTime();
   }
 
@@ -25,10 +25,6 @@ class _OverNightPickerState extends State<OverNightPicker> {
     setState(() {
       currentDate = DateTime(date.year, date.month, date.day, 22, 0);
     });
-    // parentState?.setState(() {
-    //   parentState?.startDate = currentDate;
-    //   parentState?.endDate = currentDate.add(const Duration(hours: 12));
-    // });
     parentState?.setDate(
         currentDate, currentDate.add(const Duration(hours: 12)));
   }

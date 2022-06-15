@@ -1,24 +1,26 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hotel_booking/api_controller.dart';
-import 'package:hotel_booking/models/constants.dart';
 import 'package:hotel_booking/models/room.dart';
+import 'package:hotel_booking/screens/bookingDetail.dart';
 import 'package:hotel_booking/utils/utils.dart';
 import 'package:hotel_booking/widgets/alldayPicker.dart';
 import '../models/hotel_model.dart';
+import '../models/order.dart';
 import './success.dart';
 import '../widgets/overNightpicker.dart';
 import '../widgets/twoHoursPicker.dart';
 import 'listRoomsScreen.dart';
+import 'package:momo_vn/momo_vn.dart';
 
-class PaymentScreen extends StatefulWidget {
+class SelectRoomScreen extends StatefulWidget {
   final Hotel hotel;
-  PaymentScreen({Key? key, required this.hotel}) : super(key: key);
+  SelectRoomScreen({Key? key, required this.hotel}) : super(key: key);
   @override
-  PaymentScreenState createState() => PaymentScreenState();
+  SelectRoomScreenState createState() => SelectRoomScreenState();
 }
 
-class PaymentScreenState extends State<PaymentScreen> {
+class SelectRoomScreenState extends State<SelectRoomScreen> {
   BookingType bookingType = BookingType.twoHours;
   late DateTime startDate;
   late DateTime endDate;
@@ -27,37 +29,6 @@ class PaymentScreenState extends State<PaymentScreen> {
 
   List<Room> _listRooms = const [];
   Room? _currentRoom;
-
-  Widget getTimePicker(BookingType bookingType) {
-    switch (bookingType) {
-      case BookingType.twoHours:
-        return TwoHoursPicker();
-
-      case BookingType.overnight:
-        return OverNightPicker();
-
-      case BookingType.allday:
-        return AllDayPicker();
-    }
-  }
-
-  int getTotalPayment() {
-    switch (bookingType) {
-      case BookingType.twoHours:
-        return _currentRoom!.priceTwoHours;
-      case BookingType.overnight:
-        return _currentRoom!.priceOvernight;
-      case BookingType.allday:
-        var totalDays = daysBetween(startDate, endDate);
-        return totalDays * _currentRoom!.priceAllday;
-    }
-  }
-
-  int daysBetween(DateTime from, DateTime to) {
-    from = DateTime(from.year, from.month, from.day);
-    to = DateTime(to.year, to.month, to.day);
-    return (to.difference(from).inHours / 24).round();
-  }
 
   @override
   void initState() {
@@ -91,7 +62,7 @@ class PaymentScreenState extends State<PaymentScreen> {
     if (_currentRoom == null) {
       return;
     }
-    bool bookingStatus = await createBooking(
+    String orderId = await createBooking(
       widget.hotel.id,
       _currentRoom!.id,
       bookingType,
@@ -101,16 +72,32 @@ class PaymentScreenState extends State<PaymentScreen> {
       getTotalPayment(),
       false,
     );
-    if (bookingStatus) {
+    if (orderId.isNotEmpty) {
+      var order = Order(
+        id: orderId,
+        hotelId: widget.hotel.id,
+        hotelName: widget.hotel.name,
+        roomId: _currentRoom!.id,
+        roomName: _currentRoom!.name,
+        roomImageUrl: _currentRoom!.imageUrl,
+        bookingType: bookingType,
+        startTime: startDate,
+        endTime: endDate,
+        paymentType: paymentType,
+        totalPayment: getTotalPayment(),
+        paymentStaus: false,
+      );
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => Success(),
+          builder: (_) => BookingDetail(order: order, routeFrom: "selectRoom",),
         ),
       );
+      Fluttertoast.showToast(
+          msg: "Đặt phòng thành công!", toastLength: Toast.LENGTH_LONG);
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Đặt phòng thất bại!")));
+      Fluttertoast.showToast(
+          msg: "Đặt phòng thất bại!", toastLength: Toast.LENGTH_SHORT);
     }
   }
 
@@ -502,5 +489,36 @@ class PaymentScreenState extends State<PaymentScreen> {
             ],
           ),
         ));
+  }
+
+  Widget getTimePicker(BookingType bookingType) {
+    switch (bookingType) {
+      case BookingType.twoHours:
+        return TwoHoursPicker();
+
+      case BookingType.overnight:
+        return OverNightPicker();
+
+      case BookingType.allday:
+        return AllDayPicker();
+    }
+  }
+
+  int getTotalPayment() {
+    switch (bookingType) {
+      case BookingType.twoHours:
+        return _currentRoom!.priceTwoHours;
+      case BookingType.overnight:
+        return _currentRoom!.priceOvernight;
+      case BookingType.allday:
+        var totalDays = daysBetween(startDate, endDate);
+        return totalDays * _currentRoom!.priceAllday;
+    }
+  }
+
+  int daysBetween(DateTime from, DateTime to) {
+    from = DateTime(from.year, from.month, from.day);
+    to = DateTime(to.year, to.month, to.day);
+    return (to.difference(from).inHours / 24).round();
   }
 }

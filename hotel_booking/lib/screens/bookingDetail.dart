@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/api_controller.dart';
@@ -8,24 +10,42 @@ import 'package:hotel_booking/models/room.dart';
 import 'package:hotel_booking/screens/hotelDetails.dart';
 import 'package:hotel_booking/utils/utils.dart';
 import 'package:hotel_booking/widgets/alldayPicker.dart';
+import 'package:momo_vn/momo_vn.dart';
 import '../models/hotel_model.dart';
 import './success.dart';
 import '../widgets/overNightpicker.dart';
 import '../widgets/twoHoursPicker.dart';
+import 'homeScreen.dart';
 import 'listRoomsScreen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class BookingDetail extends StatefulWidget {
   final Order order;
 
-  BookingDetail({required this.order, Key? key}) : super(key: key);
+  final String routeFrom;
+
+  BookingDetail({required this.order, this.routeFrom = "orderList", Key? key})
+      : super(key: key);
   @override
   BookingDetailState createState() => BookingDetailState();
 }
 
 class BookingDetailState extends State<BookingDetail> {
+  late MomoVn _momoPay;
+  late PaymentResponse _momoPaymentResult;
+  late String _paymentStatus;
+
   @override
   void initState() {
     super.initState();
+    momoInit();
+  }
+
+  void momoInit() {
+    _momoPay = MomoVn();
+    _momoPay.on(MomoVn.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _momoPay.on(MomoVn.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _paymentStatus = "";
   }
 
   @override
@@ -106,7 +126,7 @@ class BookingDetailState extends State<BookingDetail> {
                         height: 4,
                       ),
                       Text(
-                        "Hình thức đặt: ${bookingTypeToText[BookingType.values.byName(widget.order.bookingType)]}",
+                        "Hình thức đặt: ${bookingTypeToText[widget.order.bookingType]}",
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -210,7 +230,7 @@ class BookingDetailState extends State<BookingDetail> {
                     height: 4,
                   ),
                   Text(
-                    "Hình thức thanh toán: ${paymentTypeLabels[PaymentType.values.byName(widget.order.paymentType)]}",
+                    "Hình thức thanh toán: ${paymentTypeLabels[widget.order.paymentType]}",
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.grey,
@@ -237,10 +257,64 @@ class BookingDetailState extends State<BookingDetail> {
           SizedBox(
             height: 10,
           ),
+          if (!widget.order.paymentStaus &&
+              widget.order.paymentType != PaymentType.checkIn)
+            Padding(
+              padding: EdgeInsets.only(left: 4, right: 4),
+              child: ElevatedButton(
+                onPressed: () {
+                  MomoPaymentInfo options = MomoPaymentInfo(
+                      merchantName: "Book Me",
+                      appScheme: "momoamei20220613",
+                      merchantCode: 'MOMOAMEI20220613',
+                      partnerCode: 'MOMOAMEI20220613',
+                      amount: widget.order.totalPayment,
+                      orderId: widget.order.id,
+                      orderLabel:
+                          "${widget.order.hotelName} - ${widget.order.roomName}",
+                      merchantNameLabel: "Book Me",
+                      fee: 0,
+                      description: 'Thanh toan dat phong',
+                      partner: 'Book Me',
+                      isTestMode: true);
+                  try {
+                    _momoPay.open(options);
+                  } catch (e) {
+                    debugPrint(e.toString());
+                  }
+                },
+                child: Container(
+                  height: 50.0,
+                  child: Center(
+                    child: Text(
+                      'Thanh toán',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  side: BorderSide(
+                    width: 1.0,
+                    color: Colors.blue,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+              ),
+            ),
+          SizedBox(
+            height: 8,
+          ),
           Padding(
             padding: EdgeInsets.only(left: 4, right: 4),
             child: OutlinedButton(
               onPressed: () {
+                if (widget.routeFrom == "selectRoom") {
+                  Navigator.pop(context);
+                  return;
+                }
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -269,7 +343,95 @@ class BookingDetailState extends State<BookingDetail> {
                 ),
               ),
             ),
-          )
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          if (widget.routeFrom == "selectRoom")
+            Padding(
+              padding: EdgeInsets.only(left: 4, right: 4),
+              child: OutlinedButton(
+                onPressed: () {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => HomeScreen(),
+                      ),
+                      (route) => false);
+                },
+                child: Container(
+                  height: 50.0,
+                  child: Center(
+                    child: Text(
+                      'Màn hình chính',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                ),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(
+                    width: 1.0,
+                    color: Colors.blue,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+              ),
+            ),
+          SizedBox(
+            height: 16,
+          ),
         ]));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _momoPay.clear();
+  }
+
+  void _setState() {
+    _paymentStatus = 'Đã chuyển thanh toán';
+    if (_momoPaymentResult.isSuccess == true) {
+      _paymentStatus += "\nTình trạng: Thành công.";
+      _paymentStatus +=
+          "\nSố điện thoại: " + _momoPaymentResult.phoneNumber.toString();
+      _paymentStatus += "\nExtra: " + _momoPaymentResult.extra!;
+      _paymentStatus += "\nToken: " + _momoPaymentResult.token.toString();
+    } else {
+      _paymentStatus += "\nTình trạng: Thất bại.";
+      _paymentStatus += "\nExtra: " + _momoPaymentResult.extra.toString();
+      _paymentStatus += "\nMã lỗi: " + _momoPaymentResult.status.toString();
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentResponse response) {
+    setState(() {
+      _momoPaymentResult = response;
+      _setState();
+    });
+    updatePaymentStatus(widget.order.id, true).then((value) {
+      if (value) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => Success(),
+          ),
+        );
+      }
+    });
+    Fluttertoast.showToast(
+        msg: "Thanh toán thành công!", toastLength: Toast.LENGTH_SHORT);
+  }
+
+  void _handlePaymentError(PaymentResponse response) {
+    setState(() {
+      _momoPaymentResult = response;
+      _setState();
+    });
+    Fluttertoast.showToast(
+        msg: "Thanh toán thất bại!", toastLength: Toast.LENGTH_SHORT);
   }
 }

@@ -9,7 +9,7 @@ import 'package:hotel_booking/models/room.dart';
 import 'package:hotel_booking/screens/listRoomsScreen.dart';
 import 'package:hotel_booking/screens/nearbyScreen.dart';
 import 'package:readmore/readmore.dart';
-import '../screens/paymentScreen.dart';
+import 'selectRoomScreen.dart';
 import 'package:hotel_booking/models/hotel_model.dart';
 import 'package:hotel_booking/utils/utils.dart';
 
@@ -370,7 +370,7 @@ class _HotelDetailState extends State<HotelDetail> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => PaymentScreen(
+                        builder: (_) => SelectRoomScreen(
                           hotel: _hotel,
                         ),
                       ),

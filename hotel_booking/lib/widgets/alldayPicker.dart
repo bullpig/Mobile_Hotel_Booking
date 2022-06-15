@@ -1,10 +1,10 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:hotel_booking/screens/paymentScreen.dart';
+import 'package:hotel_booking/screens/selectRoomScreen.dart';
 import 'package:hotel_booking/utils/utils.dart';
 import 'package:intl/intl.dart';
-import '../screens/paymentScreen.dart';
+import '../screens/selectRoomScreen.dart';
 
 class AllDayPicker extends StatefulWidget {
   static const String idScreen = 'allday';
@@ -16,12 +16,12 @@ class AllDayPicker extends StatefulWidget {
 class _AllDatePickerState extends State<AllDayPicker> {
   late DateTimeRange _dateRange;
 
-  late PaymentScreenState? parentState;
+  late SelectRoomScreenState? parentState;
 
   @override
   void initState() {
     super.initState();
-    parentState = context.findAncestorStateOfType<PaymentScreenState>();
+    parentState = context.findAncestorStateOfType<SelectRoomScreenState>();
     initTime();
     // WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
     //   parentState?.setState(() {});
