@@ -1,88 +1,96 @@
-// import 'package:flutter/material.dart';
-
-// class NearbyScreen extends StatefulWidget {
-//   @override
-//   _NearbyScreenState createState() => _NearbyScreenState();
-// }
-
-// class _NearbyScreenState extends State<NearbyScreen> {
-//   @override
-//   void initState() {
-//     super.initState();
-//     print("Nearby called");
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(
-//           'Gần đây',
-//           style: TextStyle(color: Theme.of(context).primaryColor),
-//         ),
-//         centerTitle: true,
-//         backgroundColor: Colors.white,
-//         elevation: 0.0,
-//         automaticallyImplyLeading: false,
-//         leading: Padding(
-//           padding: EdgeInsets.only(left: 5.0),
-//           child: Image.asset('assets/images/bookme.png'),
-//         ),
-//       ),
-//     );
-//   }
-// }
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/directions_repository.dart';
 import 'package:hotel_booking/models/directions_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hotel_booking/models/hotel_model.dart';
 import 'package:location/location.dart';
 
-class NearByScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Google Maps',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: Colors.white,
-      ),
-      home: MapScreen(),
-    );
-  }
-}
+// class MapScreen extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Flutter Google Maps',
+//       debugShowCheckedModeBanner: false,
+//       theme: ThemeData(
+//         primaryColor: Colors.white,
+//       ),
+//       home: _MapScreen(),
+//     );
+//   }
+// }
 
 class MapScreen extends StatefulWidget {
+  Marker? destination;
+  List<Hotel>? listHotel;
+  Set<Marker>? listHotelMarker;
+  MapScreen();
+  MapScreen.fromDestination(GeoPoint _destinaton) {
+    this.destination = Marker(
+      markerId: const MarkerId('destination'),
+      infoWindow: const InfoWindow(title: 'Destination'),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      position: LatLng(_destinaton.latitude, _destinaton.longitude),
+    );
+  }
+  MapScreen.fromListHotel(List<Hotel> _listHotel) {
+    this.listHotel = _listHotel;
+    listHotelMarker = _listHotel
+        .map((e) => Marker(
+              markerId: const MarkerId('destination'),
+              infoWindow: InfoWindow(title: e.name),
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueBlue),
+              position: LatLng(e.location.latitude, e.location.longitude),
+            ))
+        .toSet();
+  }
+
   @override
   _MapScreenState createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
-  late LocationData userLocation;
+  LocationData userLocation =
+      LocationData.fromMap({'latitude': 21.02347, 'longitude': 105.7732617});
   late GoogleMapController _googleMapController;
-  Marker? _origin;
-  Marker? _destination;
+  Marker? _origin = Marker(
+    markerId: const MarkerId('origin'),
+    infoWindow: const InfoWindow(title: 'Origin'),
+    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+    position: LatLng(21.02347, 105.7732617),
+  );
   Marker? _locationMarker;
   Location currentLocation = Location();
   Directions? _info;
 
-  void getLocation() async {
+  Future<void> getLocation() async {
+    print("kk");
     var location = await currentLocation.getLocation();
     currentLocation.onLocationChanged.listen((LocationData loc) {
-      print(loc.latitude);
-      print(location.toString());
-      print(loc.longitude);
-      userLocation = loc;
-      // print(getHotelSortByLocation(location).toString());
-      setState(() {
-        _locationMarker = Marker(
-          markerId: const MarkerId('Location'),
-          infoWindow: const InfoWindow(title: 'Location'),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-          position: LatLng(loc.latitude ?? 0.0, loc.longitude ?? 0.0),
-        );
-      });
+      if (loc.latitude != userLocation.latitude ||
+          loc.longitude != userLocation.longitude ||
+          userLocation.latitude == null ||
+          userLocation.longitude == null) {
+        if (this.mounted) {
+          setState(() {
+            userLocation = loc;
+            _origin = Marker(
+              markerId: const MarkerId('Location'),
+              infoWindow: const InfoWindow(title: 'Location'),
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueRed),
+              position: LatLng(loc.latitude!, loc.longitude!),
+            );
+            // _origin = _locationMarker;
+          });
+          print(_origin?.position.latitude);
+          print(_origin?.position.longitude);
+          // print(userLocation.latitude);
+          // print(userLocation.longitude);
+        }
+      }
     });
   }
 
@@ -95,18 +103,31 @@ class _MapScreenState extends State<MapScreen> {
   @override
   initState() {
     super.initState();
-    setState(() {
-      getLocation();
-    });
-    // Add listeners to this class
+    buildData();
+  }
+
+  Future<void> getDestinationHotel() async {
+    print("eee");
+    if (widget.destination != null) {
+      var directions = await DirectionsRepository().getDirections(
+          origin: _origin!.position, destination: widget.destination!.position);
+      setState(() => _info = directions!);
+      print(_info.toString());
+    }
+  }
+
+  void buildData() async {
+    print(1);
+    getLocation();
+    print(2);
+    getDestinationHotel();
+    print(3);
   }
 
   @override
   Widget build(BuildContext context) {
-    // _getLocation();
     return Scaffold(
       appBar: AppBar(
-        
         centerTitle: true,
         title: const Text(
           'Bản Đồ',
@@ -131,12 +152,13 @@ class _MapScreenState extends State<MapScreen> {
               ),
               child: const Text('ORIGIN'),
             ),
-          if (_destination != null)
+          if (widget.destination != null)
             TextButton(
+              
               onPressed: () => _googleMapController.animateCamera(
                 CameraUpdate.newCameraPosition(
                   CameraPosition(
-                    target: _destination?.position ?? LatLng(1, 1),
+                    target: widget.destination?.position ?? LatLng(1, 1),
                     zoom: 14.5,
                     tilt: 50.0,
                   ),
@@ -157,14 +179,16 @@ class _MapScreenState extends State<MapScreen> {
             myLocationButtonEnabled: true,
             zoomControlsEnabled: false,
             initialCameraPosition: CameraPosition(
-              target: LatLng(20.97443, 105.84566),
+              target: LatLng(
+                  _origin!.position.latitude, _origin!.position.longitude),
               zoom: 12,
             ),
             onMapCreated: (controller) => _googleMapController = controller,
             markers: {
               if (_origin != null) _origin!,
-              if (_destination != null) _destination!,
-              if (_locationMarker != null) _locationMarker!
+              if (widget.destination != null) widget.destination!,
+              if (_locationMarker != null) _locationMarker!,
+              if (widget.listHotelMarker != null) ...widget.listHotelMarker!,
             },
             polylines: {
               if (_info != null)
@@ -177,7 +201,8 @@ class _MapScreenState extends State<MapScreen> {
                       .toList(),
                 ),
             },
-            onLongPress: _addMarker,
+            
+            // onLongPress: _addMarker,
           ),
           if (_info != null)
             Positioned(
@@ -216,7 +241,6 @@ class _MapScreenState extends State<MapScreen> {
           _info != null
               ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.0)
               : CameraUpdate.newCameraPosition(CameraPosition(
-                  // if(userLocation.latitude != null && userLocation.longitude != null)
                   target: LatLng(userLocation.latitude ?? 0.0,
                       userLocation.longitude ?? 0.0),
                   zoom: 11.5,
@@ -228,8 +252,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _addMarker(LatLng pos) async {
-    print("1111111111111111111111111111111111");
-    if (_origin == null || (_origin != null && _destination != null)) {
+    if (_origin == null || (_origin != null && widget.destination != null)) {
       // Origin is not set OR Origin/Destination are both set
       // Set origin
       setState(() {
@@ -241,7 +264,7 @@ class _MapScreenState extends State<MapScreen> {
           position: pos,
         );
         // Reset destination
-        _destination = null;
+        widget.destination = null;
 
         // Reset info
         _info = null;
@@ -250,7 +273,7 @@ class _MapScreenState extends State<MapScreen> {
       // Origin is already set
       // Set destination
       setState(() {
-        _destination = Marker(
+        widget.destination = Marker(
           markerId: const MarkerId('destination'),
           infoWindow: const InfoWindow(title: 'Destination'),
           icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
@@ -263,9 +286,5 @@ class _MapScreenState extends State<MapScreen> {
           .getDirections(origin: _origin!.position, destination: pos);
       setState(() => _info = directions!);
     }
-  }
-
-  void call() {
-    print("2222222222222222222222222");
   }
 }

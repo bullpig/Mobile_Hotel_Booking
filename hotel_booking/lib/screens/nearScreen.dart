@@ -9,6 +9,7 @@ import 'package:location/location.dart';
 import '../models/hotel_model.dart';
 import '../utils/utils.dart';
 import 'hotelDetails.dart';
+import 'mapScreen.dart';
 
 class NearScreen extends StatefulWidget {
   @override
@@ -20,11 +21,13 @@ class _NearbyScreenState extends State<NearScreen> {
   Location currentLocation = Location();
   // late LocationData userLocation =
   //     LocationData.fromMap({"latitude": 20.97443, "longitude": 105.84566});
-  late LocationData userLocation;
+  LocationData userLocation =
+      LocationData.fromMap({'latitude': 21.0277633, 'longitude': 105.8341583});
   @override
   void initState() {
     super.initState();
-    run();
+    getLocation();
+    asyncInitState();
   }
 
   void asyncInitState() async {
@@ -33,27 +36,29 @@ class _NearbyScreenState extends State<NearScreen> {
   }
 
   Future<void> getLocation() async {
-    print(20);
-    userLocation = await currentLocation.getLocation();
-    print(10);
+    var loca = await currentLocation.getLocation();
+
     currentLocation.onLocationChanged.listen((LocationData loc) {
-      print(loc.latitude);
-      print(loc.longitude);
-      userLocation = loc;
+      if (loc.latitude != userLocation.latitude ||
+          loc.longitude != userLocation.longitude) {
+        if (this.mounted) {
+          setState(() {
+            userLocation = loc;
+          });
+          print(userLocation.latitude);
+          print(userLocation.longitude);
+        }
+      }
     });
   }
 
-  void run() async {
-    await getLocation();
-    asyncInitState();
-  }
+  // void run() async {
+  //   await getLocation();
+  //   asyncInitState();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    // setState(() {
-    //   getLocation();
-    // });
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -68,6 +73,33 @@ class _NearbyScreenState extends State<NearScreen> {
           padding: EdgeInsets.only(left: 5.0),
           child: Image.asset('assets/images/bookme.png'),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.location_on),
+            color: Colors.red,
+            // size: 25.0,
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MapScreen.fromListHotel(listHotel),
+              ),
+            ),
+          ),
+          
+        ],
+        // bottom: PreferredSize(
+        //   preferredSize: Size.fromHeight(20),
+        //   child: IconButton(
+        //     icon: Icon(Icons.location_on),
+        //     color: Colors.red,
+        //     // size: 25.0,
+        //     onPressed: () => Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) => MapScreen.fromListHotel(listHotel),
+        //       ),
+        //     ),
+        //   ),
       ),
       body: Column(children: [
         Expanded(
@@ -102,78 +134,99 @@ class _NearbyScreenState extends State<NearScreen> {
                       ),
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(140.0, 5.0, 5.0, 5.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Stack(
                           children: [
                             Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10.0),
-                                  child: Text(
-                                    hotel.name,
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w600,
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
+                                      child: Text(
+                                        hotel.name,
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        maxLines: 2,
+                                      ),
                                     ),
-                                    maxLines: 2,
-                                  ),
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
+                                      child: Text(
+                                        hotel.address,
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                        maxLines: 3,
+                                        // overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 10.0,
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 10.0),
-                                  child: Text(
-                                    hotel.address,
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                    ),
-                                    maxLines: 3,
-                                    // overflow: TextOverflow.ellipsis,
-                                  ),
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: buildRatingStars(hotel.rating),
+                                ),
+                                SizedBox(height: 15.0),
+                                Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 3),
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.5,
+                                        child: Wrap(
+                                          spacing: 5,
+                                          runSpacing: 5,
+                                          children: hotel.rooms
+                                              .map(
+                                                (room) => Container(
+                                                  width: 180.0,
+                                                  decoration: BoxDecoration(
+                                                    color: Theme.of(context)
+                                                        .accentColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
+                                                  ),
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    room,
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
+                                        ),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ],
                             ),
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: buildRatingStars(hotel.rating),
-                            ),
-                            SizedBox(height: 15.0),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 3),
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.5,
-                                    child: Wrap(
-                                      spacing: 5,
-                                      runSpacing: 5,
-                                      children: hotel.rooms
-                                          .map(
-                                            (room) => Container(
-                                              width: 180.0,
-                                              decoration: BoxDecoration(
-                                                color: Theme.of(context)
-                                                    .accentColor,
-                                                borderRadius:
-                                                    BorderRadius.circular(10.0),
-                                              ),
-                                              alignment: Alignment.center,
-                                              child: Text(
-                                                room,
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
+                            Positioned(
+                                right: 1.0,
+                                bottom: 1.0,
+                                child: Row(
+                                  children: [
+                                    Text(hotel.distance.toString() + "km"),
+                                    Icon(
+                                      Icons.location_on,
+                                      color: Colors.red,
+                                      size: 25.0,
+                                    )
+                                  ],
+                                ))
                           ],
                         ),
                       ),

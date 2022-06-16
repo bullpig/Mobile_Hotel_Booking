@@ -4,7 +4,7 @@ import 'package:hotel_booking/models/hotel_model.dart';
 import 'package:hotel_booking/screens/eventsScreen.dart';
 import 'package:hotel_booking/screens/favouriteScreen.dart';
 import 'package:hotel_booking/screens/mainHomeScreen.dart';
-import 'package:hotel_booking/screens/nearbyScreen.dart';
+import 'package:hotel_booking/screens/mapScreen.dart';
 import 'package:hotel_booking/screens/profileScreen.dart';
 
 import 'nearScreen.dart';
