@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/directions_repository.dart';
@@ -80,8 +79,8 @@ class _MapScreenState extends State<MapScreen> {
             _origin = Marker(
               markerId: const MarkerId('Location'),
               infoWindow: const InfoWindow(title: 'Location'),
-              icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-              // icon: ,
+              icon: BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueRed),
               position: LatLng(loc.latitude!, loc.longitude!),
             );
             // _origin = _locationMarker;
