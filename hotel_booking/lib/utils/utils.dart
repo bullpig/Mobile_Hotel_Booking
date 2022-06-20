@@ -10,7 +10,8 @@ final services = {
   "Gym": Icons.fitness_center,
   "Elevator": Icons.elevator,
   "NETFLIX": Icons.camera_roll,
-  "Smart TV": Icons.smart_display,
+  "SmartTV": Icons.smart_display,
+  "Air conditioner": Icons.ac_unit,
 };
 
 enum BookingType { twoHours, overnight, allday }
