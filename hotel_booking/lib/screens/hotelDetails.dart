@@ -129,7 +129,7 @@ class _HotelDetailState extends State<HotelDetail> {
                 width: MediaQuery.of(context).size.width,
                 height: 240,
                 child: Hero(
-                  tag: "hotelImage",
+                  tag: _hotel.imageUrl + "hotelDetail",
                   child: ClipRRect(
                     child: _hotel.imageUrl.isNotEmpty
                         ? CachedNetworkImage(
@@ -161,10 +161,14 @@ class _HotelDetailState extends State<HotelDetail> {
                   icon: Icon(Icons.location_on),
                   color: Colors.white70,
                   // size: 25.0,
-                  onPressed:() => Navigator.push(context, MaterialPageRoute(builder: (context) => MapScreen.fromDestination(_hotel.location),),),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          MapScreen.fromDestination(_hotel.location),
+                    ),
+                  ),
                 ),
-
-                
               )
             ],
           ),
