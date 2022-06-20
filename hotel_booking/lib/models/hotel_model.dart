@@ -35,19 +35,6 @@ class Hotel {
       this.distance = 0.0});
 
   void setDistance(LocationData myLocation) {
-    // this.distance = sqrt(
-    //     pow((myLocation.latitude! - this.location.latitude), 2) +
-    //         pow((myLocation.longitude! - this.location.longitude), 2));
-    // double R = 6371;
-    // double dLat = (this.location.latitude - myLocation.latitude!) * PI / 180;
-    // double dLon = (this.location.longitude - myLocation.longitude!) * PI / 180;
-    // double la1ToRad = this.location.latitude * PI / 180;
-    // double la2ToRad = myLocation.latitude! * PI / 180;
-    // double a = sin(dLat / 2) * sin(dLat / 2) +
-    //     cos(la1ToRad) * cos(la2ToRad) * sin(dLon / 2) * sin(dLon / 2);
-    // double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    // this.distance = R * c;
-    // print(distance);
     double latitude1 = this.location.latitude * 0.01746031;
     double latitude2 = myLocation.latitude! * 0.01746031;
     double longitude1 = this.location.longitude * 0.01746031;
@@ -61,7 +48,11 @@ class Hotel {
   }
 
   String toString() {
-    return this.id + this.name;
+    return this.id +
+        "  " +
+        this.name +
+        "  " +
+        this.location.latitude.toString();
   }
 }
 
@@ -72,6 +63,7 @@ class ShortenHotel {
   String imageUrl;
   double rating;
   List<String> rooms;
+  GeoPoint location;
 
   ShortenHotel({
     this.id = "",
@@ -80,6 +72,7 @@ class ShortenHotel {
     this.imageUrl = "",
     this.rating = 0.0,
     this.rooms = const [],
+    this.location = const GeoPoint(0, 0)
   });
 }
 

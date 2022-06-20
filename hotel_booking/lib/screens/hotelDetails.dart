@@ -161,10 +161,14 @@ class _HotelDetailState extends State<HotelDetail> {
                   icon: Icon(Icons.location_on),
                   color: Colors.white70,
                   // size: 25.0,
-                  onPressed:() => Navigator.push(context, MaterialPageRoute(builder: (context) => MapScreen.fromDestination(_hotel.location),),),
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          MapScreen.fromDestination(_hotel.location),
+                    ),
+                  ),
                 ),
-
-                
               )
             ],
           ),

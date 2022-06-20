@@ -40,7 +40,10 @@ Future<List<ShortenHotel>> getHotelsByDestination(String destinationId) async {
       name: docData["name"],
       address: docData["address"],
       imageUrl: docData["imageUrl"],
-      rooms: List<String>.from(docData["rooms"]),
+      location: docData["location"],
+      rooms: List<String>.from(
+        docData["rooms"],
+      ),
     );
     if (hotel.rooms.length > 3) {
       hotel.rooms = hotel.rooms.sublist(0, 3);
@@ -49,7 +52,6 @@ Future<List<ShortenHotel>> getHotelsByDestination(String destinationId) async {
     hotel.rating = await getHotelRating(hotel.id);
     hotels.add(hotel);
   }
-
   return hotels;
 }
 
@@ -371,29 +373,6 @@ Future<List<Room>> getAvailableRooms(
   return rooms;
 }
 
-// Future<List<LocationHotel>> getLocationAllHotel() async {
-//   List<LocationHotel> locationHotels = [];
-
-//   try {
-//     var event = await db.collection("hotels").get();
-//     print(event.toString());
-//     print("gg");
-//     for (var doc in event.docs) {
-//       var docData = doc.data();
-//       var locationHotel = LocationHotel(
-//         doc.id.toString(),
-//         docData['location'].latitude,
-//         docData['location'].longitude,
-//       );
-//       locationHotels.add(locationHotel);
-//     }
-//   } catch (e) {
-//     print(e);
-//   }
-//   locationHotels.sort(((a, b) => a.))
-//   return locationHotels;
-// }
-
 Future<List<Hotel>> getHotelSortByLocation(LocationData myLocation) async {
   List<Hotel> hotels = [];
 
@@ -428,6 +407,36 @@ Future<List<Hotel>> getHotelSortByLocation(LocationData myLocation) async {
 
   return hotels;
 }
+
+// Future<List<ShortenHotel>> getShortenHotelSortByLocation(LocationData myLocation) async {
+//   List<ShortenHotel> hotels = [];
+
+//   try {
+//     var event = await db.collection("hotels").get();
+//     for (var doc in event.docs) {
+//       var docData = doc.data();
+//       var hotel = ShortenHotel(
+//         id: doc.id.toString(),
+//         name: docData["name"],
+//         address: docData["address"],
+//         imageUrl: docData["imageUrl"],
+//         location: docData["location"],
+//         rooms: List<String>.from(docData["rooms"]),
+//       );
+//       hotel.rating = await getHotelRating(hotel.id);
+//       hotels.add(hotel);
+//       print(hotel.toString());
+//     }
+//     hotels.sort(((a, b) => a.distance.compareTo(b.distance)));
+//     for (var i in hotels) {
+//       print(i.distance);
+//     }
+//   } catch (e) {
+//     print(e);
+//   }
+
+//   return hotels;
+// }
 
 Future<List<Order>> getOrders() async {
   List<Order> orders = [];

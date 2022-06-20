@@ -1,11 +1,16 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/directions_repository.dart';
 import 'package:hotel_booking/models/directions_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hotel_booking/models/hotel_model.dart';
 import 'package:location/location.dart';
+
+import 'hotelDetails.dart';
 
 // class MapScreen extends StatelessWidget {
 //   @override
@@ -23,28 +28,53 @@ import 'package:location/location.dart';
 
 class MapScreen extends StatefulWidget {
   Marker? destination;
-  List<Hotel>? listHotel;
-  Set<Marker>? listHotelMarker;
+  // List<Hotel>? listHotel;
+  List<Marker>? listHotelMarker;
+  String? destinationFocus;
+  int dem = 0;
+
   MapScreen();
   MapScreen.fromDestination(GeoPoint _destinaton) {
     this.destination = Marker(
       markerId: const MarkerId('destination'),
       infoWindow: const InfoWindow(title: 'Destination'),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       position: LatLng(_destinaton.latitude, _destinaton.longitude),
     );
   }
-  MapScreen.fromListHotel(List<Hotel> _listHotel) {
-    this.listHotel = _listHotel;
+
+  MapScreen.fromListHotel(var _listHotel) {
+    // this.listHotel = _listHotel;
+    // print(listHotel);
+
     listHotelMarker = _listHotel
-        .map((e) => Marker(
-              markerId: const MarkerId('destination'),
-              infoWindow: InfoWindow(title: e.name),
-              icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueBlue),
-              position: LatLng(e.location.latitude, e.location.longitude),
-            ))
-        .toSet();
+        .map<Marker>((value) => Marker(
+            markerId: MarkerId(value.id),
+            infoWindow: InfoWindow(title: value.name),
+            icon:
+                BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+            position: LatLng(value.location.latitude, value.location.longitude),
+            onTap: () {
+              destinationFocus = value.id;
+            }))
+        .toList();
+
+    print(222222222222222);
+    print(listHotelMarker.toString());
+    // print("22222222222222222222";
+    // var k = _listHotel
+    //     .map((value) => Marker(
+    //         markerId: MarkerId(value.id),
+    //         infoWindow: InfoWindow(title: value.name),
+    //         icon:
+    //             BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+    //         position: LatLng(value.location.latitude, value.location.longitude),
+    //         onTap: () {
+    //           destinationFocus = value.id;
+    //         }))
+    //     .toList();
+
+    // print(k.toString());
   }
 
   @override
@@ -58,7 +88,7 @@ class _MapScreenState extends State<MapScreen> {
   Marker? _origin = Marker(
     markerId: const MarkerId('origin'),
     infoWindow: const InfoWindow(title: 'Origin'),
-    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+    icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
     position: LatLng(21.02347, 105.7732617),
   );
   Marker? _locationMarker;
@@ -80,7 +110,7 @@ class _MapScreenState extends State<MapScreen> {
               markerId: const MarkerId('Location'),
               infoWindow: const InfoWindow(title: 'Location'),
               icon: BitmapDescriptor.defaultMarkerWithHue(
-                  BitmapDescriptor.hueRed),
+                  BitmapDescriptor.hueGreen),
               position: LatLng(loc.latitude!, loc.longitude!),
             );
             // _origin = _locationMarker;
@@ -104,6 +134,12 @@ class _MapScreenState extends State<MapScreen> {
   initState() {
     super.initState();
     buildData();
+    setState(() {
+      widget.destinationFocus = widget.destinationFocus;
+      widget.listHotelMarker = widget.listHotelMarker;
+    });
+    print(widget.destinationFocus);
+    print(e);
   }
 
   Future<void> getDestinationHotel() async {
@@ -117,138 +153,158 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void buildData() async {
-    print(1);
     getLocation();
-    print(2);
     getDestinationHotel();
-    print(3);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'Bản Đồ',
-          style: TextStyle(color: Colors.black),
-        ),
-        backgroundColor: Colors.white,
-        actions: [
-          if (_origin != null)
-            TextButton(
-              onPressed: () => _googleMapController.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: _origin!.position,
-                    zoom: 14.5,
-                    tilt: 50.0,
-                  ),
-                ),
-              ),
-              style: TextButton.styleFrom(
-                primary: Colors.green,
-                textStyle: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              child: const Text('ORIGIN'),
-            ),
-          if (widget.destination != null)
-            TextButton(
-              
-              onPressed: () => _googleMapController.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: widget.destination?.position ?? LatLng(1, 1),
-                    zoom: 14.5,
-                    tilt: 50.0,
-                  ),
-                ),
-              ),
-              style: TextButton.styleFrom(
-                primary: Colors.blue,
-                textStyle: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              child: const Text('DEST'),
-            )
-        ],
-      ),
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          GoogleMap(
-            myLocationButtonEnabled: true,
-            zoomControlsEnabled: false,
-            initialCameraPosition: CameraPosition(
-              target: LatLng(
-                  _origin!.position.latitude, _origin!.position.longitude),
-              zoom: 12,
-            ),
-            onMapCreated: (controller) => _googleMapController = controller,
-            markers: {
-              if (_origin != null) _origin!,
-              if (widget.destination != null) widget.destination!,
-              if (_locationMarker != null) _locationMarker!,
-              if (widget.listHotelMarker != null) ...widget.listHotelMarker!,
-            },
-            polylines: {
-              if (_info != null)
-                Polyline(
-                  polylineId: const PolylineId('overview_polyline'),
-                  color: Colors.red,
-                  width: 5,
-                  points: _info!.polylinePoints
-                      .map((e) => LatLng(e.latitude, e.longitude))
-                      .toList(),
-                ),
-            },
-            
-            // onLongPress: _addMarker,
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Text(
+            'Bản Đồ',
+            style: TextStyle(color: Colors.black),
           ),
-          if (_info != null)
-            Positioned(
-              top: 20.0,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 6.0,
-                  horizontal: 12.0,
+          backgroundColor: Colors.white,
+          actions: [
+            if (_origin != null)
+              TextButton(
+                onPressed: () => _googleMapController.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      target: _origin!.position,
+                      zoom: 14.5,
+                      tilt: 50.0,
+                    ),
+                  ),
                 ),
-                decoration: BoxDecoration(
-                  color: Colors.yellowAccent,
-                  borderRadius: BorderRadius.circular(20.0),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black26,
-                      offset: Offset(0, 2),
-                      blurRadius: 6.0,
-                    )
-                  ],
+                style: TextButton.styleFrom(
+                  primary: Colors.green,
+                  textStyle: const TextStyle(fontWeight: FontWeight.w600),
                 ),
-                child: Text(
-                  '${_info?.totalDistance}, ${_info?.totalDuration}',
-                  style: const TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w600,
+                child: const Text('ORIGIN'),
+              ),
+            if (widget.destination != null)
+              TextButton(
+                onPressed: () => _googleMapController.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      target: widget.destination?.position ?? LatLng(1, 1),
+                      zoom: 14.5,
+                      tilt: 50.0,
+                    ),
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                  primary: Colors.blue,
+                  textStyle: const TextStyle(fontWeight: FontWeight.w600),
+                ),
+                child: const Text('DEST'),
+              )
+          ],
+        ),
+        body: Stack(
+          alignment: Alignment.center,
+          children: [
+            GoogleMap(
+              myLocationButtonEnabled: true,
+              zoomControlsEnabled: false,
+              initialCameraPosition: CameraPosition(
+                target: LatLng(
+                    _origin!.position.latitude, _origin!.position.longitude),
+                zoom: 12,
+              ),
+              onMapCreated: (controller) => _googleMapController = controller,
+              markers: {
+                if (_origin != null) _origin!,
+                if (widget.destination != null) widget.destination!,
+                if (_locationMarker != null) _locationMarker!,
+                if (widget.listHotelMarker != null) ...widget.listHotelMarker!,
+              },
+              polylines: {
+                if (_info != null)
+                  Polyline(
+                    polylineId: const PolylineId('overview_polyline'),
+                    color: Colors.red,
+                    width: 5,
+                    points: _info!.polylinePoints
+                        .map((e) => LatLng(e.latitude, e.longitude))
+                        .toList(),
+                  ),
+              },
+
+              // onLongPress: _addMarker,
+            ),
+            if (_info != null)
+              Positioned(
+                top: 20.0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 6.0,
+                    horizontal: 12.0,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.yellowAccent,
+                    borderRadius: BorderRadius.circular(20.0),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.black26,
+                        offset: Offset(0, 2),
+                        blurRadius: 6.0,
+                      )
+                    ],
+                  ),
+                  child: Text(
+                    '${_info?.totalDistance}, ${_info?.totalDuration}',
+                    style: const TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.black,
-        onPressed: () => _googleMapController.animateCamera(
-          _info != null
-              ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.0)
-              : CameraUpdate.newCameraPosition(CameraPosition(
-                  target: LatLng(userLocation.latitude ?? 0.0,
-                      userLocation.longitude ?? 0.0),
-                  zoom: 11.5,
-                )),
+          ],
         ),
-        child: const Icon(Icons.center_focus_strong),
-      ),
-    );
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              onPressed: () {
+                if (widget.destinationFocus != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => HotelDetail(
+                        hotelId: widget.destinationFocus!,
+                      ),
+                    ),
+                  ).then((value) => setState(() {}));
+                }
+              },
+              child: const Icon(Icons.arrow_forward_ios_outlined),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            FloatingActionButton(
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              onPressed: () => _googleMapController.animateCamera(
+                _info != null
+                    ? CameraUpdate.newLatLngBounds(_info!.bounds, 100.0)
+                    : CameraUpdate.newCameraPosition(CameraPosition(
+                        target: LatLng(userLocation.latitude ?? 0.0,
+                            userLocation.longitude ?? 0.0),
+                        zoom: 11.5,
+                      )),
+              ),
+              child: const Icon(Icons.center_focus_strong),
+            ),
+          ],
+        ));
   }
 
   void _addMarker(LatLng pos) async {

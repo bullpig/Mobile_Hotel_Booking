@@ -8,6 +8,7 @@ import 'package:hotel_booking/screens/listRoomsScreen.dart';
 import '../models/destination_model.dart';
 import '../models/hotel_model.dart';
 import '../utils/utils.dart';
+import 'mapScreen.dart';
 //import 'package:hotel_app/screens/hotelDetails.dart';
 
 class DestinationScreen extends StatefulWidget {
@@ -119,10 +120,17 @@ class _DestinationScreenState extends State<DestinationScreen> {
               Positioned(
                 right: 20.0,
                 bottom: 20.0,
-                child: Icon(
-                  Icons.location_on,
+                child: IconButton(
+                  icon: Icon(Icons.location_on),
                   color: Colors.white70,
-                  size: 25.0,
+                  // size: 25.0,
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          MapScreen.fromListHotel(listHotel),
+                    ),
+                  ),
                 ),
               )
             ],
