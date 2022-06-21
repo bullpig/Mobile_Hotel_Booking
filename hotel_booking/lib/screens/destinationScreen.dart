@@ -8,7 +8,9 @@ import 'package:hotel_booking/screens/listRoomsScreen.dart';
 import '../models/destination_model.dart';
 import '../models/hotel_model.dart';
 import '../utils/utils.dart';
+import '../widgets/listHotels.dart';
 import 'mapScreen.dart';
+
 //import 'package:hotel_app/screens/hotelDetails.dart';
 
 class DestinationScreen extends StatefulWidget {
@@ -19,23 +21,18 @@ class DestinationScreen extends StatefulWidget {
 }
 
 class _DestinationScreenState extends State<DestinationScreen> {
-  List<ShortenHotel> listHotel = tempHotel;
+  late Future<List<ShortenHotel>> futureHotels;
 
   @override
   void initState() {
     super.initState();
-    asyncInitState();
-  }
-
-  void asyncInitState() async {
-    getHotelsByDestination(widget.destination.id)
-        .then((value) => setState(() => listHotel = value));
+    futureHotels = getHotelsByDestination(widget.destination.id);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(   
+      body: Column(
         children: [
           Stack(
             children: [
@@ -52,7 +49,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
                   ],
                 ),
                 child: Hero(
-                  tag: widget.destination.imageUrl,
+                  tag: widget.destination.imageUrl + "destImg",
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(30.0),
                     child: CachedNetworkImage(
@@ -136,136 +133,16 @@ class _DestinationScreenState extends State<DestinationScreen> {
             ],
           ),
           Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.only(
-                top: 10.0,
-                bottom: 15.0,
-              ),
-              itemCount: listHotel.length,
-              itemBuilder: (BuildContext context, int index) {
-                ShortenHotel hotel = listHotel[index];
-                return GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => HotelDetail(
-                        hotelId: hotel.id,
-                      ),
-                    ),
-                  ).then((value) => setState(() {})),
-                  child: Stack(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                        height: 220.0,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(140.0, 5.0, 5.0, 5.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
-                                    child: Text(
-                                      hotel.name,
-                                      style: TextStyle(
-                                        fontSize: 18.0,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      softWrap: false,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 10.0),
-                                    child: Text(
-                                      hotel.address,
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                      softWrap: false,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: buildRatingStars(hotel.rating),
-                              ),
-                              SizedBox(height: 15.0),
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 3),
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.5,
-                                      child: Wrap(
-                                        spacing: 5,
-                                        runSpacing: 5,
-                                        children: hotel.rooms
-                                            .map(
-                                              (room) => Container(
-                                                width: 160.0,
-                                                decoration: BoxDecoration(
-                                                  color: Color.fromARGB(
-                                                      255, 216, 236, 241),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0),
-                                                ),
-                                                alignment: Alignment.center,
-                                                child: Text(
-                                                  room,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  softWrap: false,
-                                                ),
-                                              ),
-                                            )
-                                            .toList(),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        left: 20.0,
-                        top: 15.0,
-                        bottom: 15.0,
-                        child: hotel.imageUrl.isNotEmpty
-                            ? CachedNetworkImage(
-                                imageUrl: hotel.imageUrl,
-                                width: 120.0,
-                                fit: BoxFit.cover,
-                              )
-                            : Image.asset(
-                                'assets/images/loading.gif',
-                                width: 120.0,
-                                fit: BoxFit.cover,
-                              ),
-                      ),
-                    ],
-                  ),
-                );
+            child: FutureBuilder<List<ShortenHotel>>(
+              future: futureHotels,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListHotels(listHotel: snapshot.data!);
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
+
+                return ListHotels(listHotel: tempHotel);
               },
             ),
           )

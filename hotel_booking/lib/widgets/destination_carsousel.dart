@@ -144,7 +144,7 @@ class _DestinationCarousel extends State<DestinationCarousel> {
                           child: Stack(
                             children: [
                               Hero(
-                                tag: destination.imageUrl,
+                                tag: destination.imageUrl + "destCarsousel",
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(20.0),
                                   child: destination.imageUrl.isNotEmpty

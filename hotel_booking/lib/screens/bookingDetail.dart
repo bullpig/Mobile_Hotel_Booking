@@ -202,6 +202,32 @@ class BookingDetailState extends State<BookingDetail> {
                   SizedBox(
                     height: 16,
                   ),
+                  Text(
+                    "Tổng số tiền phòng: ${widget.order.totalPayment}VND",
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  if (widget.order.totalDiscount != null)
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          "Mã giảm giá: -${widget.order.totalDiscount}VND",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -216,7 +242,7 @@ class BookingDetailState extends State<BookingDetail> {
                         ),
                       ),
                       Text(
-                        "${widget.order.totalPayment}VND",
+                        "${getFinalPayment(widget.order)}VND",
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.lightBlue,
@@ -295,11 +321,7 @@ class BookingDetailState extends State<BookingDetail> {
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  side: BorderSide(
-                    width: 1.0,
-                    color: Colors.blue,
-                    style: BorderStyle.solid,
-                  ),
+                  primary: Colors.blue,
                 ),
               ),
             ),

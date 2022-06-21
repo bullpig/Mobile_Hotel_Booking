@@ -13,6 +13,8 @@ class Order {
   PaymentType paymentType;
   int totalPayment;
   bool paymentStaus;
+  String? voucherId;
+  int? totalDiscount;
 
   Order({
     this.id = "",
@@ -27,6 +29,8 @@ class Order {
     this.paymentType = PaymentType.checkIn,
     this.totalPayment = 0,
     this.paymentStaus = false,
+    this.voucherId,
+    this.totalDiscount,
   });
 }
 
@@ -44,3 +48,7 @@ var tempOrders = [
     endTime: DateTime(0),
   ),
 ];
+
+int getFinalPayment(Order order) {
+  return order.totalPayment - (order.totalDiscount ?? 0);
+}

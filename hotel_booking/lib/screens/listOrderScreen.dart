@@ -131,7 +131,7 @@ class ListOrderState extends State<ListOrderScreen> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Text(
-                                        "${order.totalPayment}VND ",
+                                        "${order.totalPayment - (order.totalDiscount ?? 0)}VND ",
                                         style: TextStyle(
                                           color: Colors.lightBlue,
                                           fontSize: 13,
@@ -139,11 +139,12 @@ class ListOrderState extends State<ListOrderScreen> {
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
-                                      if (order.paymentStaus) Icon(
-                                        Icons.check_circle,
-                                        color: Colors.green,
-                                        size: 12,
-                                      )
+                                      if (order.paymentStaus)
+                                        Icon(
+                                          Icons.check_circle,
+                                          color: Colors.green,
+                                          size: 12,
+                                        )
                                     ],
                                   )),
                             ],

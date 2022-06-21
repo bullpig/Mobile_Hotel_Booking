@@ -14,6 +14,9 @@ final services = {
   "Air conditioner": Icons.ac_unit,
 };
 
+String defaultImageUrl =
+    "https://res.cloudinary.com/dsy1fdqx2/image/upload/v1655433295/demo/shimmer_wylozh.gif";
+
 enum BookingType { twoHours, overnight, allday }
 
 final bookingTypeToText = {

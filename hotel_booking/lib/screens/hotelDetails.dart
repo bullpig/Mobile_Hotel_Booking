@@ -129,7 +129,7 @@ class _HotelDetailState extends State<HotelDetail> {
                 width: MediaQuery.of(context).size.width,
                 height: 240,
                 child: Hero(
-                  tag: "hotelImage",
+                  tag: _hotel.imageUrl + "hotelDetail",
                   child: ClipRRect(
                     child: _hotel.imageUrl.isNotEmpty
                         ? CachedNetworkImage(
@@ -374,10 +374,10 @@ class _HotelDetailState extends State<HotelDetail> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => SelectRoomScreen(
-                          hotel: _hotel,
-                        ),
-                      ),
+                          builder: (_) => SelectRoomScreen(
+                                hotel: _hotel,
+                              ),
+                          settings: RouteSettings(name: "/selectRoom")),
                     );
                   },
                   child: Container(

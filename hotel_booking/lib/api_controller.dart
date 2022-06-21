@@ -6,6 +6,7 @@ import 'package:hotel_booking/models/destination_model.dart';
 import 'package:hotel_booking/models/location_hotel.dart';
 import 'package:hotel_booking/models/order.dart';
 import 'package:hotel_booking/models/room.dart';
+import 'package:hotel_booking/models/voucher.dart';
 import 'package:hotel_booking/utils/utils.dart';
 import 'package:location/location.dart';
 
@@ -149,7 +150,9 @@ Future<String> createBooking(
     DateTime endTime,
     PaymentType paymentType,
     int totalPayment,
-    bool isPaid) async {
+    bool isPaid,
+    String? voucherId,
+    int? totalDiscount) async {
   try {
     var order = <String, dynamic>{
       "userId": auth.currentUser?.uid.toString(),
@@ -163,6 +166,10 @@ Future<String> createBooking(
       "paymentStatus": isPaid,
       "bookingTime": FieldValue.serverTimestamp(),
     };
+    if (voucherId != null && totalDiscount != 0) {
+      order["voucherId"] = voucherId;
+      order["totalDiscount"] = totalDiscount;
+    }
     var orderDoc = await db.collection("orders").add(order);
     return orderDoc.id;
   } catch (e) {
@@ -460,6 +467,8 @@ Future<List<Order>> getOrders() async {
         paymentType: PaymentType.values.byName(docData["paymentType"]),
         totalPayment: docData["totalPayment"],
         paymentStaus: docData["paymentStatus"],
+        voucherId: docData["voucherId"],
+        totalDiscount: docData["totalDiscount"],
       );
       var room = await db.collection("rooms").doc(order.roomId).get();
       order.roomName = room.get("name");
@@ -510,4 +519,138 @@ Future<bool> updatePaymentStatus(String orderId, bool paymentStatus) async {
   }
 
   return false;
+}
+
+Future<List<Map<String, String>>> getVouchers() async {
+  List<Map<String, String>> returnedVouchers = [];
+
+  try {
+    var query = await db
+        .collection("vouchers")
+        .where("endTime", isGreaterThanOrEqualTo: DateTime.now())
+        .get();
+    for (var doc in query.docs) {
+      var docData = doc.data();
+
+      if (DateTime.now().isBefore(docData["startTime"].toDate())) {
+        continue;
+      }
+      Map<String, String> voucher = {
+        "id": doc.id,
+        "imageUrl": docData["imageUrl"] ?? defaultImageUrl,
+      };
+      returnedVouchers.add(voucher);
+    }
+  } catch (e) {
+    print(e.toString());
+  }
+
+  return returnedVouchers;
+}
+
+Future<Voucher> getVoucher(String voucherId) async {
+  try {
+    var doc = await db.collection("vouchers").doc(voucherId).get();
+    var docData = doc.data()!;
+
+    var voucher = Voucher(
+      id: doc.id,
+      name: docData["name"] ?? "",
+      description: docData["description"] ?? "",
+      imageUrl: docData["imageUrl"] ?? defaultImageUrl,
+      startTime: docData["startTime"].toDate(),
+      endTime: docData["endTime"].toDate(),
+      type: VoucherType.values.byName(docData["type"]),
+      discountValue: docData["discountValue"],
+      maxDiscount: docData["maxDiscount"],
+      isForAll:
+          docData["appliedHotels"].isEmpty && docData["appliedRooms"].isEmpty
+              ? true
+              : false,
+    );
+    return voucher;
+  } catch (e) {
+    print(e.toString());
+  }
+
+  return Voucher();
+}
+
+Future<List<ShortenHotel>> getDiscountedHotels(String voucherId) async {
+  List<ShortenHotel> hotels = [];
+
+  var voucher = await db.collection("vouchers").doc(voucherId).get();
+  List<String> hotelIds = List<String>.from(voucher.get("appliedHotels") ?? []);
+
+  if (hotelIds.isEmpty) {
+    return hotels;
+  }
+
+  var event = await db
+      .collection("hotels")
+      .where(FieldPath.documentId, whereIn: hotelIds)
+      .get();
+  for (var doc in event.docs) {
+    var docData = doc.data();
+    var hotel = ShortenHotel(
+      id: doc.id.toString(),
+      name: docData["name"],
+      address: docData["address"],
+      imageUrl: docData["imageUrl"],
+      rooms: List<String>.from(docData["rooms"]),
+    );
+    if (hotel.rooms.length > 3) {
+      hotel.rooms = hotel.rooms.sublist(0, 3);
+      hotel.rooms.add("...");
+    }
+    hotel.rating = await getHotelRating(hotel.id);
+    hotels.add(hotel);
+  }
+
+  return hotels;
+}
+
+Future<List<Voucher>> getVouchersByHotel(String hotelId) async {
+  List<Voucher> resVouchers = [];
+
+  try {
+    var query = await db
+        .collection("vouchers")
+        .where("endTime", isGreaterThanOrEqualTo: DateTime.now())
+        .get();
+
+    for (var doc in query.docs) {
+      var docData = doc.data();
+
+      if (DateTime.now().isBefore(docData["startTime"].toDate())) {
+        continue;
+      }
+
+      if (docData["appliedHotels"].isNotEmpty &&
+          !docData["appliedHotels"].contains(hotelId)) {
+        continue;
+      }
+
+      var voucher = Voucher(
+        id: doc.id,
+        name: docData["name"] ?? "",
+        description: docData["description"] ?? "",
+        imageUrl: docData["imageUrl"] ?? defaultImageUrl,
+        startTime: docData["startTime"].toDate(),
+        endTime: docData["endTime"].toDate(),
+        type: VoucherType.values.byName(docData["type"]),
+        discountValue: docData["discountValue"],
+        maxDiscount: docData["maxDiscount"],
+        isForAll:
+            docData["appliedHotels"].isEmpty && docData["appliedRooms"].isEmpty
+                ? true
+                : false,
+        appliedRooms: List<String>.from(docData["appliedRooms"] ?? []),
+      );
+      resVouchers.add(voucher);
+    }
+  } catch (e) {
+    print(e.toString());
+  }
+  return resVouchers;
 }
