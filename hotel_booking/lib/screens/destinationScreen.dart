@@ -114,22 +114,33 @@ class _DestinationScreenState extends State<DestinationScreen> {
                   ],
                 ),
               ),
-              Positioned(
-                right: 20.0,
-                bottom: 20.0,
-                child: IconButton(
-                  icon: Icon(Icons.location_on),
-                  color: Colors.white70,
-                  // size: 25.0,
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          MapScreen.fromListHotel(listHotel),
-                    ),
-                  ),
-                ),
-              )
+              FutureBuilder<List<ShortenHotel>>(
+                future: futureHotels,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Positioned(
+                      right: 20.0,
+                      bottom: 20.0,
+                      child: IconButton(
+                        icon: Icon(Icons.location_on),
+                        color: Colors.white70,
+                        // size: 25.0,
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MapScreen.fromListHotel(snapshot.data!),
+                          ),
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+
+                  return Container();
+                },
+              ),
             ],
           ),
           Expanded(
