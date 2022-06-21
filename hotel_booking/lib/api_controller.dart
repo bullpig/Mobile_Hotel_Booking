@@ -148,7 +148,9 @@ Future<String> createBooking(
     DateTime endTime,
     PaymentType paymentType,
     int totalPayment,
-    bool isPaid) async {
+    bool isPaid,
+    String? voucherId,
+    int? totalDiscount) async {
   try {
     var order = <String, dynamic>{
       "userId": auth.currentUser?.uid.toString(),
@@ -162,6 +164,10 @@ Future<String> createBooking(
       "paymentStatus": isPaid,
       "bookingTime": FieldValue.serverTimestamp(),
     };
+    if (voucherId != null && totalDiscount != 0) {
+      order["voucherId"] = voucherId;
+      order["totalDiscount"] = totalDiscount;
+    }
     var orderDoc = await db.collection("orders").add(order);
     return orderDoc.id;
   } catch (e) {
@@ -452,6 +458,8 @@ Future<List<Order>> getOrders() async {
         paymentType: PaymentType.values.byName(docData["paymentType"]),
         totalPayment: docData["totalPayment"],
         paymentStaus: docData["paymentStatus"],
+        voucherId: docData["voucherId"],
+        totalDiscount: docData["totalDiscount"],
       );
       var room = await db.collection("rooms").doc(order.roomId).get();
       order.roomName = room.get("name");
@@ -518,17 +526,6 @@ Future<List<Map<String, String>>> getVouchers() async {
       if (DateTime.now().isBefore(docData["startTime"].toDate())) {
         continue;
       }
-
-      // var voucher = Voucher(
-      //   id: doc.id,
-      //   name: docData["name"] ?? "",
-      //   description: docData["description"] ?? "",
-      //   imageUrl: docData["imageUrl"] ?? defaultImageUrl,
-      //   startTime: docData["startTime"].toDate(),
-      //   endTime: docData["endTime"].toDate(),
-      //   appliedHotels: List<String>.from(docData["appliedHotels"] ?? []),
-      //   appliedRooms: List<String>.from(docData["appliedRooms"] ?? []),
-      // );
       Map<String, String> voucher = {
         "id": doc.id,
         "imageUrl": docData["imageUrl"] ?? defaultImageUrl,
@@ -607,7 +604,44 @@ Future<List<ShortenHotel>> getDiscountedHotels(String voucherId) async {
 Future<List<Voucher>> getVouchersByHotel(String hotelId) async {
   List<Voucher> resVouchers = [];
 
+  try {
+    var query = await db
+        .collection("vouchers")
+        .where("endTime", isGreaterThanOrEqualTo: DateTime.now())
+        .get();
 
+    for (var doc in query.docs) {
+      var docData = doc.data();
 
+      if (DateTime.now().isBefore(docData["startTime"].toDate())) {
+        continue;
+      }
+
+      if (docData["appliedHotels"].isNotEmpty &&
+          !docData["appliedHotels"].contains(hotelId)) {
+        continue;
+      }
+
+      var voucher = Voucher(
+        id: doc.id,
+        name: docData["name"] ?? "",
+        description: docData["description"] ?? "",
+        imageUrl: docData["imageUrl"] ?? defaultImageUrl,
+        startTime: docData["startTime"].toDate(),
+        endTime: docData["endTime"].toDate(),
+        type: VoucherType.values.byName(docData["type"]),
+        discountValue: docData["discountValue"],
+        maxDiscount: docData["maxDiscount"],
+        isForAll:
+            docData["appliedHotels"].isEmpty && docData["appliedRooms"].isEmpty
+                ? true
+                : false,
+        appliedRooms: List<String>.from(docData["appliedRooms"] ?? []),
+      );
+      resVouchers.add(voucher);
+    }
+  } catch (e) {
+    print(e.toString());
+  }
   return resVouchers;
 }

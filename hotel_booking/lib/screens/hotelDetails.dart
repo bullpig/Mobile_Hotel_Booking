@@ -374,10 +374,10 @@ class _HotelDetailState extends State<HotelDetail> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => SelectRoomScreen(
-                          hotel: _hotel,
-                        ),
-                      ),
+                          builder: (_) => SelectRoomScreen(
+                                hotel: _hotel,
+                              ),
+                          settings: RouteSettings(name: "/selectRoom")),
                     );
                   },
                   child: Container(
