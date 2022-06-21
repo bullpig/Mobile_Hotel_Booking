@@ -11,6 +11,7 @@ import 'package:hotel_booking/utils/utils.dart';
 import 'package:location/location.dart';
 
 import './models/hotel_model.dart';
+import './models/voucher.dart';
 
 final db = FirebaseFirestore.instance;
 final auth = FirebaseAuth.instance;
@@ -401,6 +402,10 @@ Future<List<Hotel>> getHotelSortByLocation(LocationData myLocation) async {
       );
       hotel.rating = await getHotelRating(hotel.id);
       hotel.setDistance(myLocation);
+      if (hotel.rooms.length > 3) {
+        hotel.rooms = hotel.rooms.sublist(0, 3);
+        hotel.rooms.add("...");
+      }
       hotels.add(hotel);
       print(hotel.toString());
     }

@@ -1,21 +1,10 @@
 import 'dart:ffi';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hotel_booking/api_controller.dart';
-import 'package:hotel_booking/models/order.dart';
-import 'package:hotel_booking/models/room.dart';
 import 'package:hotel_booking/models/voucher.dart';
-import 'package:hotel_booking/screens/bookingDetail.dart';
-import 'package:hotel_booking/screens/hotelDetails.dart';
-import 'package:hotel_booking/screens/listRoomsScreen.dart';
 import 'package:hotel_booking/widgets/listHotels.dart';
-import 'package:readmore/readmore.dart';
-import 'selectRoomScreen.dart';
 import 'package:hotel_booking/models/hotel_model.dart';
-import 'package:hotel_booking/utils/utils.dart';
 
 class DiscountedHotelsScreen extends StatefulWidget {
   Voucher voucher;

@@ -104,7 +104,7 @@ class _NearbyScreenState extends State<NearScreen> {
                   children: [
                     Container(
                       margin: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-                      height: 230.0,
+                      height: 240.0,
                       // width: double.infinity,
                       width: 400.0,
                       decoration: BoxDecoration(
@@ -133,6 +133,7 @@ class _NearbyScreenState extends State<NearScreen> {
                                           fontWeight: FontWeight.w600,
                                         ),
                                         maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                     Padding(
@@ -143,8 +144,8 @@ class _NearbyScreenState extends State<NearScreen> {
                                         style: TextStyle(
                                           color: Colors.grey,
                                         ),
-                                        maxLines: 3,
-                                        // overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ],
