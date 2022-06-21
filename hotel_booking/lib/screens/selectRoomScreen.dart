@@ -166,36 +166,35 @@ class SelectRoomScreenState extends State<SelectRoomScreen> {
           return false;
         },
         child: Scaffold(
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios),
+              iconSize: 30.0,
+              color: Colors.grey,
+              onPressed: () => Navigator.pop(context),
+            ),
+            title: Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Text(
+                  widget.hotel.name,
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20.0,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+            ),
+            centerTitle: true,
+            backgroundColor: Colors.white,
+          ),
           body: ListView(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back_ios),
-                    iconSize: 30.0,
-                    color: Colors.black,
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Text(
-                        widget.hotel.name,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.0,
-                        ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ),
-                  )
-                ],
-              ),
               SizedBox(
-                height: 20.0,
+                height: 16.0,
               ),
               Container(
                 height: MediaQuery.of(context).size.height / 3,
@@ -216,8 +215,9 @@ class SelectRoomScreenState extends State<SelectRoomScreen> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Text(
-                        'THÔNG TIN THANH TOÁN',
+                        'CHỌN THỜI GIAN',
                         style: TextStyle(
+                          color: Colors.blue,
                           fontSize: 18.0,
                           fontWeight: FontWeight.w600,
                         ),
@@ -370,6 +370,7 @@ class SelectRoomScreenState extends State<SelectRoomScreen> {
                                     Text(
                                       'CHỌN PHÒNG',
                                       style: TextStyle(
+                                          color: Colors.blue,
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -411,8 +412,7 @@ class SelectRoomScreenState extends State<SelectRoomScreen> {
                                                   ),
                                                   Icon(
                                                     Icons.arrow_forward_ios,
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
+                                                    color: Colors.blue,
                                                   ),
                                                 ]),
                                           )),
@@ -444,6 +444,7 @@ class SelectRoomScreenState extends State<SelectRoomScreen> {
                                     Text(
                                       'CHỌN VOUCHER',
                                       style: TextStyle(
+                                          color: Colors.blue,
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -484,7 +485,7 @@ class SelectRoomScreenState extends State<SelectRoomScreen> {
                                                 children: [
                                                   Text(
                                                     currentVoucher?.name ??
-                                                        "Không có voucher phù hợp",
+                                                        "Chưa chọn voucher",
                                                     style: TextStyle(
                                                         fontSize: 18,
                                                         fontWeight:
@@ -492,8 +493,7 @@ class SelectRoomScreenState extends State<SelectRoomScreen> {
                                                   ),
                                                   Icon(
                                                     Icons.arrow_forward_ios,
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
+                                                    color: Colors.blue,
                                                   ),
                                                 ]),
                                           )),
@@ -523,13 +523,15 @@ class SelectRoomScreenState extends State<SelectRoomScreen> {
                               Text(
                                 'CHỌN PHƯƠNG THỨC THANH TOÁN',
                                 style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
+                                    color: Colors.blue,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
                               ),
                               for (var type in paymentTypeLabels.keys)
                                 ListTile(
                                   leading: Radio<PaymentType>(
                                     value: type,
-                                    activeColor: Theme.of(context).primaryColor,
+                                    activeColor: Colors.blue,
                                     groupValue: paymentType,
                                     onChanged: (PaymentType? value) {
                                       setState(() {
@@ -545,7 +547,7 @@ class SelectRoomScreenState extends State<SelectRoomScreen> {
                                   ),
                                   trailing: Icon(
                                     paymentTypeIcons[type]!,
-                                    color: Theme.of(context).primaryColor,
+                                    color: Colors.blue,
                                   ),
                                 ),
                             ],
@@ -668,7 +670,7 @@ class SelectRoomScreenState extends State<SelectRoomScreen> {
                           padding: const EdgeInsets.all(10.0),
                           child: RaisedButton(
                             disabledColor: Theme.of(context).disabledColor,
-                            color: Theme.of(context).primaryColor,
+                            color: Colors.blue,
                             textColor: Colors.white,
                             child: Container(
                               height: 50.0,

@@ -659,3 +659,20 @@ Future<List<Voucher>> getVouchersByHotel(String hotelId) async {
   }
   return resVouchers;
 }
+
+Future<List<ShortenHotel>> getSearchHotels() async {
+  List<ShortenHotel> hotels = [];
+
+  var event = await db.collection("hotels").get();
+  for (var doc in event.docs) {
+    var docData = doc.data();
+    var hotel = ShortenHotel(
+      id: doc.id.toString(),
+      name: docData["name"],
+      address: docData["address"],
+      imageUrl: docData["imageUrl"],
+    );
+    hotels.add(hotel);
+  }
+  return hotels;
+}
