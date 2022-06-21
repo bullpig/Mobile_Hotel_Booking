@@ -19,8 +19,6 @@ class NearScreen extends StatefulWidget {
 class _NearbyScreenState extends State<NearScreen> {
   List<Hotel> listHotel = [];
   Location currentLocation = Location();
-  // late LocationData userLocation =
-  //     LocationData.fromMap({"latitude": 20.97443, "longitude": 105.84566});
   LocationData userLocation =
       LocationData.fromMap({'latitude': 21.0277633, 'longitude': 105.8341583});
   @override
@@ -52,11 +50,6 @@ class _NearbyScreenState extends State<NearScreen> {
     });
   }
 
-  // void run() async {
-  //   await getLocation();
-  //   asyncInitState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +68,7 @@ class _NearbyScreenState extends State<NearScreen> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.location_on),
+            icon: Image.asset('assets/images/Icon_Map.png'),
             color: Colors.red,
             // size: 25.0,
             onPressed: () => Navigator.push(
@@ -85,21 +78,7 @@ class _NearbyScreenState extends State<NearScreen> {
               ),
             ),
           ),
-          
         ],
-        // bottom: PreferredSize(
-        //   preferredSize: Size.fromHeight(20),
-        //   child: IconButton(
-        //     icon: Icon(Icons.location_on),
-        //     color: Colors.red,
-        //     // size: 25.0,
-        //     onPressed: () => Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //         builder: (context) => MapScreen.fromListHotel(listHotel),
-        //       ),
-        //     ),
-        //   ),
       ),
       body: Column(children: [
         Expanded(

@@ -193,9 +193,12 @@ class _SearchState extends State<Search> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold),
                           ),
-                          // leading: Image(
-                          //   image: NetworkImage(data['imageUrl']),
-                          // ),
+                          leading: Image(
+                            image: NetworkImage(data['imageUrl']),
+                            width: 80.0,
+                            height: 50.0,
+                            fit: BoxFit.cover,
+                          ),
                         );
                        
                       }
@@ -230,9 +233,12 @@ class _SearchState extends State<Search> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold),
                           ),
-                          // leading: Image(
-                          //   image: NetworkImage(data['imageUrl']),
-                          // ),
+                          leading: Image(
+                            image: NetworkImage(data['imageUrl']),
+                            width: 80.0,
+                            height: 50.0,
+                            fit: BoxFit.cover,
+                          ),
                         );
                       }
                       return Container();

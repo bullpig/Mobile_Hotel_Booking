@@ -10,6 +10,8 @@ final services = {
   "Gym": Icons.fitness_center,
   "Elevator": Icons.elevator,
   "NETFLIX": Icons.camera_roll,
+  "SmartTV": Icons.smart_display,
+  "Air conditioner": Icons.ac_unit,
 };
 
 String defaultImageUrl =
