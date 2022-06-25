@@ -420,7 +420,6 @@ Future<List<Hotel>> getHotelSortByLocation(LocationData myLocation) async {
 
   var res = hotels.sublist(0, 10);
 
-
   return res;
 }
 
@@ -651,7 +650,6 @@ Future<List<ShortenHotel>> getSearchHotels() async {
   return hotels;
 }
 
-
 Future<List<City>> getCities() async {
   List<City> res = [];
 
@@ -669,6 +667,7 @@ Future<List<City>> getCities() async {
     log(e.toString());
   }
   return res;
+}
 
 Future<String> changePassword(
     String currentPassword, String newPassword) async {
