@@ -43,8 +43,6 @@ class _NearbyScreenState extends State<NearScreen> {
           setState(() {
             userLocation = loc;
           });
-          print(userLocation.latitude);
-          print(userLocation.longitude);
         }
       }
     });

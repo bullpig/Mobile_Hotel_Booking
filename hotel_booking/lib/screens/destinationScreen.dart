@@ -63,7 +63,7 @@ class _DestinationScreenState extends State<DestinationScreen> {
               ),
               SafeArea(
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     IconButton(
                       icon: Icon(Icons.arrow_back_ios),
@@ -71,12 +71,6 @@ class _DestinationScreenState extends State<DestinationScreen> {
                       color: Colors.black,
                       onPressed: () => Navigator.pop(context),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.search),
-                      iconSize: 30.0,
-                      color: Colors.black,
-                      onPressed: () {},
-                    )
                   ],
                 ),
               ),
