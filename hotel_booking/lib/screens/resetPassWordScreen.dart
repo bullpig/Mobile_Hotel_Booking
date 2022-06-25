@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hotel_booking/api_controller.dart';
+import 'package:hotel_booking/screens/homeScreen.dart';
 import 'package:hotel_booking/screens/loginScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hotel_booking/screens/profileScreen.dart';
@@ -144,7 +145,7 @@ class resetPassWordScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (_) => ProfileScreen()),
+                                  builder: (_) => HomeScreen.withScreen(4)),
                             );
                           } else if (result == "WrongPassWord") {
                             Fluttertoast.showToast(

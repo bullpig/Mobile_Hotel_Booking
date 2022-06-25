@@ -13,7 +13,14 @@ import 'nearScreen.dart';
 // import 'package:hotel_app/screens/nearbyScreen.dart';
 
 class HomeScreen extends StatefulWidget {
-  static const String idScreen = 'home';
+  int currentTab = 0;
+
+  static String idScreen = 'home';
+
+  HomeScreen() {}
+  HomeScreen.withScreen(int tab) {
+    currentTab = tab;
+  }
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -24,9 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     fontSize: 12,
     fontWeight: FontWeight.w500,
   );
-
-  int _currentTab = 0;
-
+  
   final Tabs = [
     MainHomeScreen(),
     NearScreen(),
@@ -38,14 +43,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Tabs[_currentTab],
+      body: Tabs[widget.currentTab],
       bottomNavigationBar: BottomNavigationBar(
         unselectedItemColor: Color(0xFFB7B7B7),
         selectedItemColor: Theme.of(context).primaryColor,
-        currentIndex: _currentTab,
+        currentIndex: widget.currentTab,
         onTap: (int value) {
           setState(() {
-            _currentTab = value;
+            widget.currentTab = value;
           });
         },
         items: [

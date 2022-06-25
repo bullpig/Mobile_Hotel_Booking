@@ -44,7 +44,6 @@ class Hotel {
             cos(latitude1) * cos(latitude2) * cos(longitude2 - longitude1));
 
     this.distance = double.parse(temp.toStringAsFixed(1));
-    print(this.distance);
   }
 
   String toString() {
@@ -65,15 +64,14 @@ class ShortenHotel {
   List<String> rooms;
   GeoPoint location;
 
-  ShortenHotel({
-    this.id = "",
-    this.name = "",
-    this.address = "",
-    this.imageUrl = "",
-    this.rating = 0.0,
-    this.rooms = const [],
-    this.location = const GeoPoint(0, 0)
-  });
+  ShortenHotel(
+      {this.id = "",
+      this.name = "",
+      this.address = "",
+      this.imageUrl = "",
+      this.rating = 0.0,
+      this.rooms = const [],
+      this.location = const GeoPoint(0, 0)});
 }
 
 var tempHotel = [ShortenHotel(), ShortenHotel()];

@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hotel_booking/screens/forgotPassword.dart';
 import 'package:hotel_booking/screens/homeScreen.dart';
 import './registerationScreen.dart';
@@ -84,7 +85,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       style: TextStyle(fontSize: 18.0),
                     ),
-
                     SizedBox(height: 10.0),
                     RaisedButton(
                       color: Theme.of(context).primaryColor,
@@ -107,15 +107,28 @@ class _LoginScreenState extends State<LoginScreen> {
                         borderRadius: new BorderRadius.circular(24.0),
                       ),
                       onPressed: () async {
+                        if (email.text == null || password.text == null) {
+                          Fluttertoast.showToast(
+                              msg: 'Yêu cầu nhập đầy đủ thông tin');
+                        }
+
                         log("Press login");
                         try {
                           final user = await _auth.signInWithEmailAndPassword(
                               email: email.text, password: password.text);
                           if (user != null) {
                             log("Logged in");
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(),),);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomeScreen(),
+                              ),
+                            );
                           }
                         } catch (e) {
+                          Fluttertoast.showToast(
+                              msg: 'Tài khoản hoặc mật khẩu không chính xác');
+                          password.text = '';
                           print(e);
                         }
                       },

@@ -650,7 +650,6 @@ Future<String> changePassword(
   final user = await FirebaseAuth.instance.currentUser;
   final cred = await EmailAuthProvider.credential(
       email: user!.email!, password: currentPassword);
-  // print()
   await user.reauthenticateWithCredential(cred).then((value) async {
     await user.updatePassword(newPassword).then((_) {
       print("NewPW " + newPassword);
