@@ -8,7 +8,6 @@ import 'package:hotel_booking/screens/hotelDetails.dart';
 import 'package:hotel_booking/screens/selectRoomScreen.dart';
 import '../models/destination_model.dart';
 import '../models/hotel_model.dart';
-//import 'package:hotel_app/screens/hotelDetails.dart';
 
 class ListRommsScreen extends StatefulWidget {
   final List<Room> listRooms;
@@ -21,13 +20,7 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
   @override
   void initState() {
     super.initState();
-    //asyncInitState();
   }
-
-  // void asyncInitState() async {
-  //   getRoomByHotel(widget.hotel.id)
-  //       .then((value) => setState(() => listRooms = value));
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +57,6 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
           Expanded(
             child: ListView.builder(
               padding: EdgeInsets.only(
-                //top: 10.0,
                 bottom: 15.0,
               ),
               itemCount: widget.listRooms.length,
@@ -76,7 +68,6 @@ class _ListRommsScreenState extends State<ListRommsScreen> {
                     children: [
                       Container(
                         margin: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-                        //height: 200.0,
                         width: 400.0,
                         decoration: BoxDecoration(
                           color: Colors.white,

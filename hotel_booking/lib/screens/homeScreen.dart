@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/basic.dart';
-import 'package:hotel_booking/models/hotel_model.dart';
 import 'package:hotel_booking/screens/eventsScreen.dart';
 import 'package:hotel_booking/screens/favouriteScreen.dart';
 import 'package:hotel_booking/screens/mainHomeScreen.dart';
-import 'package:hotel_booking/screens/mapScreen.dart';
 import 'package:hotel_booking/screens/profileScreen.dart';
-
 import 'nearScreen.dart';
-// import 'package:hotel_app/screens/favouriteScreen.dart';
-// import 'package:hotel_app/screens/mainHomeScreen.dart';
-// import 'package:hotel_app/screens/nearbyScreen.dart';
 
 class HomeScreen extends StatefulWidget {
   int currentTab = 0;
@@ -66,10 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Icons.room,
               size: 30.0,
             ),
-            // label: (
-            //   'Gần đây',
-            //   style: bottomTextStyle,
-            // ),
+            
             label: "Gần đây",
           ),
           BottomNavigationBarItem(
@@ -77,10 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Icons.bookmark,
               size: 40.0,
             ),
-            // label: (
-            //   'Yêu thích',
-            //   style: bottomTextStyle,
-            // ),
+            
             label: "Yêu thích",
           ),
           BottomNavigationBarItem(
@@ -88,10 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Icons.takeout_dining,
               size: 30.0,
             ),
-            // label: (
-            //   'Khuyến mãi',
-            //   style: bottomTextStyle,
-            // ),
+           
             label: "Khuyến mãi",
           ),
           BottomNavigationBarItem(
@@ -99,15 +83,11 @@ class _HomeScreenState extends State<HomeScreen> {
               Icons.account_circle,
               size: 30.0,
             ),
-            // label:(
-            //   'Cá nhân',
-            //   style: bottomTextStyle,
-            // ),
+            
             label: "Cá nhân",
           ),
         ],
         backgroundColor: Colors.transparent,
-        // type: BottomNavigationBarType.fixed,
         showSelectedLabels: true,
         elevation: 0,
       ),

@@ -1,19 +1,9 @@
 import 'dart:ffi';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hotel_booking/api_controller.dart';
-import 'package:hotel_booking/models/room.dart';
-import 'package:hotel_booking/screens/discountedHotels.dart';
-import 'package:hotel_booking/screens/homeScreen.dart';
-import 'package:hotel_booking/screens/listRoomsScreen.dart';
-import 'package:hotel_booking/screens/mapScreen.dart';
 import 'package:readmore/readmore.dart';
 import '../models/voucher.dart';
-import 'selectRoomScreen.dart';
-import 'package:hotel_booking/models/hotel_model.dart';
 import 'package:hotel_booking/utils/utils.dart';
 
 class ApplyVoucher extends StatefulWidget {
@@ -66,7 +56,6 @@ class _ApplyVoucherState extends State<ApplyVoucher> {
             children: [
               Container(
                 width: MediaQuery.of(context).size.width,
-                // height: 240,
                 child: Hero(
                   tag: widget.voucher.imageUrl + "voucherImage",
                   child: ClipRRect(

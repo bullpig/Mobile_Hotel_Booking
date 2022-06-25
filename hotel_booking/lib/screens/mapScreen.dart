@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/directions_repository.dart';
 import 'package:hotel_booking/models/directions_model.dart';
@@ -52,13 +51,13 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   LocationData userLocation =
-      LocationData.fromMap({'latitude': 21.02347, 'longitude': 105.7732617});
+      LocationData.fromMap({'latitude': 21.0413, 'longitude': 105.7871});
   late GoogleMapController _googleMapController;
   Marker? _origin = Marker(
     markerId: const MarkerId('origin'),
     infoWindow: const InfoWindow(title: 'Origin'),
     icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
-    position: LatLng(21.02347, 105.7732617),
+    position: LatLng(21.0413, 105.7871),
   );
   Marker? _locationMarker;
   Location currentLocation = Location();
@@ -86,8 +85,6 @@ class _MapScreenState extends State<MapScreen> {
           });
           print(_origin?.position.latitude);
           print(_origin?.position.longitude);
-          // print(userLocation.latitude);
-          // print(userLocation.longitude);
         }
       }
     });
@@ -202,7 +199,7 @@ class _MapScreenState extends State<MapScreen> {
                 if (_info != null)
                   Polyline(
                     polylineId: const PolylineId('overview_polyline'),
-                    color: Colors.red,
+                    color: Colors.lightBlue,
                     width: 5,
                     points: _info!.polylinePoints
                         .map((e) => LatLng(e.latitude, e.longitude))

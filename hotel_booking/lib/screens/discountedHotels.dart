@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/models/voucher.dart';

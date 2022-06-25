@@ -1,11 +1,9 @@
 import 'dart:async';
 import 'dart:async';
 import 'dart:core';
-
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/api_controller.dart';
 import 'package:location/location.dart';
-
 import '../models/hotel_model.dart';
 import '../utils/utils.dart';
 import 'hotelDetails.dart';
@@ -20,7 +18,7 @@ class _NearbyScreenState extends State<NearScreen> {
   List<Hotel> listHotel = [];
   Location currentLocation = Location();
   LocationData userLocation =
-      LocationData.fromMap({'latitude': 21.0277633, 'longitude': 105.8341583});
+      LocationData.fromMap({'latitude': 21.0413, 'longitude': 105.7871});
   @override
   void initState() {
     super.initState();

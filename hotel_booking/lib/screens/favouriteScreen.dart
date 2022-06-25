@@ -1,15 +1,11 @@
 import 'dart:ffi';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/models/hotel_model.dart';
 import 'package:hotel_booking/screens/hotelDetails.dart';
-// import 'package:hotel_app/screens/hotelDetails.dart';
-// import 'package:hotel_app/screens/success.dart';
-// import 'package:hotel_app/widgets/overNightpicker.dart';
-// import 'package:hotel_app/widgets/twoHourspicker.dart';
+
 
 class FavouriteScreen extends StatefulWidget {
   FavouriteScreen({Key? key}) : super(key: key);

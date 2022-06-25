@@ -1,16 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/api_controller.dart';
-import 'package:hotel_booking/screens/homeScreen.dart';
 import 'package:hotel_booking/screens/listOrderScreen.dart';
 import 'package:hotel_booking/screens/loginScreen.dart';
-import 'package:hotel_booking/screens/mainHomeScreen.dart';
-
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:hotel_booking/screens/resetPassWordScreen.dart';
-
-import '../models/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -67,12 +61,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       image: NetworkImage(imageUser),
                       fit: BoxFit.cover,
                     ),
-                    // Image.network(
-                    //     imageUser,
-                    //     height: 180.0,
-                    //     width: 120.0,
-                    //     fit: BoxFit.cover,
-                    //   ),
                   ),
                 ),
               ),

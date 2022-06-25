@@ -1,10 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/api_controller.dart';
-import 'package:hotel_booking/models/voucher.dart';
 import 'package:hotel_booking/screens/voucherDetail.dart';
-
-import 'hotelDetails.dart';
 
 class EventScreen extends StatefulWidget {
   @override

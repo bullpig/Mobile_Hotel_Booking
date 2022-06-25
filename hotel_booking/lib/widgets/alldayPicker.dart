@@ -23,9 +23,7 @@ class _AllDatePickerState extends State<AllDayPicker> {
     super.initState();
     parentState = context.findAncestorStateOfType<SelectRoomScreenState>();
     initTime();
-    // WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-    //   parentState?.setState(() {});
-    // });
+   
   }
 
   void initTime() {

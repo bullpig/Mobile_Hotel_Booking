@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +16,6 @@ void main() async {
       runApp(MyApp(auth: true));
     }
   });
-
-  //runApp(MyApp());
 }
 
 class MyHttpOverrides extends HttpOverrides{
@@ -45,8 +42,6 @@ class MyApp extends StatelessWidget {
         accentColor: const Color(0xFFD8ECF1),
         scaffoldBackgroundColor: const Color(0xFFF3F5F7),
       ),
-      // home: LoginScreen(),
-      // home: HomeScreen(),
       home: auth ? HomeScreen() : LoginScreen(),
     );
   }

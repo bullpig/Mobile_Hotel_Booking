@@ -1,9 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/models/hotel_model.dart';
-import 'package:hotel_booking/screens/hotelDetails.dart';
-import 'package:hotel_booking/utils/utils.dart';
 import 'package:hotel_booking/widgets/horizontalListHotels.dart';
 
 class HotelCarousel extends StatefulWidget {

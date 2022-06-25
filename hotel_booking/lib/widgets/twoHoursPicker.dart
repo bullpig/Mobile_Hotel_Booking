@@ -5,7 +5,6 @@ import 'package:hotel_booking/screens/selectRoomScreen.dart';
 import 'package:intl/intl.dart';
 import 'package:time_picker_widget/time_picker_widget.dart';
 import '../utils/utils.dart';
-import 'package:flutter/widgets.dart';
 
 class TwoHoursPicker extends StatefulWidget {
   static const String idScreen = 'twohours';

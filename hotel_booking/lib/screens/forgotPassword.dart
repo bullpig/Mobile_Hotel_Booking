@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hotel_booking/screens/homeScreen.dart';
 import 'package:hotel_booking/screens/loginScreen.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -66,7 +65,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       style: TextStyle(fontSize: 18.0),
                     ),
                     SizedBox(height: 10.0),
-                    // SizedBox(height: 10.0),
                     RaisedButton(
                       color: Theme.of(context).primaryColor,
                       textColor: Colors.black,

@@ -97,9 +97,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      // onPressed: (){
-                      //   Navigator.push(context, route)
-                      // }
                       shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(24.0),
                       ),
@@ -108,7 +105,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           Fluttertoast.showToast(
                               msg: 'Yêu cầu nhập đầy đủ thông tin');
                         }
-
                         log("Press login");
                         try {
                           final user = await _auth.signInWithEmailAndPassword(

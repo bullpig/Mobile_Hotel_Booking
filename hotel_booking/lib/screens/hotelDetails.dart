@@ -3,10 +3,8 @@ import 'dart:ffi';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/models/room.dart';
-import 'package:hotel_booking/screens/listRoomsScreen.dart';
 import 'package:hotel_booking/screens/mapScreen.dart';
 import 'package:readmore/readmore.dart';
 import 'selectRoomScreen.dart';
@@ -160,7 +158,6 @@ class _HotelDetailState extends State<HotelDetail> {
                 child: IconButton(
                   icon: Icon(Icons.location_on),
                   color: Colors.white70,
-                  // size: 25.0,
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(

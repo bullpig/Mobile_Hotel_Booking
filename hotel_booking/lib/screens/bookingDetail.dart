@@ -1,27 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/api_controller.dart';
-import 'package:hotel_booking/models/constants.dart';
 import 'package:hotel_booking/models/order.dart';
-import 'package:hotel_booking/models/room.dart';
 import 'package:hotel_booking/screens/hotelDetails.dart';
 import 'package:hotel_booking/utils/utils.dart';
-import 'package:hotel_booking/widgets/alldayPicker.dart';
 import 'package:momo_vn/momo_vn.dart';
-import '../models/hotel_model.dart';
 import './success.dart';
-import '../widgets/overNightpicker.dart';
-import '../widgets/twoHoursPicker.dart';
 import 'homeScreen.dart';
-import 'listRoomsScreen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class BookingDetail extends StatefulWidget {
   final Order order;
-
   final String routeFrom;
 
   BookingDetail({required this.order, this.routeFrom = "orderList", Key? key})

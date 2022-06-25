@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -8,8 +7,6 @@ import 'package:hotel_booking/screens/homeScreen.dart';
 import 'package:hotel_booking/screens/loginScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hotel_booking/screens/profileScreen.dart';
-
-// import '../api_controller.dart';
 
 class resetPassWordScreen extends StatelessWidget {
   static const String idScreen = 'register';
