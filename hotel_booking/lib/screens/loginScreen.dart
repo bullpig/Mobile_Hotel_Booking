@@ -1,11 +1,8 @@
-// ignore: file_names
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/screens/homeScreen.dart';
 import './registerationScreen.dart';
-// import '../api_controller.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String idScreen = 'login';
@@ -111,7 +108,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               email: email.text, password: password.text);
                           if (user != null) {
                             log("Logged in");
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(),),);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HomeScreen(),
+                              ),
+                            );
                           }
                         } catch (e) {
                           print(e);

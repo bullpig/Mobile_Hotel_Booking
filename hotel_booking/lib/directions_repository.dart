@@ -24,8 +24,6 @@ class DirectionsRepository {
       },
     );
 
-    // Check if response is successful
-    print("1111111111111111111111111111111111111111111111111111111");
     if (response.statusCode == 200) {
       print(response.data.toString());
 

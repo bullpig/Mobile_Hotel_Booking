@@ -44,7 +44,7 @@ class Hotel {
             cos(latitude1) * cos(latitude2) * cos(longitude2 - longitude1));
 
     this.distance = double.parse(temp.toStringAsFixed(1));
-    print(this.distance);
+
   }
 
   String toString() {
