@@ -25,6 +25,14 @@ class HotelCarouselState extends State<HotelCarousel> {
   }
 
   @override
+  void didUpdateWidget(covariant HotelCarousel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.cityId != widget.cityId) {
+      futureHotels = getSuggestHotels(widget.cityId);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [

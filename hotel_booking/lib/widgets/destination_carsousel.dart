@@ -5,9 +5,9 @@ import '../api_controller.dart';
 import '../models/destination_model.dart';
 
 class DestinationCarousel extends StatefulWidget {
-  final String city;
+  final String cityId;
 
-  const DestinationCarousel({Key? key, required this.city}) : super(key: key);
+  const DestinationCarousel({Key? key, required this.cityId}) : super(key: key);
 
   @override
   State<DestinationCarousel> createState() => _DestinationCarousel();
@@ -19,7 +19,15 @@ class _DestinationCarousel extends State<DestinationCarousel> {
   @override
   void initState() {
     super.initState();
-    futureDestinations = getDestination(widget.city);
+    futureDestinations = getDestination(widget.cityId);
+  }
+
+  @override
+  void didUpdateWidget(covariant DestinationCarousel oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.cityId != widget.cityId) {
+      futureDestinations = getDestination(widget.cityId);
+    }
   }
 
   @override

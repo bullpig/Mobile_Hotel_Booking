@@ -3,8 +3,8 @@ import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hotel_booking/models/city.dart';
 import 'package:hotel_booking/models/destination_model.dart';
-import 'package:hotel_booking/models/location_hotel.dart';
 import 'package:hotel_booking/models/order.dart';
 import 'package:hotel_booking/models/room.dart';
 import 'package:hotel_booking/models/voucher.dart';
@@ -101,10 +101,14 @@ Future<void> setHotelFavoriteStatus(String hotelId, bool isFavorite) async {
 }
 
 Future<List<String>> getFavoriteHotelIds() async {
-  var doc = await db.collection("users").doc(auth.currentUser?.uid).get();
-  var hotelIds = List<String>.from(doc.get("favoriteHotel") ?? []);
-
-  return hotelIds;
+  try {
+    var doc = await db.collection("users").doc(auth.currentUser?.uid).get();
+    var hotelIds = List<String>.from(doc.get("favoriteHotel") ?? []);
+    return hotelIds;
+  } catch (e) {
+    log(e.toString());
+    return [];
+  }
 }
 
 Future<bool> getHotelFavoriteStatus(String hotelId) async {
@@ -411,10 +415,13 @@ Future<List<Hotel>> getHotelSortByLocation(LocationData myLocation) async {
     }
     hotels.sort(((a, b) => a.distance.compareTo(b.distance)));
   } catch (e) {
-    print(e);
+    log(e.toString());
   }
 
-  return hotels;
+  var res = hotels.sublist(0, 10);
+
+
+  return res;
 }
 
 Future<List<Order>> getOrders() async {
@@ -643,6 +650,25 @@ Future<List<ShortenHotel>> getSearchHotels() async {
   }
   return hotels;
 }
+
+
+Future<List<City>> getCities() async {
+  List<City> res = [];
+
+  try {
+    var event = await db.collection("cities").get();
+    for (var doc in event.docs) {
+      var docData = doc.data();
+      var city = City(
+        id: doc.id.toString(),
+        name: docData["city"],
+      );
+      res.add(city);
+    }
+  } catch (e) {
+    log(e.toString());
+  }
+  return res;
 
 Future<String> changePassword(
     String currentPassword, String newPassword) async {

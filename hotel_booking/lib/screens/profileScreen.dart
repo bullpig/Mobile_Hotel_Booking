@@ -5,7 +5,11 @@ import 'package:hotel_booking/screens/homeScreen.dart';
 import 'package:hotel_booking/screens/listOrderScreen.dart';
 import 'package:hotel_booking/screens/loginScreen.dart';
 import 'package:hotel_booking/screens/mainHomeScreen.dart';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:hotel_booking/screens/resetPassWordScreen.dart';
+
 import '../models/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -123,7 +127,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: Theme.of(context).primaryColor,
                   ),
                   title: Text("Đăng xuất"),
-                  onTap: () {
+                  onTap: () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.remove("cityId");
+                    prefs.remove("cityName");
                     _signOut();
                     Navigator.pushReplacement(
                       context,
