@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +16,7 @@ import './models/voucher.dart';
 
 final db = FirebaseFirestore.instance;
 final auth = FirebaseAuth.instance;
-
+final user1 = auth.currentUser;
 Future<bool> addUserInfo(
     String uid, String email, String phone, String name) async {
   try {
@@ -419,6 +420,7 @@ Future<List<Hotel>> getHotelSortByLocation(LocationData myLocation) async {
 
   var res = hotels.sublist(0, 10);
 
+
   return res;
 }
 
@@ -649,6 +651,7 @@ Future<List<ShortenHotel>> getSearchHotels() async {
   return hotels;
 }
 
+
 Future<List<City>> getCities() async {
   List<City> res = [];
 
@@ -666,4 +669,38 @@ Future<List<City>> getCities() async {
     log(e.toString());
   }
   return res;
+
+Future<String> changePassword(
+    String currentPassword, String newPassword) async {
+  String result = "False";
+  final user = await FirebaseAuth.instance.currentUser;
+  final cred = await EmailAuthProvider.credential(
+      email: user!.email!, password: currentPassword);
+  await user.reauthenticateWithCredential(cred).then((value) async {
+    await user.updatePassword(newPassword).then((_) {
+      print("NewPW " + newPassword);
+      result = "OK";
+    }).catchError((error) {
+      result = "Falsess";
+      print("UpdatePassWord false " + error.toString());
+    });
+  }).catchError((err) {
+    result = "WrongPassWord";
+    print("Password ERROR " + err.toString());
+  });
+  return result;
+}
+
+Future<List<String>> getUserName() async {
+  List<String> list = [];
+  var uid = auth.currentUser!.uid;
+  var event = await db.collection("users").doc(uid).get();
+  list.add(event.get("name"));
+  try {
+    list.add(event.get("image"));
+  } catch (e) {
+    list.add(
+        "https://vsmcamp.com/wp-content/uploads/2020/11/JaZBMzV14fzRI4vBWG8jymplSUGSGgimkqtJakOV.jpeg");
+  }
+  return list;
 }

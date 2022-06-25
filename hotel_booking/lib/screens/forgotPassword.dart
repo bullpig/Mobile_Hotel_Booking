@@ -1,21 +1,20 @@
+// ignore: file_names
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hotel_booking/screens/forgotPassword.dart';
 import 'package:hotel_booking/screens/homeScreen.dart';
-import './registerationScreen.dart';
+import 'package:hotel_booking/screens/loginScreen.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const String idScreen = 'login';
+class ForgotPasswordScreen extends StatefulWidget {
+  static const String idScreen = 'forgotPw';
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
 
   final _auth = FirebaseAuth.instance;
 
@@ -39,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: 1.0),
               Text(
-                'Đăng nhập',
+                'Quên mật khẩu',
                 style: TextStyle(
                   fontSize: 24.0,
                 ),
@@ -67,22 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(fontSize: 18.0),
                     ),
                     SizedBox(height: 10.0),
-                    TextField(
-                      controller: password,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: 'Mật khẩu',
-                        labelStyle: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                    SizedBox(height: 10.0),
+                    // SizedBox(height: 10.0),
                     RaisedButton(
                       color: Theme.of(context).primaryColor,
                       textColor: Colors.black,
@@ -90,42 +74,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 50.0,
                         child: Center(
                           child: Text(
-                            'Đăng nhập',
+                            'Gửi Email',
                             style: TextStyle(
                               fontSize: 18.0,
                             ),
                           ),
                         ),
                       ),
-                      // onPressed: (){
-                      //   Navigator.push(context, route)
-                      // }
                       shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(24.0),
                       ),
                       onPressed: () async {
-                        if (email.text == null || password.text == null) {
-                          Fluttertoast.showToast(
-                              msg: 'Yêu cầu nhập đầy đủ thông tin');
-                        }
-
-                        log("Press login");
                         try {
-                          final user = await _auth.signInWithEmailAndPassword(
-                              email: email.text, password: password.text);
-                          if (user != null) {
-                            log("Logged in");
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => HomeScreen(),
-                              ),
-                            );
-                          }
+                          await _auth.sendPasswordResetEmail(
+                              email: email.text);
+                          Fluttertoast.showToast(msg: "Vui lòng kiểm tra email của bạn!");
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen(),),);
                         } catch (e) {
-                          Fluttertoast.showToast(
-                              msg: 'Tài khoản hoặc mật khẩu không chính xác');
-                          password.text = '';
                           print(e);
                         }
                       },
@@ -135,26 +100,13 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               FlatButton(
                 child: Text(
-                  'Không có tài khoản? Đăng ký ngay!',
+                  'Huỷ',
                 ),
                 onPressed: () {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => registerationScreen(),
-                    ),
-                  );
-                },
-              ),
-              FlatButton(
-                child: Text(
-                  'Quên mật khẩu',
-                ),
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ForgotPasswordScreen(),
+                      builder: (context) => LoginScreen(),
                     ),
                   );
                 },

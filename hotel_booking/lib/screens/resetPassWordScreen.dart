@@ -4,12 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hotel_booking/api_controller.dart';
+import 'package:hotel_booking/screens/homeScreen.dart';
 import 'package:hotel_booking/screens/loginScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hotel_booking/screens/profileScreen.dart';
 
 // import '../api_controller.dart';
 
-class registerationScreen extends StatelessWidget {
+class resetPassWordScreen extends StatelessWidget {
   static const String idScreen = 'register';
   final _auth = FirebaseAuth.instance;
   final _db = FirebaseFirestore.instance;
@@ -18,6 +20,8 @@ class registerationScreen extends StatelessWidget {
   TextEditingController email = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController password = TextEditingController();
+  TextEditingController newPassword = TextEditingController();
+  TextEditingController confirmPassWord = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -30,16 +34,25 @@ class registerationScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: 35.0,
+                height: 50,
               ),
-              Image(
-                image: AssetImage("assets/images/bookme.png"),
-                width: 390.0,
-                height: 250.0,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 1,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.arrow_back_ios),
+                    iconSize: 30.0,
+                    color: Colors.blue,
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
               ),
-              SizedBox(height: 1.0),
+              SizedBox(height: 100),
               Text(
-                'Đăng ký tài khoản',
+                'Thay đổi mật khẩu',
                 style: TextStyle(
                   fontSize: 24.0,
                 ),
@@ -52,58 +65,40 @@ class registerationScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     TextField(
-                      controller: email,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        labelStyle: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                    SizedBox(height: 10.0),
-                    TextField(
-                      controller: name,
-                      keyboardType: TextInputType.text,
-                      decoration: InputDecoration(
-                        labelText: 'Họ và tên',
-                        labelStyle: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                    SizedBox(height: 10.0),
-                    TextField(
-                      controller: phone,
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        labelText: 'Số điện thoại',
-                        labelStyle: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                        hintStyle: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                      style: TextStyle(fontSize: 18.0),
-                    ),
-                    SizedBox(height: 10.0),
-                    TextField(
                       controller: password,
                       obscureText: true,
                       decoration: InputDecoration(
-                        labelText: 'Mật khẩu',
+                        labelText: 'Mật khẩu hiện tại',
+                        labelStyle: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                    TextField(
+                      controller: newPassword,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Mật khẩu mới',
+                        labelStyle: TextStyle(
+                          fontSize: 20.0,
+                        ),
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      style: TextStyle(fontSize: 18.0),
+                    ),
+                    TextField(
+                      controller: confirmPassWord,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Nhập lại mật khẩu',
                         labelStyle: TextStyle(
                           fontSize: 20.0,
                         ),
@@ -122,7 +117,7 @@ class registerationScreen extends StatelessWidget {
                         height: 50.0,
                         child: Center(
                           child: Text(
-                            'Đăng ký',
+                            'Xác nhận',
                             style: TextStyle(
                               fontSize: 18.0,
                             ),
@@ -133,61 +128,40 @@ class registerationScreen extends StatelessWidget {
                         borderRadius: new BorderRadius.circular(24.0),
                       ),
                       onPressed: () async {
-                        if (name.text.length < 4) {
-                          Fluttertoast.showToast(msg: 'Nhập đầy đủ họ và tên');
-                        } else if (!email.text.contains('@')) {
-                          Fluttertoast.showToast(msg: 'Email sai');
-                        } else if (phone.text.isEmpty) {
+                        if (password.text.isEmpty == true ||
+                            newPassword.text.isEmpty == true ||
+                            confirmPassWord.text.isEmpty == true) {
                           Fluttertoast.showToast(
-                              msg: 'Số điện thoại là bắt buộc');
-                        } else if (password.text.length < 6) {
+                              msg: 'Yêu cầu nhập đầy đủ thông tin');
+                        } else if (newPassword.text != confirmPassWord.text) {
                           Fluttertoast.showToast(
-                              msg: 'Mật khẩu phải từ 6 kí tự trở lên');
+                              msg: 'Mật khẩu mới không khớp');
                         } else {
-                          try {
-                            final newUser =
-                                await _auth.createUserWithEmailAndPassword(
-                                    email: email.text, password: password.text);
-                            var uid = newUser.user?.uid.toString();
-                            var registeredEmail = newUser.user?.email;
-                            // var user = <String, dynamic>{
-                            //   "email": registeredEmail,
-                            //   "name": name.text,
-                            //   "phone": phone.text
-                            // };
-                            // await _db.collection("users").doc(uid).set(user);
-                            if (uid != null && registeredEmail != null) {
-                              await addUserInfo(
-                                  uid, registeredEmail, phone.text, name.text);
-                            }
-                            Fluttertoast.showToast(msg: "Đăng ký thành công");
+                          var result = await changePassword(
+                              password.text, newPassword.text);
+                          if (result == "OK") {
+                            Fluttertoast.showToast(
+                                msg: 'Thay đổi mật khẩu thành công');
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => LoginScreen(),
-                              ),
+                                  builder: (_) => HomeScreen.withScreen(4)),
                             );
-                          } catch (e) {
-                            log(e.toString());
+                          } else if (result == "WrongPassWord") {
+                            Fluttertoast.showToast(
+                                msg: 'Mật khẩu không chính xác');
+                          } else if (result == "False") {
+                            Fluttertoast.showToast(msg: 'False');
+                          } else if (result == "No") {
+                            Fluttertoast.showToast(msg: 'No');
+                          } else if (result == "Falsess") {
+                            Fluttertoast.showToast(msg: 'Falsess');
                           }
                         }
                       },
                     ),
                   ],
                 ),
-              ),
-              FlatButton(
-                child: Text(
-                  'Đã có tài khoản? Đăng nhập ngay!',
-                ),
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => LoginScreen(),
-                    ),
-                  );
-                },
               ),
             ],
           ),

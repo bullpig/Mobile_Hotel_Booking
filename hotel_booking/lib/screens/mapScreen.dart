@@ -12,23 +12,8 @@ import 'package:location/location.dart';
 
 import 'hotelDetails.dart';
 
-// class MapScreen extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Flutter Google Maps',
-//       debugShowCheckedModeBanner: false,
-//       theme: ThemeData(
-//         primaryColor: Colors.white,
-//       ),
-//       home: _MapScreen(),
-//     );
-//   }
-// }
-
 class MapScreen extends StatefulWidget {
   Marker? destination;
-  // List<Hotel>? listHotel;
   List<Marker>? listHotelMarker;
   String? destinationFocus;
   int dem = 0;
@@ -44,9 +29,6 @@ class MapScreen extends StatefulWidget {
   }
 
   MapScreen.fromListHotel(var _listHotel) {
-    // this.listHotel = _listHotel;
-    // print(listHotel);
-
     listHotelMarker = _listHotel
         .map<Marker>((value) => Marker(
             markerId: MarkerId(value.id),
@@ -59,22 +41,8 @@ class MapScreen extends StatefulWidget {
             }))
         .toList();
 
-    print(222222222222222);
     print(listHotelMarker.toString());
-    // print("22222222222222222222";
-    // var k = _listHotel
-    //     .map((value) => Marker(
-    //         markerId: MarkerId(value.id),
-    //         infoWindow: InfoWindow(title: value.name),
-    //         icon:
-    //             BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-    //         position: LatLng(value.location.latitude, value.location.longitude),
-    //         onTap: () {
-    //           destinationFocus = value.id;
-    //         }))
-    //     .toList();
 
-    // print(k.toString());
   }
 
   @override
@@ -143,7 +111,6 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> getDestinationHotel() async {
-    print("eee");
     if (widget.destination != null) {
       var directions = await DirectionsRepository().getDirections(
           origin: _origin!.position, destination: widget.destination!.position);
@@ -153,7 +120,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void buildData() async {
-    getLocation();
+    await getLocation();
     getDestinationHotel();
   }
 
@@ -161,6 +128,12 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            iconSize: 30.0,
+            color: Colors.blue,
+            onPressed: () => Navigator.pop(context),
+          ),
           centerTitle: true,
           title: const Text(
             'Bản Đồ',
