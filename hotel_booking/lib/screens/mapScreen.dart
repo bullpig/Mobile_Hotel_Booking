@@ -19,10 +19,12 @@ class MapScreen extends StatefulWidget {
   int dem = 0;
 
   MapScreen();
-  MapScreen.fromDestination(GeoPoint _destinaton) {
+  MapScreen.fromDestination(
+      GeoPoint _destinaton, String hotelId, String hotelName) {
+    destinationFocus = hotelId;
     this.destination = Marker(
       markerId: const MarkerId('destination'),
-      infoWindow: const InfoWindow(title: 'Destination'),
+      infoWindow: InfoWindow(title: hotelName),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
       position: LatLng(_destinaton.latitude, _destinaton.longitude),
     );
@@ -42,7 +44,6 @@ class MapScreen extends StatefulWidget {
         .toList();
 
     print(listHotelMarker.toString());
-
   }
 
   @override
@@ -101,7 +102,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   initState() {
     super.initState();
-    buildData();
+
     setState(() {
       widget.destinationFocus = widget.destinationFocus;
       widget.listHotelMarker = widget.listHotelMarker;
@@ -115,17 +116,19 @@ class _MapScreenState extends State<MapScreen> {
       var directions = await DirectionsRepository().getDirections(
           origin: _origin!.position, destination: widget.destination!.position);
       setState(() => _info = directions!);
+
       print(_info.toString());
     }
   }
 
   void buildData() async {
     await getLocation();
-    getDestinationHotel();
+    await getDestinationHotel();
   }
 
   @override
   Widget build(BuildContext context) {
+    buildData();
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -276,6 +279,7 @@ class _MapScreenState extends State<MapScreen> {
               ),
               child: const Icon(Icons.center_focus_strong),
             ),
+            SizedBox(height: 50),
           ],
         ));
   }

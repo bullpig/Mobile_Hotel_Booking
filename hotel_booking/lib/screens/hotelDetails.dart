@@ -164,8 +164,8 @@ class _HotelDetailState extends State<HotelDetail> {
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          MapScreen.fromDestination(_hotel.location),
+                      builder: (context) => MapScreen.fromDestination(
+                          _hotel.location, _hotel.id, _hotel.name),
                     ),
                   ),
                 ),
