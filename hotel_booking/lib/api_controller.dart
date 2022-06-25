@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,7 +16,7 @@ import './models/voucher.dart';
 
 final db = FirebaseFirestore.instance;
 final auth = FirebaseAuth.instance;
-
+final user1 = auth.currentUser;
 Future<bool> addUserInfo(
     String uid, String email, String phone, String name) async {
   try {
@@ -407,48 +408,14 @@ Future<List<Hotel>> getHotelSortByLocation(LocationData myLocation) async {
         hotel.rooms.add("...");
       }
       hotels.add(hotel);
-      print(hotel.toString());
     }
     hotels.sort(((a, b) => a.distance.compareTo(b.distance)));
-    for (var i in hotels) {
-      print(i.distance);
-    }
   } catch (e) {
     print(e);
   }
 
   return hotels;
 }
-
-// Future<List<ShortenHotel>> getShortenHotelSortByLocation(LocationData myLocation) async {
-//   List<ShortenHotel> hotels = [];
-
-//   try {
-//     var event = await db.collection("hotels").get();
-//     for (var doc in event.docs) {
-//       var docData = doc.data();
-//       var hotel = ShortenHotel(
-//         id: doc.id.toString(),
-//         name: docData["name"],
-//         address: docData["address"],
-//         imageUrl: docData["imageUrl"],
-//         location: docData["location"],
-//         rooms: List<String>.from(docData["rooms"]),
-//       );
-//       hotel.rating = await getHotelRating(hotel.id);
-//       hotels.add(hotel);
-//       print(hotel.toString());
-//     }
-//     hotels.sort(((a, b) => a.distance.compareTo(b.distance)));
-//     for (var i in hotels) {
-//       print(i.distance);
-//     }
-//   } catch (e) {
-//     print(e);
-//   }
-
-//   return hotels;
-// }
 
 Future<List<Order>> getOrders() async {
   List<Order> orders = [];
@@ -675,4 +642,40 @@ Future<List<ShortenHotel>> getSearchHotels() async {
     hotels.add(hotel);
   }
   return hotels;
+}
+
+Future<String> changePassword(
+    String currentPassword, String newPassword) async {
+  String result = "False";
+  final user = await FirebaseAuth.instance.currentUser;
+  final cred = await EmailAuthProvider.credential(
+      email: user!.email!, password: currentPassword);
+  // print()
+  await user.reauthenticateWithCredential(cred).then((value) async {
+    await user.updatePassword(newPassword).then((_) {
+      print("NewPW " + newPassword);
+      result = "OK";
+    }).catchError((error) {
+      result = "Falsess";
+      print("UpdatePassWord false " + error.toString());
+    });
+  }).catchError((err) {
+    result = "WrongPassWord";
+    print("Password ERROR " + err.toString());
+  });
+  return result;
+}
+
+Future<List<String>> getUserName() async {
+  List<String> list = [];
+  var uid = auth.currentUser!.uid;
+  var event = await db.collection("users").doc(uid).get();
+  list.add(event.get("name"));
+  try {
+    list.add(event.get("image"));
+  } catch (e) {
+    list.add(
+        "https://vsmcamp.com/wp-content/uploads/2020/11/JaZBMzV14fzRI4vBWG8jymplSUGSGgimkqtJakOV.jpeg");
+  }
+  return list;
 }

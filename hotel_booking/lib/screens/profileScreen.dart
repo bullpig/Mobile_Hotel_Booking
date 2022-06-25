@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_booking/api_controller.dart';
 import 'package:hotel_booking/screens/homeScreen.dart';
 import 'package:hotel_booking/screens/listOrderScreen.dart';
 import 'package:hotel_booking/screens/loginScreen.dart';
 import 'package:hotel_booking/screens/mainHomeScreen.dart';
+import 'package:hotel_booking/screens/resetPassWordScreen.dart';
 import '../models/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -15,9 +17,22 @@ Future<void> _signOut() async {
   await FirebaseAuth.instance.signOut();
 }
 
+String userName = "Đỗ Quang Huynh";
+String imageUser =
+    "https://vsmcamp.com/wp-content/uploads/2020/11/JaZBMzV14fzRI4vBWG8jymplSUGSGgimkqtJakOV.jpeg";
+
 class _ProfileScreenState extends State<ProfileScreen> {
+  void setUp() async {
+    var list = await getUserName();
+    setState(() {
+      userName = list[0];
+      imageUser = list[1];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    setUp();
     return Scaffold(
       body: Column(
         children: [
@@ -45,16 +60,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: 4.0,
                     ),
                     image: DecorationImage(
-                      image: AssetImage('assets/images/user4.jpg'),
+                      image: NetworkImage(imageUser),
                       fit: BoxFit.cover,
                     ),
+                    // Image.network(
+                    //     imageUser,
+                    //     height: 180.0,
+                    //     width: 120.0,
+                    //     fit: BoxFit.cover,
+                    //   ),
                   ),
                 ),
               ),
               Positioned(
                 bottom: -88,
                 child: Text(
-                  'Đoàn Duy Cường',
+                  userName,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18.0,
@@ -79,6 +100,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => ListOrderScreen(),
+                      ),
+                    );
+                  }),
+              ListTile(
+                  leading: Icon(
+                    Icons.password_rounded,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  title: Text("Thay đổi mật khẩu"),
+                  onTap: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => resetPassWordScreen(),
                       ),
                     );
                   }),
