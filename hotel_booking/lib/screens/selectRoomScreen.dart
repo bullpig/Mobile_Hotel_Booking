@@ -138,6 +138,8 @@ class SelectRoomScreenState extends State<SelectRoomScreen> {
         paymentType: paymentType,
         totalPayment: getTotalPayment(),
         paymentStaus: false,
+        voucherId: currentVoucher?.id,
+        totalDiscount: getDiscount(),
       );
       Navigator.pushReplacement(
         context,

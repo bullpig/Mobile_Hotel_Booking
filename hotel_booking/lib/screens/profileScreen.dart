@@ -22,15 +22,22 @@ String imageUser =
 class _ProfileScreenState extends State<ProfileScreen> {
   void setUp() async {
     var list = await getUserName();
-    setState(() {
-      userName = list[0];
-      imageUser = list[1];
-    });
+    if (list.length == 2 && this.mounted == true) {
+      setState(() {
+        userName = list[0];
+        imageUser = list[1];
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setUp();
   }
 
   @override
   Widget build(BuildContext context) {
-    setUp();
     return Scaffold(
       body: Column(
         children: [
@@ -115,18 +122,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: Theme.of(context).primaryColor,
                   ),
                   title: Text("Đăng xuất"),
-                  onTap: () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    prefs.remove("cityId");
-                    prefs.remove("cityName");
-                    _signOut();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LoginScreen(),
-                      ),
-                    );
+                  onTap: () {
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => LoginScreen(),
+                        ),
+                        (route) => false).then((value) {
+                      SharedPreferences.getInstance().then((value) {
+                        value.remove("cityId");
+                        value.remove("cityName");
+                      });
+                      _signOut();
+                    });
                   }),
+                  
             ]),
           ),
         ],

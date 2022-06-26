@@ -151,7 +151,7 @@ class registerationScreen extends StatelessWidget {
                               await addUserInfo(
                                   uid, registeredEmail, phone.text, name.text);
                             }
-                            Fluttertoast.showToast(msg: "Đăng ký thành công");
+                            Fluttertoast.showToast(msg: "Đăng ký thành công!");
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -159,6 +159,7 @@ class registerationScreen extends StatelessWidget {
                               ),
                             );
                           } catch (e) {
+                            Fluttertoast.showToast(msg: "Đăng ký thất bại!");
                             log(e.toString());
                           }
                         }

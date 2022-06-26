@@ -283,7 +283,7 @@ class BookingDetailState extends State<BookingDetail> {
                       appScheme: "momoamei20220613",
                       merchantCode: 'MOMOAMEI20220613',
                       partnerCode: 'MOMOAMEI20220613',
-                      amount: widget.order.totalPayment,
+                      amount: getFinalPayment(widget.order),
                       orderId: widget.order.id,
                       orderLabel:
                           "${widget.order.hotelName} - ${widget.order.roomName}",
